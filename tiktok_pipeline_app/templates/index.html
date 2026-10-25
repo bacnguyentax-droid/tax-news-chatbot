@@ -1,0 +1,3452 @@
+<!DOCTYPE html>
+
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TikTok Automation Studio 2026 - Pipeline Studio</title>
+
+    <!-- Tailwind CSS qua CDN -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="/static/css/style.css?v={{ version }}">
+
+</head>
+
+<body class="min-h-screen flex flex-col antialiased selection:bg-[#df8a5a] selection:text-white">
+
+    <!-- ========================================================= -->
+
+    <!-- 1. TOP NAVBAR HEADER: MARK DAO* STYLE                      -->
+
+    <!-- ========================================================= -->
+
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-[#e3e7f0]">
+
+        <div class="max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+
+            
+
+            <!-- Brand Logo & Mobile Sidebar Toggle -->
+
+            <div class="flex items-center space-x-3 shrink-0">
+
+                <button type="button" onclick="toggleSidebarMobile()" class="lg:hidden p-2 -ml-2 rounded-xl text-slate-600 hover:text-[#df8a5a] hover:bg-[#fdf4ee] transition" title="Mở danh mục menu">
+
+                    <i class="fa-solid fa-bars text-base"></i>
+
+                </button>
+
+                <div class="flex items-center">
+
+                    <span class="text-2xl font-black text-[#282d38] tracking-tight">tiktok studio<span class="text-[#df8a5a] text-3xl leading-none">*</span></span>
+
+                </div>
+
+                <span class="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-[#fdf4ee] text-[#df8a5a] text-[10px] font-extrabold uppercase tracking-wider">
+
+                    2026 Pro
+
+                </span>
+
+            </div>
+
+            <!-- Tab Navigation Capsule in Header -->
+
+            <nav class="nav-capsule">
+
+                <button type="button" id="tabBtnContent" onclick="switchTab('content')" class="nav-tab-btn active">
+
+                    <i class="fa-solid fa-layer-group text-xs"></i>
+
+                    <span>Nội Dung & Dữ Liệu</span>
+
+                </button>
+
+                <button type="button" id="tabBtnIntegrations" onclick="switchTab('integrations')" class="nav-tab-btn">
+
+                    <i class="fa-solid fa-network-wired text-xs"></i>
+
+                    <span>Trung Tâm Kết Nối</span>
+
+                    <span id="integrationsBadgeCount" class="ml-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#fdf4ee] text-[#df8a5a] font-bold">6/6</span>
+
+                </button>
+
+            </nav>
+
+            <!-- Right Actions: Drive Status & Quick Actions -->
+
+            <div class="flex items-center space-x-2.5 shrink-0">
+
+                <!-- Drive Status Pill -->
+
+                <div id="driveStatusPill" class="hidden md:flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white border border-[#e3e7f0] shadow-xs text-xs">
+
+                    <span id="driveStatusDot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
+
+                    <span id="driveStatusText" class="text-slate-700 font-semibold truncate max-w-[190px]">Drive: HCMTAX HCM</span>
+
+                </div>
+
+                <!-- Sync Button -->
+
+                <button onclick="reloadFromDrive()" title="Đồng bộ lại từ Google Drive" class="p-2.5 rounded-2xl bg-white hover:bg-[#fdf4ee] text-slate-600 hover:text-[#df8a5a] border border-[#e3e7f0] transition shadow-xs">
+
+                    <i class="fa-solid fa-arrows-rotate" id="reloadIcon"></i>
+
+                </button>
+
+                <!-- Platform Settings Button -->
+
+                <button onclick="openPlatformConfigModal()" class="btn-primary-mark py-2 px-3.5 text-xs">
+
+                    <i class="fa-solid fa-sliders text-xs"></i>
+
+                    <span class="hidden sm:inline">Cấu hình ảnh cuộn</span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- ========================================================= -->
+
+    <!-- 2. APP LAYOUT: SIDEBAR 2 CẤP BÊN TRÁI + MAIN CONTENT       -->
+
+    <!-- ========================================================= -->
+
+    <div class="flex-1 flex w-full relative">
+
+        <!-- OVERLAY NỀN CHO MOBILE KHI MỞ SIDEBAR -->
+
+        <div id="sidebarBackdrop" onclick="toggleSidebarMobile(false)" class="fixed inset-0 bg-[#282d38]/40 backdrop-blur-xs z-35 hidden lg:hidden transition-opacity"></div>
+
+        <!-- MENU 2 CẤP BÊN TRÁI: CANH GIỮA THEO MÀN HÌNH VÀ TRƯỢT THEO KHI SCROLL -->
+
+        <aside id="appSidebar" class="fixed top-1/2 -translate-y-1/2 left-3 sm:left-4 lg:left-6 z-40 w-64 xl:w-72 bg-white/95 backdrop-blur-md border-2 border-[#e3e7f0] hover:border-[#df8a5a]/50 rounded-3xl p-4 flex flex-col justify-between shadow-[0_16px_50px_-8px_rgba(40,45,56,0.15),0_6px_20px_rgba(223,138,90,0.1)] transition-all duration-300 max-h-[86vh] overflow-y-auto scrollbar-thin -translate-x-full lg:translate-x-0">
+
+            <div class="space-y-6">
+
+                <!-- NHÓM 1: ĐIỀU HƯỚNG TỔNG QUAN -->
+
+                <div>
+
+                    <div class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 px-3 mb-2 flex items-center justify-between">
+
+                        <span>Điều Hướng</span>
+
+                    </div>
+
+                    <nav class="space-y-1">
+
+                        <button type="button" onclick="switchTab('content')" id="sideNavContent" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-bold transition text-[#df8a5a] bg-[#fdf4ee] border border-[#f5d5c5]/80 shadow-2xs">
+
+                            <span class="flex items-center gap-2.5">
+
+                                <i class="fa-solid fa-layer-group text-xs text-[#df8a5a]"></i>
+
+                                <span>Nội Dung & Dữ Liệu</span>
+
+                            </span>
+
+                            <span class="w-2 h-2 rounded-full bg-[#df8a5a]"></span>
+
+                        </button>
+
+                        <button type="button" onclick="switchTab('integrations')" id="sideNavIntegrations" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-medium transition text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent">
+
+                            <span class="flex items-center gap-2.5">
+
+                                <i class="fa-solid fa-network-wired text-xs text-slate-400"></i>
+
+                                <span>Trung Tâm Kết Nối</span>
+
+                            </span>
+
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#fdf4ee] text-[#df8a5a] font-bold">6/6</span>
+
+                        </button>
+
+                    </nav>
+
+                </div>
+
+                <!-- NHÓM 2: MENU 2 CẤP - MENU CHA "TẠO ẢNH CUỘN" & 3 MENU CON -->
+
+                <div>
+
+                    <div class="text-[10px] font-extrabold uppercase tracking-wider text-[#df8a5a] px-3 mb-2 flex items-center justify-between">
+
+                        <span>Tác Nghiệp Tự Động</span>
+
+                        <span class="px-2 py-0.5 rounded-full bg-[#fdf4ee] text-[#df8a5a] text-[9px] font-bold font-mono">4 Chức Năng</span>
+
+                    </div>
+
+                    <!-- KHỐI MENU CHA: TẠO ẢNH CUỘN -->
+
+                    <div class="rounded-2xl border-2 border-[#df8a5a]/30 bg-gradient-to-b from-[#fdf6f2] via-white to-[#fdf6f2]/50 overflow-hidden shadow-xs">
+
+                        <button type="button" onclick="toggleSidebarMenu('menuChucNang')" class="w-full flex items-center justify-between p-3.5 text-xs font-bold text-[#282d38] hover:bg-[#fdf4ee] transition cursor-pointer select-none">
+
+                            <span class="flex items-center gap-2.5">
+
+                                <span class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#df8a5a] to-[#e59b6e] text-white flex items-center justify-center text-xs shadow-xs">
+
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                                </span>
+
+                                <span class="text-sm font-extrabold tracking-tight">Tạo ảnh cuộn</span>
+
+                            </span>
+
+                            <i id="menuChucNangIcon" class="fa-solid fa-chevron-down text-xs text-[#df8a5a] transition-transform duration-200"></i>
+
+                        </button>
+
+                        <!-- 3 MENU CON THUỘC MENU TẠO ẢNH CUỘN -->
+
+                        <div id="menuChucNangSubmenu" class="px-2.5 pb-3 pt-1 space-y-2 border-t border-[#f5d5c5]/60 bg-white/70">
+
+                            
+
+                            <!-- MENU CON 1: TẠO NỘI DUNG SLIDE -->
+
+                            <button type="button" onclick="sidebarTriggerAction('content')" 
+
+                                    class="w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold text-slate-800 bg-white hover:bg-[#fdf4ee] hover:text-[#df8a5a] border border-[#e3e7f0] hover:border-[#df8a5a]/60 transition group shadow-2xs text-left cursor-pointer">
+
+                                <span class="flex items-center gap-2 min-w-0">
+
+                                    <span class="w-7 h-7 rounded-lg bg-[#fdf4ee] text-[#df8a5a] flex items-center justify-center text-xs shrink-0 group-hover:bg-[#df8a5a] group-hover:text-white transition">
+
+                                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                                    </span>
+
+                                    <span class="truncate">Tạo nội dung Slide</span>
+
+                                </span>
+
+                                <span class="text-[9px] px-1.5 py-0.5 rounded-md bg-[#fdf4ee] text-[#df8a5a] font-bold border border-[#f5d5c5] shrink-0 font-mono">
+
+                                    AI
+
+                                </span>
+
+                            </button>
+
+                            <!-- MENU CON 2: TẠO SLIDE -->
+
+                            <button type="button" onclick="sidebarTriggerAction('slides')" 
+
+                                    class="w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold text-slate-800 bg-white hover:bg-emerald-50 hover:text-emerald-700 border border-[#e3e7f0] hover:border-emerald-300 transition group shadow-2xs text-left cursor-pointer">
+
+                                <span class="flex items-center gap-2 min-w-0">
+
+                                    <span class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition">
+
+                                        <i class="fa-solid fa-images"></i>
+
+                                    </span>
+
+                                    <span class="truncate">Tạo Slide</span>
+
+                                </span>
+
+                                <span class="text-[9px] px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-700 font-bold border border-emerald-200 shrink-0 font-mono">
+
+                                    9:16
+
+                                </span>
+
+                            </button>
+
+                            <!-- MENU CON 3: ĐĂNG VIDEO LÊN TIKTOK (ẢNH CUỘN & CHỈ MÌNH TÔI) -->
+
+                            <button type="button" onclick="sidebarTriggerAction('tiktok')" 
+
+                                    id="menuItemDangTikTok"
+
+                                    class="w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold text-slate-800 bg-white hover:bg-rose-50 hover:text-rose-700 border border-[#e3e7f0] hover:border-rose-300 transition group shadow-2xs text-left cursor-pointer">
+
+                                <span class="flex items-center gap-2 min-w-0">
+
+                                    <span class="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-xs shrink-0 group-hover:bg-[#282d38] group-hover:text-white transition">
+
+                                        <i class="fa-brands fa-tiktok"></i>
+
+                                    </span>
+
+                                    <span class="truncate">Đăng video lên tiktok</span>
+
+                                </span>
+
+                                <span class="text-[9px] px-1.5 py-0.5 rounded-md bg-rose-50 text-rose-700 font-bold border border-rose-200 shrink-0 font-mono">
+
+                                    Only Me
+
+                                </span>
+
+                            </button>
+
+                            <!-- MENU CON 3: CẤU HÌNH ẢNH CUỘN (CHUYỂN TỪ HỆ THỐNG VÀO MENU CẤP 2 CỦA TẠO ẢNH CUỘN) -->
+
+                            <button type="button" onclick="sidebarTriggerAction('config')" 
+
+                                    class="w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold text-slate-800 bg-white hover:bg-amber-50 hover:text-amber-800 border border-[#e3e7f0] hover:border-amber-300 transition group shadow-2xs text-left cursor-pointer">
+
+                                <span class="flex items-center gap-2 min-w-0">
+
+                                    <span class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-xs shrink-0 group-hover:bg-amber-500 group-hover:text-white transition">
+
+                                        <i class="fa-solid fa-sliders"></i>
+
+                                    </span>
+
+                                    <span class="truncate">Cấu hình ảnh cuộn</span>
+
+                                </span>
+
+                                <span class="text-[9px] px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-700 font-bold border border-amber-200 shrink-0 font-mono">
+
+                                    Preset
+
+                                </span>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- NHÓM 3: HỆ THỐNG (ĐÃ BỎ CẤU HÌNH NỀN TẢNG VÌ ĐÃ ĐƯA VÀO MENU CẤP 2 CỦA TẠO ẢNH CUỘN) -->
+
+                <div>
+
+                    <div class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 px-3 mb-2">
+
+                        <span>Hệ Thống</span>
+
+                    </div>
+
+                    <nav class="space-y-1">
+
+                        <button type="button" onclick="reloadFromDrive()" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-semibold transition text-slate-700 hover:bg-[#fdf4ee] hover:text-[#df8a5a] border border-transparent hover:border-[#f5d5c5]">
+
+                            <span class="flex items-center gap-2.5">
+
+                                <i class="fa-solid fa-arrows-rotate text-xs text-slate-500 reload-spin-icon"></i>
+
+                                <span>Nạp lại từ Sheets</span>
+
+                            </span>
+
+                            <span class="text-[10px] text-emerald-600 font-bold font-mono">Đồng bộ</span>
+
+                        </button>
+
+                    </nav>
+
+                </div>
+
+            </div>
+
+            <!-- CHÂN SIDEBAR: HỒ SƠ ĐANG CHỌN -->
+
+            <div class="pt-4 border-t border-[#e3e7f0]">
+
+                <div class="p-3 rounded-2xl bg-[#fdf6f2] border border-[#f5d5c5] space-y-1.5 text-xs">
+
+                    <div class="flex items-center justify-between">
+
+                        <span class="font-bold text-[#df8a5a] text-[10.5px] flex items-center gap-1.5">
+
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Hồ Sơ Đang Chọn
+
+                        </span>
+
+                        <span id="sideActiveRowBadge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white text-[#df8a5a] font-bold border border-[#f5d5c5]">Dòng #1</span>
+
+                    </div>
+
+                    <div id="sideActiveTopicText" class="text-[11px] font-bold text-slate-800 truncate" title="Biểu thuế thu nhập cá nhân">
+
+                        Biểu thuế thu nhập cá nhân
+
+                    </div>
+
+                    <div class="text-[9.5px] text-slate-500 pt-0.5 flex items-center justify-between">
+
+                        <span>Chức năng sẽ tác nghiệp trên dòng này</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+        <!-- MAIN CONTENT CONTAINER (GIỮ NGUYÊN TOÀN BỘ BẢNG & FORM) -->
+
+        <main class="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-8 space-y-8 max-w-[1680px] mx-auto w-full lg:pl-72 xl:pl-80">
+
+        <!-- ========================================================= -->
+
+        <!-- TAB 1: NỘI DUNG VÀ TIẾN TRÌNH 6 GIAI ĐOẠN                 -->
+
+        <!-- ========================================================= -->
+
+        <div id="tabContentSection" class="space-y-8">
+
+            <!-- HERO TITLE SECTION: MARK DAO* STYLE -->
+
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pt-2">
+
+                <div>
+
+                    <div class="flex items-center gap-2 mb-2.5">
+
+                        <span class="px-3 py-1 rounded-full bg-[#fdf4ee] text-[#df8a5a] text-xs font-bold tracking-wide uppercase flex items-center gap-1.5">
+
+                            <span class="text-sm">✦</span> Quy Trình Tác Nghiệp Tự Động 2026
+
+                        </span>
+
+                    </div>
+
+                    <h1 class="text-3xl sm:text-5xl font-black text-[#282d38] tracking-tight leading-tight">
+
+                        6 giai đoạn tác nghiệp<br>
+
+                        <span class="text-[#df8a5a]">sản xuất Video TikTok*</span>
+
+                    </h1>
+
+                    <div class="title-line mt-3.5"></div>
+
+                </div>
+
+                <!-- Quick Metric Cards (Inspired by Image 3) -->
+
+                <div class="flex items-center gap-3 flex-wrap">
+
+                    <div class="mark-card p-3.5 px-4 flex items-center gap-3.5">
+
+                        <div class="icon-3d-sm">
+
+                            <i class="fa-brands fa-tiktok"></i>
+
+                        </div>
+
+                        <div>
+
+                            <div class="text-[11px] text-[#64748b] font-medium">Kênh đích phát hành</div>
+
+                            <div class="text-sm font-bold text-[#282d38]">@thong_tin_ve_thue</div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="mark-card p-3.5 px-4 flex items-center gap-3.5">
+
+                        <div class="icon-3d-sm">
+
+                            <i class="fa-solid fa-bolt"></i>
+
+                        </div>
+
+                        <div>
+
+                            <div class="text-[11px] text-[#64748b] font-medium">Trạng thái hạ tầng</div>
+
+                            <div class="text-sm font-bold text-emerald-600">6/6 Sẵn sàng</div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- 6 STAGES PIPELINE (Inspired by Image 1: 8 xu hướng) -->
+
+            <div class="space-y-4">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+
+                    <!-- Card 01: Sheets -->
+
+                    <div class="mark-card p-5 relative overflow-hidden flex flex-col justify-between space-y-4 border-2 border-[#df8a5a]/40 bg-gradient-to-b from-[#fdf6f2] to-white">
+
+                        <div class="flex items-start justify-between">
+
+                            <div class="num-badge">01</div>
+
+                            <div class="icon-3d">
+
+                                <i class="fa-regular fa-file-excel"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <h3 class="text-sm font-bold text-[#282d38]">Dữ liệu & Sheets</h3>
+
+                            <p class="text-xs text-[#64748b] leading-relaxed mt-1">Đọc & Phân loại AI từ file Thông tin Google Drive</p>
+
+                        </div>
+
+                        <div class="pt-2 border-t border-[#e3e7f0]">
+
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#ecfdf5] text-[#059669] text-[10px] font-bold">
+
+                                <i class="fa-solid fa-circle-check text-[10px]"></i> Đang tác nghiệp
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Card 02: Telegram 1 -->
+
+                    <div class="mark-card p-5 flex flex-col justify-between space-y-4">
+
+                        <div class="flex items-start justify-between">
+
+                            <div class="num-badge text-slate-400">02</div>
+
+                            <div class="icon-3d bg-[#f1f5f9] text-slate-500 shadow-none">
+
+                                <i class="fa-brands fa-telegram"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <h3 class="text-sm font-bold text-[#282d38]">Duyệt Telegram 1</h3>
+
+                            <p class="text-xs text-[#64748b] leading-relaxed mt-1">Phê duyệt Chủ đề & Bộ thẻ Hashtag tự động</p>
+
+                        </div>
+
+                        <div class="pt-2 border-t border-[#e3e7f0]">
+
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-medium font-mono">
+
+                                Cột Duyệt CĐ
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Card 03: Render Song Song -->
+
+                    <div class="mark-card p-5 flex flex-col justify-between space-y-4">
+
+                        <div class="flex items-start justify-between">
+
+                            <div class="num-badge text-slate-400">03</div>
+
+                            <div class="icon-3d bg-[#f1f5f9] text-slate-500 shadow-none">
+
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <h3 class="text-sm font-bold text-[#282d38]">Render Song Song</h3>
+
+                            <p class="text-xs text-[#64748b] leading-relaxed mt-1">HeyGen avatar ảo & ElevenLabs lồng tiếng</p>
+
+                        </div>
+
+                        <div class="pt-2 border-t border-[#e3e7f0]">
+
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-medium font-mono">
+
+                                Cột Tạo video
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Card 04: Duyệt Telegram 2 -->
+
+                    <div class="mark-card p-5 flex flex-col justify-between space-y-4">
+
+                        <div class="flex items-start justify-between">
+
+                            <div class="num-badge text-slate-400">04</div>
+
+                            <div class="icon-3d bg-[#f1f5f9] text-slate-500 shadow-none">
+
+                                <i class="fa-solid fa-circle-check"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <h3 class="text-sm font-bold text-[#282d38]">Duyệt Telegram 2</h3>
+
+                            <p class="text-xs text-[#64748b] leading-relaxed mt-1">Xem trước video nháp Drive & duyệt xuất bản</p>
+
+                        </div>
+
+                        <div class="pt-2 border-t border-[#e3e7f0]">
+
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-medium font-mono">
+
+                                Nút Duyệt đăng
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Card 05: Cập nhật Sheets -->
+
+                    <div class="mark-card p-5 flex flex-col justify-between space-y-4">
+
+                        <div class="flex items-start justify-between">
+
+                            <div class="num-badge text-slate-400">05</div>
+
+                            <div class="icon-3d bg-[#f1f5f9] text-slate-500 shadow-none">
+
+                                <i class="fa-solid fa-database"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <h3 class="text-sm font-bold text-[#282d38]">Cập nhật Sheets</h3>
+
+                            <p class="text-xs text-[#64748b] leading-relaxed mt-1">Đánh dấu 'x' hoàn tất sẵn sàng đăng tải</p>
+
+                        </div>
+
+                        <div class="pt-2 border-t border-[#e3e7f0]">
+
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-medium font-mono">
+
+                                Cột Duyệt đăng
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Card 06: Đăng bài TikTok -->
+
+                    <div class="mark-card p-5 flex flex-col justify-between space-y-4">
+
+                        <div class="flex items-start justify-between">
+
+                            <div class="num-badge text-slate-400">06</div>
+
+                            <div class="icon-3d bg-[#f1f5f9] text-slate-500 shadow-none">
+
+                                <i class="fa-brands fa-tiktok"></i>
+
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <h3 class="text-sm font-bold text-[#282d38]">Đăng bài TikTok</h3>
+
+                            <p class="text-xs text-[#64748b] leading-relaxed mt-1">Tự động xuất bản kênh qua TikTok Content API</p>
+
+                        </div>
+
+                        <div class="pt-2 border-t border-[#e3e7f0]">
+
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-medium font-mono">
+
+                                Cột Đăng bài
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Bottom Summary Capsule (Inspired by Image 1) -->
+
+                <div class="p-3.5 rounded-full bg-white border border-[#e3e7f0] shadow-xs flex items-center justify-center gap-2.5 text-xs text-slate-700 font-medium text-center">
+
+                    <span class="w-6 h-6 rounded-full bg-[#fdf4ee] text-[#df8a5a] flex items-center justify-center text-xs shrink-0 font-bold">✦</span>
+
+                    <span><strong>Nguyên tắc chung:</strong> Tự động hóa khép kín từ kho dữ liệu Google Drive, thẩm định qua Telegram đến sản xuất và xuất bản video 9:16 chuẩn SEO.</span>
+
+                </div>
+
+            </div>
+
+            <!-- GOOGLE DRIVE BREADCRUMB & CONTROLS (GIÃN RA & KHO LƯU TRỮ 1 HÀNG) -->
+
+            <div class="mark-card p-4 sm:p-5 space-y-4 shadow-sm">
+
+                <!-- HÀNG 1: KHO LƯU TRỮ GOOGLE DRIVE (HOÀN TOÀN TRÊN 1 HÀNG - KHÔNG RỚT DÒNG) -->
+
+                <div class="flex items-center justify-between gap-4 flex-wrap sm:flex-nowrap pb-3 border-b border-[#f1f4f9]">
+
+                    <div class="flex items-center space-x-2.5 text-xs sm:text-sm text-slate-700 min-w-0 overflow-x-auto scrollbar-none py-0.5">
+
+                        <div class="icon-3d-sm shrink-0">
+
+                            <i class="fa-brands fa-google-drive text-[#df8a5a]"></i>
+
+                        </div>
+
+                        <div class="flex items-center space-x-2 whitespace-nowrap shrink-0 flex-nowrap">
+
+                            <span class="text-slate-500 font-semibold shrink-0">Kho lưu trữ:</span>
+
+                            <span class="font-mono bg-[#fdf4ee] px-2.5 py-1 rounded-lg text-[#df8a5a] font-semibold text-xs border border-[#fae4d7] shrink-0">_____Xây dựng video_____</span>
+
+                            <span class="text-slate-400 font-bold shrink-0">/</span>
+
+                            <span class="font-mono bg-[#fdf4ee] px-2.5 py-1 rounded-lg text-[#df8a5a] font-semibold text-xs border border-[#fae4d7] shrink-0">Tạo video</span>
+
+                            <span class="text-slate-400 font-bold shrink-0">/</span>
+
+                            <span class="font-mono bg-[#ecfdf5] px-2.5 py-1 rounded-lg text-[#059669] font-bold text-xs flex items-center gap-1.5 border border-emerald-200 shrink-0">
+
+                                <i class="fa-regular fa-file-excel"></i>
+
+                                <strong id="currentFileName">Thông tin</strong>
+
+                            </span>
+
+                            <button type="button" onclick="reloadFromDrive()" title="Đồng bộ / Nạp lại file Excel từ Google Sheets" class="p-1 px-2.5 text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg transition-all inline-flex items-center gap-1 font-semibold shadow-2xs cursor-pointer ml-1 shrink-0">
+
+                                <i class="fa-solid fa-arrows-rotate text-[11px] reload-spin-icon"></i>
+
+                                <span>Nạp lại</span>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="text-xs text-slate-500 shrink-0 whitespace-nowrap bg-[#f8fafc] px-3.5 py-1.5 rounded-full border border-slate-200/80 font-medium">
+
+                        Tổng số: <strong id="totalRowsCount" class="text-[#df8a5a] text-sm font-bold">...</strong> dòng dữ liệu
+
+                    </div>
+
+                </div>
+
+                <!-- HÀNG 2: NHẬP TÊN CHỦ ĐỀ MỚI RỘNG RÃI, THOẢI MÁI (GIÃN THEO BỀ RỘNG TRANG) -->
+
+                <div class="flex items-center gap-3">
+
+                    <div class="relative flex-1">
+
+                        <input type="text" id="newTopicInput" 
+
+                               placeholder="Nhập tên chủ đề mới (ấn Enter hoặc bấm nút để thêm)..." 
+
+                               class="w-full py-2.5 pl-4 pr-10 text-xs sm:text-sm bg-white border border-[#e3e7f0] rounded-xl focus:outline-none focus:border-[#df8a5a] focus:ring-2 focus:ring-[#df8a5a]/25 transition-all placeholder:text-slate-400 font-medium text-[#282d38] shadow-2xs"
+
+                               onkeydown="if(event.key === 'Enter') { event.preventDefault(); addNewRowPrompt(); }">
+
+                        <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+
+                            <i class="fa-solid fa-pen-to-square text-xs text-[#df8a5a]/70"></i>
+
+                        </span>
+
+                    </div>
+
+                    <button type="button" onclick="addNewRowPrompt()" class="btn-primary-mark py-2.5 px-5 shadow-sm shrink-0 whitespace-nowrap text-xs sm:text-sm font-bold">
+
+                        <i class="fa-solid fa-plus text-xs"></i>
+
+                        <span>Thêm Chủ Đề Mới</span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- MAIN DATA TABLE -->
+
+            <div class="mark-card overflow-hidden">
+
+                <!-- Search & Filters Header -->
+
+                <div class="p-4 border-b border-[#e3e7f0] bg-white flex flex-col md:flex-row items-center justify-between gap-3">
+
+                    <div class="flex items-center space-x-2.5 w-full md:w-auto">
+
+                        <div class="relative w-full md:w-80">
+
+                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+
+                            <input type="text" id="searchInput" oninput="filterTable()" placeholder="Tìm kiếm theo chủ đề, hashtag, nội dung..." 
+
+                                   class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-2xl pl-10 pr-3.5 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#df8a5a] focus:bg-white transition">
+
+                        </div>
+
+                        <select id="filterStatus" onchange="filterTable()" class="bg-[#ffffff] border border-[#e3e7f0] rounded-2xl px-3.5 py-2 text-xs text-slate-700 focus:outline-none focus:border-[#df8a5a] transition">
+
+                            <option value="all">Tất cả trạng thái</option>
+
+                            <option value="duyet_cd_ht">Đã duyệt CĐ và HT (x)</option>
+
+                            <option value="chua_duyet_cd_ht">Chưa duyệt CĐ và HT</option>
+
+                            <option value="duyet_noi_dung">Đã duyệt nội dung (x)</option>
+
+                            <option value="tao_video">Đã tạo video (x)</option>
+
+                            <option value="duyet_dang">Đã duyệt đăng (x)</option>
+
+                            <option value="dang_bai">Đã đăng TikTok (x)</option>
+
+                        </select>
+
+                        <button type="button" onclick="reloadFromDrive()" title="Đồng bộ / Nạp lại file Excel từ Google Sheets" class="p-2 px-3 text-xs bg-white hover:bg-[#fdf4ee] text-[#df8a5a] hover:text-[#c87648] border border-[#f5d5c5] rounded-2xl transition-all inline-flex items-center gap-1.5 font-semibold shadow-2xs shrink-0 cursor-pointer">
+
+                            <i class="fa-solid fa-arrows-rotate text-xs reload-spin-icon"></i>
+
+                            <span class="hidden sm:inline">Nạp lại Excel</span>
+
+                        </button>
+
+                    </div>
+
+                    <div class="text-xs text-slate-500 flex items-center gap-2">
+
+                        <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#df8a5a]"></span> Bấm vào dòng bất kỳ để xem & biên tập chi tiết</span>
+
+                    </div>
+
+                </div>
+
+                <!-- Table Content -->
+
+                <div class="overflow-x-auto max-h-[400px] overflow-y-auto scrollbar-thin">
+
+                    <table class="w-full text-left text-xs border-collapse mark-table">
+
+                        <thead class="sticky top-0 z-20">
+
+                            <tr id="tableHeaderRow">
+
+                                <th class="py-3 px-3 w-14 text-center">STT<br><span class="text-[9px] text-[#6366f1] font-normal">(A)</span></th>
+
+                                <th class="py-3 px-4 min-w-[180px]">Chủ đề<br><span class="text-[9px] text-[#6366f1] font-normal">(Cột B)</span></th>
+
+                                <th class="py-3 px-4 min-w-[200px]">Yêu cầu chủ đề<br><span class="text-[9px] text-[#df8a5a] font-normal">(Cột C)</span></th>
+
+                                <th class="py-3 px-4 min-w-[440px]">Nội dung kịch bản<br><span class="text-[9px] text-[#6366f1] font-normal">(Cột D)</span></th>
+
+                                <th class="py-3 px-3 min-w-[140px]">Hag tag<br><span class="text-[9px] text-[#6366f1] font-normal">(Cột E)</span></th>
+
+                                <th class="py-3 px-3 min-w-[140px]">Loại video<br><span class="text-[9px] text-[#6366f1] font-normal">(Cột F)</span></th>
+
+                                <th class="py-3 px-3 min-w-[160px]">Dạng video<br><span class="text-[9px] text-[#6366f1] font-normal">(Cột G)</span></th>
+
+                                <th class="py-3 px-2 text-center w-28">duyệt CĐ và HT<br><span class="text-[9px] text-[#6366f1] font-normal">(Cột H)</span></th>
+
+                                <th class="py-3 px-2 text-center w-28">Duyệt nội dung<br><span class="text-[9px] text-[#df8a5a] font-normal">(Cột I)</span></th>
+
+                                <th class="py-3 px-2 text-center w-20">Tạo video<br><span class="text-[9px] text-[#6366f1] font-normal">(Cột J)</span></th>
+
+                                <th class="py-3 px-2 text-center w-20">Duyệt đăng<br><span class="text-[9px] text-[#6366f1] font-normal">(Cột K)</span></th>
+
+                                <th class="py-3 px-2 text-center w-20">Đăng bài<br><span class="text-[9px] text-[#6366f1] font-normal">(Cột L)</span></th>
+
+                                <th class="py-3 px-3 text-center w-16">Thao tác</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="tableBody" class="divide-y divide-[#e3e7f0] font-normal text-slate-700">
+
+                            <!-- JS Dynamic rows -->
+
+                            <tr>
+
+                                <td colspan="12" class="py-10 text-center text-slate-500">
+
+                                    <i class="fa-solid fa-spinner fa-spin text-xl mb-2 text-[#df8a5a]"></i>
+
+                                    <div>Đang nạp dữ liệu từ Google Drive...</div>
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <!-- ROW DETAIL INSPECTOR & EDITOR (Inspired by Image 2: Checklist & Form) -->
+
+            <div id="detailSection" class="mark-card p-6 transition-all duration-300">
+
+                <!-- Header of Form -->
+
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 mb-5 border-b border-[#e3e7f0] gap-4">
+
+                    <div class="flex items-center space-x-3.5">
+
+                        <div class="icon-3d">
+
+                            <span id="detailBadgeStt" class="font-black text-sm">#1</span>
+
+                        </div>
+
+                        <div>
+
+                            <h2 class="text-base font-bold text-[#282d38] flex items-center gap-2">
+
+                                <span>Chi Tiết Dữ Liệu Hồ Sơ Video</span>
+
+                                <span id="detailRowBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-[#fdf4ee] text-[#df8a5a] font-mono font-bold">Dòng #1</span>
+
+                            </h2>
+
+                            <p class="text-xs text-[#64748b]">Biên tập kịch bản và đồng bộ hai chiều trực tiếp với file Google Sheets.</p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+
+                        <button type="button" onclick="deleteCurrentRow()" class="px-4 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs font-semibold transition flex items-center gap-1.5">
+
+                            <i class="fa-regular fa-trash-can"></i>
+
+                            <span>Xóa dòng này</span>
+
+                        </button>
+
+                        <button type="button" onclick="saveCurrentRow()" id="btnSaveRow" class="btn-primary-mark py-2 px-5 text-xs font-bold shadow-md">
+
+                            <i class="fa-solid fa-floppy-disk text-xs"></i>
+
+                            <span>LƯU VÀO GOOGLE DRIVE</span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- Form Fields -->
+
+                <form id="rowEditForm" onsubmit="event.preventDefault(); saveCurrentRow();" class="space-y-4">
+
+                    <input type="hidden" id="editRowIndex" value="0">
+
+                    <div class="flex flex-col sm:flex-row gap-4 items-start">
+
+                        <!-- Cột A: STT (kích thước nhỏ gọn vừa khít với tiêu đề STT Cột A) -->
+
+                        <div class="w-24 sm:w-28 shrink-0">
+
+                            <label class="block text-xs font-bold text-slate-700 mb-1 whitespace-nowrap">
+
+                                STT <span class="text-slate-400 font-normal">(Cột A)</span>
+
+                            </label>
+
+                            <input type="number" id="field_STT" class="w-full text-center bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-2 py-2 text-xs text-slate-800 focus:outline-none focus:border-[#df8a5a] focus:bg-white font-bold transition" placeholder="STT">
+
+                        </div>
+
+                        <!-- Cột B: Chủ đề -->
+
+                        <div class="flex-1 w-full">
+
+                            <label class="block text-xs font-bold text-slate-700 mb-1">
+
+                                Chủ đề video <span class="text-rose-500">*</span> <span class="text-slate-400 font-normal">(Cột B)</span>
+
+                            </label>
+
+                            <input type="text" id="field_ChuDe" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 focus:outline-none focus:border-[#df8a5a] focus:bg-white font-bold transition" placeholder="Nhập chủ đề video...">
+
+                        </div>
+
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+
+                        <!-- Cột C: Yêu cầu chủ đề -->
+
+                        <div class="md:col-span-12">
+
+                            <label class="block text-xs font-bold text-[#df8a5a] mb-1 flex items-center gap-1.5">
+
+                                <i class="fa-solid fa-wand-magic-sparkles text-[#df8a5a]"></i>
+
+                                Yêu cầu chủ đề <span class="text-slate-500 font-normal">(Cột C - Định hướng nội dung / Prompt gợi ý cho AI)</span>
+
+                            </label>
+
+                            <textarea id="field_YeuCauChuDe" rows="2" class="w-full bg-[#fdf6f2] border border-[#f5d5c5] rounded-2xl p-3 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#df8a5a] focus:bg-white leading-relaxed font-sans transition" placeholder="Nhập các yêu cầu cụ thể, góc tiếp cận hoặc số hiệu văn bản pháp luật cần tham chiếu..."></textarea>
+
+                        </div>
+
+                        <!-- Cột D: Nội dung -->
+
+                        <div class="md:col-span-12">
+
+                            <div class="flex items-center justify-between mb-1">
+
+                                <label class="text-xs font-bold text-slate-700">
+
+                                    Nội dung kịch bản <span class="text-slate-400 font-normal">(Cột D)</span>
+
+                                </label>
+
+                                <span id="contentLengthHint" class="text-[11px] text-slate-400 font-mono">0 ký tự</span>
+
+                            </div>
+
+                            <textarea id="field_NoiDung" rows="14" oninput="updateCharCount()" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-2xl p-4 text-xs text-slate-800 focus:outline-none focus:border-[#df8a5a] focus:bg-white leading-relaxed font-mono whitespace-pre-wrap transition shadow-2xs" placeholder="Nội dung kịch bản chi tiết..."></textarea>
+
+                        </div>
+
+                        <!-- Cột E: Hag tag -->
+
+                        <div class="md:col-span-4">
+
+                            <label class="block text-xs font-bold text-slate-700 mb-1">
+
+                                Hag tag <span class="text-slate-400 font-normal">(Cột E)</span>
+
+                            </label>
+
+                            <input type="text" id="field_HagTag" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" placeholder="#thue #thuetncn #kinhdoanh...">
+
+                        </div>
+
+                        <!-- Cột F: Loại video -->
+
+                        <div class="md:col-span-4">
+
+                            <label class="block text-xs font-bold text-slate-700 mb-1">
+
+                                Loại video <span class="text-slate-400 font-normal">(Cột F - 6 giá trị)</span>
+
+                            </label>
+
+                            <select id="field_LoaiVideo" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 focus:outline-none focus:border-[#df8a5a] focus:bg-white transition">
+
+                                <option value="">-- Chọn Loại video --</option>
+
+                                <option value="Góc cảnh báo">1. Góc cảnh báo</option>
+
+                                <option value="Hỏi nhanh đáp gọn">2. Hỏi nhanh đáp gọn</option>
+
+                                <option value="Tiện ích thuế">3. Tiện ích thuế</option>
+
+                                <option value="Chính sách thuế">4. Chính sách thuế</option>
+
+                                <option value="Góc nhìn-chia sẽ">5. Góc nhìn-chia sẽ</option>
+
+                                <option value="Tin thức thời sự">6. Tin thức thời sự</option>
+
+                            </select>
+
+                        </div>
+
+                        <!-- Cột G: Dạng video -->
+
+                        <div class="md:col-span-4">
+
+                            <label class="block text-xs font-bold text-slate-700 mb-1">
+
+                                Dạng video <span class="text-slate-400 font-normal">(Cột G - Thể loại)</span>
+
+                            </label>
+
+                            <select id="field_DangVideo" onchange="onDangVideoChange()" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 focus:outline-none focus:border-[#df8a5a] focus:bg-white transition">
+
+                                <option value="">-- Chọn Dạng video --</option>
+
+                                <option value="Ảnh cuộn">1. Ảnh cuộn</option>
+
+                                <option value="Trích video từ youtube">2. Trích video từ youtube</option>
+
+                                <option value="Trên (ảnh), dưới (ảnh)">3. Trên (ảnh), dưới (ảnh)</option>
+
+                                <option value="Trên (ảnh), dưới (video)">4. Trên (ảnh), dưới (video)</option>
+
+                                <option value="Trên (video), dưới (video)">5. Trên (video), dưới (video)</option>
+
+                                <option value="Video với nhân vật ở góc (heygen), nói về nội dung (ảnh) ở khung chính">6. Video với nhân vật ở góc (heygen), nói về nội dung (ảnh) ở khung chính</option>
+
+                                <option value="Video với nhân vật ở góc (heygen), nói về nội dung (video) ở khung chính">7. Video với nhân vật ở góc (heygen), nói về nội dung (video) ở khung chính</option>
+
+                                <option value="Video tạo hoàn toàn từ AI">8. Video tạo hoàn toàn từ AI</option>
+
+                            </select>
+
+                        </div>
+
+                        <!-- DANH MỤC THÔNG SỐ ẢNH CUỘN (HIỆN KHI DẠNG VIDEO LÀ ẢNH CUỘN) -->
+
+                        <div id="carouselPresetSelectContainer" class="hidden md:col-span-12 p-3.5 bg-gradient-to-r from-[#fdf6f2] to-white border border-[#f5d5c5] rounded-2xl transition-all">
+
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
+
+                                <label class="text-xs font-bold text-[#df8a5a] flex items-center gap-1.5">
+
+                                    <i class="fa-solid fa-layer-group text-xs"></i>
+
+                                    <span>Danh mục thông số ảnh cuộn:</span>
+
+                                    <span class="text-slate-500 font-normal text-[11px]">(Cơ sở định hướng hình ảnh để AI tạo sinh slide)</span>
+
+                                </label>
+
+                                <button type="button" onclick="openPlatformConfigModal()" class="text-xs text-[#df8a5a] hover:underline font-bold flex items-center gap-1">
+
+                                    <i class="fa-solid fa-sliders text-[10px]"></i>
+
+                                    <span>Quản lý thông số ảnh cuộn</span>
+
+                                </button>
+
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+
+                                <div class="sm:col-span-5">
+
+                                    <select id="field_CarouselPresetId" onchange="onCarouselPresetChange()" class="w-full bg-white border border-[#f5d5c5] rounded-xl px-3.5 py-2 text-xs text-slate-800 font-bold focus:outline-none focus:border-[#df8a5a] shadow-2xs transition">
+
+                                        <!-- Dynamic options -->
+
+                                    </select>
+
+                                </div>
+
+                                <div class="sm:col-span-7 bg-white/95 p-2 px-3 rounded-xl border border-[#e3e7f0] text-[11px] text-slate-600 shadow-2xs flex items-center gap-3">
+
+                                    <div class="w-12 h-15 aspect-[4/5] rounded-lg overflow-hidden shrink-0 border border-[#df8a5a]/40 shadow-xs relative bg-slate-100 cursor-pointer" onclick="viewLargePresetCurrent()" title="Bấm để phóng to xem ảnh mẫu 4:5">
+
+                                        <img id="presetImgPreview" src="/static/images/presets/preset_mark_dao_infographic.jpg" alt="Ảnh mẫu" class="w-full h-full object-cover">
+
+                                    </div>
+
+                                    <div class="flex-1 min-w-0">
+
+                                        <div id="presetDescPreview" class="line-clamp-2 font-medium text-slate-700">Đang tải thông số ảnh cuộn...</div>
+
+                                        <div class="text-[10px] text-[#df8a5a] font-bold mt-1 flex items-center gap-1">
+
+                                            <i class="fa-solid fa-wand-magic-sparkles text-[9px]"></i>
+
+                                            <span>Ảnh minh họa tương ứng theo chỉ dẫn AI</span>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- TRẠNG THÁI TIẾN TRÌNH & PHÊ DUYỆT (CỘT H, I, J, K) -->
+
+                    <div class="bg-[#ffffff] border border-[#e3e7f0] rounded-2xl p-4 mt-3">
+
+                        <div class="text-[11px] font-extrabold text-[#df8a5a] uppercase tracking-wider mb-2.5 flex items-center justify-between">
+
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-list-check"></i> Trạng thái phê duyệt & tiến trình (Đánh dấu 'x')</span>
+
+                            <span class="text-[10px] text-slate-400 font-normal">Tự động điền 'x' khi tích chọn</span>
+
+                        </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+
+                            <label class="flex items-center space-x-2.5 bg-white border border-[#e3e7f0] p-3 rounded-xl cursor-pointer hover:border-[#df8a5a] transition shadow-xs">
+
+                                <input type="checkbox" id="field_DuyetCDHT" class="w-4 h-4 rounded text-[#df8a5a] focus:ring-[#df8a5a]">
+
+                                <div>
+
+                                    <span class="text-xs font-bold text-slate-800">duyệt CĐ và HT</span>
+
+                                    <p class="text-[10px] text-slate-500">Cột H (Giai đoạn 2)</p>
+
+                                </div>
+
+                            </label>
+
+                            <label class="flex items-center space-x-2.5 bg-white border-2 border-[#df8a5a]/40 bg-[#fdf6f2]/40 p-3 rounded-xl cursor-pointer hover:border-[#df8a5a] transition shadow-xs">
+
+                                <input type="checkbox" id="field_DuyetNoiDung" class="w-4 h-4 rounded text-[#df8a5a] focus:ring-[#df8a5a]">
+
+                                <div>
+
+                                    <span class="text-xs font-bold text-[#df8a5a]">Duyệt nội dung</span>
+
+                                    <p class="text-[10px] text-slate-500">Cột I (Giai đoạn 2.5)</p>
+
+                                </div>
+
+                            </label>
+
+                            <label class="flex items-center space-x-2.5 bg-white border border-[#e3e7f0] p-3 rounded-xl cursor-pointer hover:border-[#df8a5a] transition shadow-xs">
+
+                                <input type="checkbox" id="field_TaoVideo" class="w-4 h-4 rounded text-[#df8a5a] focus:ring-[#df8a5a]">
+
+                                <div>
+
+                                    <span class="text-xs font-bold text-slate-800">Tạo video</span>
+
+                                    <p class="text-[10px] text-slate-500">Cột J (Giai đoạn 3)</p>
+
+                                </div>
+
+                            </label>
+
+                            <label class="flex items-center space-x-2.5 bg-white border border-[#e3e7f0] p-3 rounded-xl cursor-pointer hover:border-[#df8a5a] transition shadow-xs">
+
+                                <input type="checkbox" id="field_DuyetDang" class="w-4 h-4 rounded text-[#df8a5a] focus:ring-[#df8a5a]">
+
+                                <div>
+
+                                    <span class="text-xs font-bold text-slate-800">Duyệt đăng</span>
+
+                                    <p class="text-[10px] text-slate-500">Cột K (Giai đoạn 4 & 5)</p>
+
+                                </div>
+
+                            </label>
+
+                            <label class="flex items-center space-x-2.5 bg-white border border-[#e3e7f0] p-3 rounded-xl cursor-pointer hover:border-[#df8a5a] transition shadow-xs">
+
+                                <input type="checkbox" id="field_DangBai" class="w-4 h-4 rounded text-[#df8a5a] focus:ring-[#df8a5a]">
+
+                                <div>
+
+                                    <span class="text-xs font-bold text-slate-800">Đăng bài</span>
+
+                                    <p class="text-[10px] text-slate-500">Cột L (Giai đoạn 6 - TikTok)</p>
+
+                                </div>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                    <!-- DÃY CHỨC NĂNG TÁC NGHIỆP AI (ACTION BAR) -->
+
+                    <div class="bg-gradient-to-r from-[#fdf4ee] via-white to-[#fdf4ee] border border-[#f5d5c5] rounded-2xl p-5 my-4 shadow-sm flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+
+                        <div class="space-y-1">
+
+                            <div class="flex items-center space-x-2">
+
+                                <span class="px-2.5 py-0.5 rounded-full bg-[#df8a5a] text-white text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1">
+
+                                    <span>✦</span> AI Studio Pipeline
+
+                                </span>
+
+                                <span class="text-xs font-bold text-[#282d38] uppercase tracking-wide">Dãy Chức Năng Tác Nghiệp</span>
+
+                                <span id="aiSelectedRowLabel" class="text-xs text-[#df8a5a] font-mono bg-white px-2.5 py-0.5 rounded-lg border border-[#f5d5c5] font-bold">Dòng #1</span>
+
+                            </div>
+
+                            <p class="text-xs text-slate-600 leading-relaxed">
+
+                                Áp dụng cho dòng chọn: Dạng video là <strong class="text-[#df8a5a]">Ảnh cuộn</strong> và Loại video là <strong class="text-[#df8a5a]">Chính sách thuế</strong>.
+
+                            </p>
+
+                        </div>
+
+                        <!-- Buttons Row -->
+
+                        <div class="flex items-center flex-wrap gap-2.5 w-full lg:w-auto">
+
+                            <button type="button" id="btnGenerateContent" onclick="triggerGenerateContent()" class="btn-primary-mark py-2.5 px-5 shadow-lg">
+
+                                <i class="fa-solid fa-wand-magic-sparkles text-amber-200 text-xs"></i>
+
+                                <span>TẠO NỘI DUNG SLIDE</span>
+
+                            </button>
+
+                            <button type="button" id="btnGenerateSlides" onclick="triggerGenerateSlides()" class="btn-primary-mark py-2.5 px-5 shadow-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white border-none">
+
+                                <i class="fa-solid fa-images text-emerald-200 text-xs"></i>
+
+                                <span>TẠO SLIDE</span>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Live Progress Banner -->
+
+                    <div id="aiProgressBanner" class="hidden p-3.5 rounded-2xl bg-[#fdf4ee] border border-[#df8a5a] text-xs text-[#df8a5a] flex items-center justify-between">
+
+                        <div class="flex items-center space-x-2.5">
+
+                            <i class="fa-solid fa-spinner fa-spin text-[#df8a5a]"></i>
+
+                            <span id="aiProgressText" class="font-bold">Đang tra cứu tri thức thuế & Google Search văn bản mới nhất...</span>
+
+                        </div>
+
+                        <span class="text-[11px] text-[#df8a5a] font-semibold">Đang đồng bộ thư mục & tài liệu lên Google Drive...</span>
+
+                    </div>
+
+                    <!-- URLs mở rộng -->
+
+                    <details class="pt-1 text-xs text-slate-600">
+
+                        <summary class="cursor-pointer hover:text-[#df8a5a] font-bold mb-2 select-none flex items-center gap-1.5 text-slate-700">
+
+                            <i class="fa-solid fa-link text-[#df8a5a]"></i>
+
+                            <span>Liên kết mở rộng (Audio MP3, Video Draft HeyGen, TikTok URL)</span>
+
+                        </summary>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 p-3.5 bg-[#ffffff] border border-[#e3e7f0] rounded-2xl">
+
+                            <div>
+
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">Audio URL (ElevenLabs MP3)</label>
+
+                                <input type="url" id="field_AudioURL" class="w-full bg-white border border-[#e3e7f0] rounded-xl px-3 py-1.5 text-xs text-slate-800 font-mono" placeholder="https://drive.google.com/...">
+
+                            </div>
+
+                            <div>
+
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">Video Draft URL (Nháp HeyGen/Canva)</label>
+
+                                <input type="url" id="field_VideoDraftURL" class="w-full bg-white border border-[#e3e7f0] rounded-xl px-3 py-1.5 text-xs text-slate-800 font-mono" placeholder="https://drive.google.com/...">
+
+                            </div>
+
+                            <div>
+
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">TikTok Video URL (Sau đăng)</label>
+
+                                <input type="url" id="field_TikTokURL" class="w-full bg-white border border-[#e3e7f0] rounded-xl px-3 py-1.5 text-xs text-slate-800 font-mono" placeholder="https://www.tiktok.com/@...">
+
+                            </div>
+
+                        </div>
+
+                    </details>
+
+                </form>
+
+            </div>
+
+        </div> <!-- KẾT THÚC TAB 1 -->
+
+        <!-- ========================================================= -->
+
+        <!-- TAB 2: TRUNG TÂM KẾT NỐI (6 NỀN TẢNG)                      -->
+
+        <!-- ========================================================= -->
+
+        <div id="tabIntegrationsSection" class="hidden space-y-6">
+
+            <!-- Header Banner -->
+
+            <div class="mark-card p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 bg-gradient-to-r from-[#fdf6f2] via-white to-[#fdf4ee]">
+
+                <div class="space-y-1.5">
+
+                    <div class="flex items-center space-x-2">
+
+                        <span class="px-3 py-1 rounded-full bg-[#fdf4ee] text-[#df8a5a] text-xs font-bold tracking-wide uppercase flex items-center gap-1.5">
+
+                            <span class="text-sm">✦</span> Quản Trị Hệ Thống Tác Nghiệp
+
+                        </span>
+
+                        <span class="text-xs text-slate-500 font-medium">Tự động duy trì & lưu trữ vĩnh viễn</span>
+
+                    </div>
+
+                    <h2 class="text-2xl font-black text-[#282d38]">Trung Tâm Kết Nối Đa Nền Tảng</h2>
+
+                    <p class="text-xs text-[#64748b] max-w-2xl leading-relaxed">
+
+                        Cấu hình thông số một lần duy nhất. Hệ thống tự động ghi nhớ và lưu trữ vĩnh viễn để phục vụ toàn bộ chu trình sản xuất video tự động.
+
+                    </p>
+
+                </div>
+
+                <!-- Overall Stats Capsule -->
+
+                <div class="flex items-center gap-4 p-3.5 bg-white border border-[#e3e7f0] rounded-2xl shadow-sm">
+
+                    <div class="text-center px-2">
+
+                        <div class="text-2xl font-black text-[#df8a5a] font-mono" id="statConnectedCount">6/6</div>
+
+                        <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Đã Kết Nối</div>
+
+                    </div>
+
+                    <div class="flex items-center gap-2.5 pl-3.5 border-l border-[#e3e7f0]">
+
+                        <div class="flex flex-col items-center gap-1">
+
+                            <span id="badge_dot_drive" class="w-3 h-3 rounded-full bg-emerald-500 shadow-sm"></span>
+
+                            <span class="text-[9px] text-slate-500 font-mono">Drive</span>
+
+                        </div>
+
+                        <div class="flex flex-col items-center gap-1">
+
+                            <span id="badge_dot_gemini" class="w-3 h-3 rounded-full bg-emerald-500 shadow-sm"></span>
+
+                            <span class="text-[9px] text-slate-500 font-mono">Gemini</span>
+
+                        </div>
+
+                        <div class="flex flex-col items-center gap-1">
+
+                            <span id="badge_dot_telegram" class="w-3 h-3 rounded-full bg-emerald-500 shadow-sm"></span>
+
+                            <span class="text-[9px] text-slate-500 font-mono">Tele</span>
+
+                        </div>
+
+                        <div class="flex flex-col items-center gap-1">
+
+                            <span id="badge_dot_heygen" class="w-3 h-3 rounded-full bg-emerald-500 shadow-sm"></span>
+
+                            <span class="text-[9px] text-slate-500 font-mono">HeyGen</span>
+
+                        </div>
+
+                        <div class="flex flex-col items-center gap-1">
+
+                            <span id="badge_dot_elevenlabs" class="w-3 h-3 rounded-full bg-emerald-500 shadow-sm"></span>
+
+                            <span class="text-[9px] text-slate-500 font-mono">11Labs</span>
+
+                        </div>
+
+                        <div class="flex flex-col items-center gap-1">
+
+                            <span id="badge_dot_tiktok" class="w-3 h-3 rounded-full bg-emerald-500 shadow-sm"></span>
+
+                            <span class="text-[9px] text-slate-500 font-mono">TikTok</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Grid 6 Connection Cards (3 Rows x 2 Cols) -->
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                <!-- 1. GOOGLE DRIVE & GOOGLE SHEETS -->
+
+                <div id="card_google_drive" class="mark-card p-6 flex flex-col justify-between space-y-5">
+
+                    <div class="space-y-4">
+
+                        <div class="flex items-start justify-between">
+
+                            <div class="flex items-center space-x-3.5">
+
+                                <div class="icon-3d">
+
+                                    <i class="fa-brands fa-google-drive"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <h3 class="text-sm font-bold text-[#282d38]">1. Google Drive & Google Sheets</h3>
+
+                                    <p class="text-xs text-[#64748b]">Kho lưu trữ kịch bản & file Thông tin bảng tính</p>
+
+                                </div>
+
+                            </div>
+
+                            <span id="card_status_drive" class="px-3 py-1 rounded-full text-[11px] font-bold bg-[#ecfdf5] text-[#059669] border border-emerald-200 flex items-center gap-1.5">
+
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+
+                                <span>Đã kết nối</span>
+
+                            </span>
+
+                        </div>
+
+                        <div class="p-3.5 rounded-2xl bg-[#ffffff] border border-[#e3e7f0] text-xs space-y-2">
+
+                            <div class="flex items-center justify-between">
+
+                                <span class="text-slate-500 font-medium">Tài khoản Google:</span>
+
+                                <span class="font-bold text-[#059669] font-mono" id="integ_drive_email">HCMTAX HCM (bacnguyentax@gmail.com)</span>
+
+                            </div>
+
+                            <div class="flex items-center justify-between">
+
+                                <span class="text-slate-500 font-medium">Thư mục nguồn:</span>
+
+                                <span class="text-slate-800 font-mono text-[11px]">_____Xây dựng video_____ / Tạo video</span>
+
+                            </div>
+
+                            <div class="flex items-center justify-between">
+
+                                <span class="text-slate-500 font-medium">File bảng tính:</span>
+
+                                <span class="font-bold text-[#df8a5a] font-mono" id="integ_drive_filename">Thông tin</span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="p-3.5 rounded-2xl bg-white border border-[#e3e7f0] space-y-2 text-xs">
+
+                            <div class="font-bold text-slate-800 flex items-center justify-between">
+
+                                <span>Bước 1: Nạp file credentials.json (OAuth Desktop)</span>
+
+                                <span id="credentialsStatusBadge" class="text-[10px] text-[#059669] font-mono font-bold bg-[#ecfdf5] px-2 py-0.5 rounded-full border border-emerald-200">Đã nạp</span>
+
+                            </div>
+
+                            <div class="flex items-center space-x-2">
+
+                                <input type="file" id="integ_credentialsFileInput" accept=".json" class="text-xs text-slate-600 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-800 hover:file:bg-slate-200 cursor-pointer">
+
+                                <button type="button" onclick="uploadCredentialsFromTab()" class="btn-primary-mark py-1.5 px-3 text-xs">
+
+                                    Tải lên
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="pt-2 border-t border-[#e3e7f0] flex items-center justify-between gap-2 flex-wrap">
+
+                        <button type="button" onclick="startGoogleAuth()" id="btnStartAuth_tab" class="btn-primary-mark py-2 px-4 text-xs">
+
+                            <i class="fa-brands fa-google text-xs"></i>
+
+                            <span>Bước 2: Đăng Nhập Google</span>
+
+                        </button>
+
+                        <div class="flex items-center space-x-2">
+
+                            <button type="button" onclick="createDriveStructure()" class="btn-outline-mark py-2 px-3 text-xs">
+
+                                <i class="fa-solid fa-folder-plus text-xs"></i>
+
+                                <span>Tạo cây mẫu</span>
+
+                            </button>
+
+                            <button type="button" onclick="reloadFromDrive()" class="btn-outline-mark py-2 px-3 text-xs">
+
+                                <i class="fa-solid fa-arrows-rotate text-xs"></i>
+
+                                <span>Đồng bộ</span>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- 2. GEMINI & NOTEBOOKLM -->
+
+                <div id="card_gemini" class="mark-card p-6 flex flex-col justify-between space-y-5">
+
+                    <div class="space-y-4">
+
+                        <div class="flex items-start justify-between">
+
+                            <div class="flex items-center space-x-3.5">
+
+                                <div class="icon-3d">
+
+                                    <i class="fa-solid fa-brain"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <h3 class="text-sm font-bold text-[#282d38]">2. Gemini & Tri Thức NotebookLM</h3>
+
+                                    <p class="text-xs text-[#64748b]">Trí tuệ nhân tạo tra cứu pháp quy & sinh kịch bản</p>
+
+                                </div>
+
+                            </div>
+
+                            <span id="card_status_gemini" class="px-3 py-1 rounded-full text-[11px] font-bold bg-[#ecfdf5] text-[#059669] border border-emerald-200 flex items-center gap-1.5">
+
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+
+                                <span>Đã kết nối</span>
+
+                            </span>
+
+                        </div>
+
+                        <div class="space-y-3 text-xs">
+
+                            <div>
+
+                                <div class="flex items-center justify-between mb-1">
+
+                                    <label class="font-bold text-slate-700">Gemini API Key <span class="text-rose-500">*</span></label>
+
+                                    <span id="integ_gemini_key_badge" class="text-[10px] text-[#059669] font-mono font-bold bg-[#ecfdf5] px-2 py-0.5 rounded-full border border-emerald-200">Đã nạp</span>
+
+                                </div>
+
+                                <div class="relative">
+
+                                    <input type="password" id="integ_gemini_key" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 pr-10 text-xs text-slate-800 font-mono focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" placeholder="AIzaSy...">
+
+                                    <button type="button" onclick="togglePasswordVis('integ_gemini_key', this)" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
+
+                                        <i class="fa-solid fa-eye"></i>
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+
+                                <div>
+
+                                    <label class="block font-bold text-slate-700 mb-1">Mô hình AI</label>
+
+                                    <select id="integ_gemini_model" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 focus:outline-none focus:border-[#df8a5a] focus:bg-white transition">
+
+                                        <option value="gemini-2.5-flash">Gemini 2.5 Flash (Tối ưu)</option>
+
+                                        <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+
+                                        <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+
+                                    </select>
+
+                                </div>
+
+                                <div>
+
+                                    <label class="block font-bold text-slate-700 mb-1">NotebookLM Tri Thức</label>
+
+                                    <input type="text" id="integ_notebooklm_name" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 font-medium focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" value="Tax_Nghiệp vụ thuế">
+
+                                </div>
+
+                            </div>
+
+                            <div class="flex items-center space-x-2 pt-0.5">
+
+                                <input type="checkbox" id="integ_gemini_websearch" checked class="w-4 h-4 rounded text-[#df8a5a] focus:ring-[#df8a5a]">
+
+                                <span class="text-xs text-slate-700">Bật Google Search Grounding (Tra cứu luật mới nhất)</span>
+
+                            </div>
+
+                            <div>
+
+                                <label class="block font-bold text-slate-700 mb-1">Ghi chú nghiệp vụ thuế bổ trợ</label>
+
+                                <textarea id="integ_gemini_custom" rows="2" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" placeholder="Số hiệu văn bản pháp luật cần ưu tiên áp dụng..."></textarea>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="pt-2 border-t border-[#e3e7f0] flex items-center justify-end space-x-2">
+
+                        <button type="button" onclick="testIntegration('gemini')" id="btnTest_gemini" class="btn-outline-mark py-2 px-3.5 text-xs">
+
+                            <i class="fa-solid fa-vial text-[#df8a5a]"></i>
+
+                            <span>Kiểm Tra</span>
+
+                        </button>
+
+                        <button type="button" onclick="saveIntegration('gemini')" id="btnSave_gemini" class="btn-primary-mark py-2 px-4 text-xs">
+
+                            <i class="fa-solid fa-floppy-disk"></i>
+
+                            <span>Lưu Cấu Hình</span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- 3. TELEGRAM BOT (DUYỆT HAI CHIỀU) -->
+
+                <div id="card_telegram" class="mark-card p-6 flex flex-col justify-between space-y-5">
+
+                    <div class="space-y-4">
+
+                        <div class="flex items-start justify-between">
+
+                            <div class="flex items-center space-x-3.5">
+
+                                <div class="icon-3d">
+
+                                    <i class="fa-brands fa-telegram"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <h3 class="text-sm font-bold text-[#282d38]">3. Telegram Bot Phê Duyệt</h3>
+
+                                    <p class="text-xs text-[#64748b]">Giai đoạn 2 & 4: Gửi tin nhắn duyệt hai chiều trực tuyến</p>
+
+                                </div>
+
+                            </div>
+
+                            <span id="card_status_telegram" class="px-3 py-1 rounded-full text-[11px] font-bold bg-[#ecfdf5] text-[#059669] border border-emerald-200 flex items-center gap-1.5">
+
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+
+                                <span>Đã kết nối</span>
+
+                            </span>
+
+                        </div>
+
+                        <div class="space-y-3 text-xs">
+
+                            <div>
+
+                                <label class="block font-bold text-slate-700 mb-1">Telegram Bot Token <span class="text-rose-500">*</span></label>
+
+                                <div class="relative">
+
+                                    <input type="password" id="integ_telegram_token" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 pr-10 text-xs text-slate-800 font-mono focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" placeholder="8348691966:AAGc...">
+
+                                    <button type="button" onclick="togglePasswordVis('integ_telegram_token', this)" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
+
+                                        <i class="fa-solid fa-eye"></i>
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                            <div>
+
+                                <div class="flex items-center justify-between mb-1">
+
+                                    <label class="font-bold text-slate-700">Chat ID / Nhóm Phê Duyệt</label>
+
+                                    <button type="button" onclick="autoDetectTelegramChatId()" class="text-[10px] text-[#df8a5a] font-bold hover:underline">
+
+                                        <i class="fa-solid fa-wand-magic-sparkles mr-1"></i>Tự nhận diện Chat ID
+
+                                    </button>
+
+                                </div>
+
+                                <input type="text" id="integ_telegram_chatid" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 font-mono focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" placeholder="8929374740">
+
+                                <p class="text-[10px] text-slate-500 mt-1" id="integ_telegram_botname_hint">Bot: <a href="https://t.me/BoomNam_Bot" target="_blank" class="text-[#df8a5a] underline font-bold">@BoomNam_Bot</a> (Nhắn /start để bot lấy Chat ID).</p>
+
+                            </div>
+
+                            <!-- KHUNG THỬ NGHIỆM DUYỆT 2 CHIỀU (Checklist Style from Image 2) -->
+
+                            <div class="mt-3 p-4 bg-[#fdf6f2] border border-[#f5d5c5] rounded-2xl space-y-3">
+
+                                <div class="flex items-center justify-between">
+
+                                    <span class="text-xs font-bold text-[#282d38] flex items-center gap-1.5">
+
+                                        <i class="fa-solid fa-comments text-[#df8a5a]"></i>
+
+                                        <span>Kiểm Thử Duyệt Hai Chiều (Interactive Q&A)</span>
+
+                                    </span>
+
+                                    <span class="text-[10px] px-2.5 py-0.5 rounded-full bg-white text-[#df8a5a] border border-[#f5d5c5] font-bold">2-Way Approval</span>
+
+                                </div>
+
+                                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+
+                                    <input type="text" id="integ_telegram_test_question" value="bạn có đồng ý chỉnh sửa không?" class="w-full bg-white border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 font-semibold focus:outline-none focus:border-[#df8a5a]">
+
+                                    <button type="button" onclick="startTelegramApprovalTest()" id="btnSendTelegramQuestion" class="btn-primary-mark py-2 px-4 whitespace-nowrap text-xs">
+
+                                        <i class="fa-solid fa-paper-plane text-xs"></i>
+
+                                        <span>Gửi & Chờ Phản Hồi</span>
+
+                                    </button>
+
+                                </div>
+
+                                <!-- Box trạng thái chờ hoặc kết quả phản hồi -->
+
+                                <div id="telegram_test_result_box" class="hidden"></div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="pt-2 border-t border-[#e3e7f0] flex items-center justify-end space-x-2">
+
+                        <button type="button" onclick="testIntegration('telegram')" id="btnTest_telegram" class="btn-outline-mark py-2 px-3.5 text-xs">
+
+                            <i class="fa-solid fa-paper-plane text-[#df8a5a]"></i>
+
+                            <span>Kiểm Tra Bot (Ping)</span>
+
+                        </button>
+
+                        <button type="button" onclick="saveIntegration('telegram')" id="btnSave_telegram" class="btn-primary-mark py-2 px-4 text-xs">
+
+                            <i class="fa-solid fa-floppy-disk"></i>
+
+                            <span>Lưu Cấu Hình</span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- 4. HEYGEN AI VIDEO AVATAR -->
+
+                <div id="card_heygen" class="mark-card p-6 flex flex-col justify-between space-y-5">
+
+                    <div class="space-y-4">
+
+                        <div class="flex items-start justify-between">
+
+                            <div class="flex items-center space-x-3.5">
+
+                                <div class="icon-3d">
+
+                                    <i class="fa-solid fa-user-tie"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <h3 class="text-sm font-bold text-[#282d38]">4. HeyGen AI Video Avatar</h3>
+
+                                    <p class="text-xs text-[#64748b]">Giai đoạn 3: Sinh nhân vật người ảo phát biểu góc khung hình</p>
+
+                                </div>
+
+                            </div>
+
+                            <span id="card_status_heygen" class="px-3 py-1 rounded-full text-[11px] font-bold bg-[#ecfdf5] text-[#059669] border border-emerald-200 flex items-center gap-1.5">
+
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+
+                                <span>Đã kết nối</span>
+
+                            </span>
+
+                        </div>
+
+                        <div class="space-y-3 text-xs">
+
+                            <div>
+
+                                <label class="block font-bold text-slate-700 mb-1">HeyGen API Key <span class="text-rose-500">*</span></label>
+
+                                <div class="relative">
+
+                                    <input type="password" id="integ_heygen_key" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 pr-10 text-xs text-slate-800 font-mono focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" placeholder="sk_V2_...">
+
+                                    <button type="button" onclick="togglePasswordVis('integ_heygen_key', this)" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
+
+                                        <i class="fa-solid fa-eye"></i>
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+
+                                <div>
+
+                                    <label class="block font-bold text-slate-700 mb-1">Avatar ID</label>
+
+                                    <input type="text" id="integ_heygen_avatar" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 font-mono focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" value="HCMTax">
+
+                                </div>
+
+                                <div>
+
+                                    <label class="block font-bold text-slate-700 mb-1">Voice ID (Tùy chọn)</label>
+
+                                    <input type="text" id="integ_heygen_voice" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 font-mono focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" placeholder="ID giọng HeyGen">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="pt-2 border-t border-[#e3e7f0] flex items-center justify-end space-x-2">
+
+                        <button type="button" onclick="testIntegration('heygen')" id="btnTest_heygen" class="btn-outline-mark py-2 px-3.5 text-xs">
+
+                            <i class="fa-solid fa-vial text-[#df8a5a]"></i>
+
+                            <span>Kiểm Tra (v3)</span>
+
+                        </button>
+
+                        <button type="button" onclick="saveIntegration('heygen')" id="btnSave_heygen" class="btn-primary-mark py-2 px-4 text-xs">
+
+                            <i class="fa-solid fa-floppy-disk"></i>
+
+                            <span>Lưu Cấu Hình</span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- 5. ELEVENLABS AI VOICE -->
+
+                <div id="card_elevenlabs" class="mark-card p-6 flex flex-col justify-between space-y-5">
+
+                    <div class="space-y-4">
+
+                        <div class="flex items-start justify-between">
+
+                            <div class="flex items-center space-x-3.5">
+
+                                <div class="icon-3d">
+
+                                    <i class="fa-solid fa-microphone-lines"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <h3 class="text-sm font-bold text-[#282d38]">5. Giọng Đọc AI ElevenLabs</h3>
+
+                                    <p class="text-xs text-[#64748b]">Giai đoạn 3: Lồng tiếng phát thanh viên AI chuẩn quốc tế</p>
+
+                                </div>
+
+                            </div>
+
+                            <span id="card_status_elevenlabs" class="px-3 py-1 rounded-full text-[11px] font-bold bg-[#ecfdf5] text-[#059669] border border-emerald-200 flex items-center gap-1.5">
+
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+
+                                <span>Đã kết nối</span>
+
+                            </span>
+
+                        </div>
+
+                        <div class="space-y-3 text-xs">
+
+                            <div>
+
+                                <label class="block font-bold text-slate-700 mb-1">ElevenLabs API Key <span class="text-rose-500">*</span></label>
+
+                                <div class="relative">
+
+                                    <input type="password" id="integ_elevenlabs_key" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 pr-10 text-xs text-slate-800 font-mono focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" placeholder="sk_030ed6cd...">
+
+                                    <button type="button" onclick="togglePasswordVis('integ_elevenlabs_key', this)" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
+
+                                        <i class="fa-solid fa-eye"></i>
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+
+                                <div>
+
+                                    <label class="block font-bold text-slate-700 mb-1">Voice ID / Tên Giọng</label>
+
+                                    <input type="text" id="integ_elevenlabs_voice" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 font-mono focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" value="Mr B New">
+
+                                </div>
+
+                                <div>
+
+                                    <label class="block font-bold text-slate-700 mb-1">Model ID</label>
+
+                                    <select id="integ_elevenlabs_model" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 focus:outline-none focus:border-[#df8a5a] focus:bg-white transition">
+
+                                        <option value="eleven_multilingual_v2">Eleven Multilingual v2</option>
+
+                                        <option value="eleven_turbo_v2_5">Eleven Turbo v2.5</option>
+
+                                        <option value="eleven_monolingual_v1">Eleven Monolingual v1</option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="pt-2 border-t border-[#e3e7f0] flex items-center justify-end space-x-2">
+
+                        <button type="button" onclick="testIntegration('elevenlabs')" id="btnTest_elevenlabs" class="btn-outline-mark py-2 px-3.5 text-xs">
+
+                            <i class="fa-solid fa-vial text-[#df8a5a]"></i>
+
+                            <span>Kiểm Tra Giọng Đọc</span>
+
+                        </button>
+
+                        <button type="button" onclick="saveIntegration('elevenlabs')" id="btnSave_elevenlabs" class="btn-primary-mark py-2 px-4 text-xs">
+
+                            <i class="fa-solid fa-floppy-disk"></i>
+
+                            <span>Lưu Cấu Hình</span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- 6. TIKTOK CREATOR / CONTENT POSTING -->
+
+                <div id="card_tiktok" class="mark-card p-6 flex flex-col justify-between space-y-5">
+
+                    <div class="space-y-4">
+
+                        <div class="flex items-start justify-between">
+
+                            <div class="flex items-center space-x-3.5">
+
+                                <div class="icon-3d">
+
+                                    <i class="fa-brands fa-tiktok"></i>
+
+                                </div>
+
+                                <div>
+
+                                    <h3 class="text-sm font-bold text-[#282d38]">6. Kênh TikTok Tuyên Truyền</h3>
+
+                                    <p class="text-xs text-[#64748b]">Giai đoạn 6: Đăng tải tự động qua TikTok Content Posting API</p>
+
+                                </div>
+
+                            </div>
+
+                            <span id="card_status_tiktok" class="px-3 py-1 rounded-full text-[11px] font-bold bg-[#ecfdf5] text-[#059669] border border-emerald-200 flex items-center gap-1.5">
+
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+
+                                <span>Đã kết nối</span>
+
+                            </span>
+
+                        </div>
+
+                        <div class="space-y-3 text-xs">
+
+                            <div class="grid grid-cols-2 gap-3">
+
+                                <div>
+
+                                    <label class="block font-bold text-slate-700 mb-1">Tên Kênh TikTok <span class="text-rose-500">*</span></label>
+
+                                    <input type="text" id="integ_tiktok_username" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 font-bold focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" value="@thong_tin_ve_thue">
+
+                                </div>
+
+                                <div>
+
+                                    <label class="block font-bold text-slate-700 mb-1">Chế Độ Hiển Thị Bài Đăng</label>
+
+                                    <select id="integ_tiktok_privacy" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 focus:outline-none focus:border-[#df8a5a] focus:bg-white transition">
+
+                                        <option value="PUBLIC_TO_EVERYONE">Công khai (Public)</option>
+
+                                        <option value="MUTUAL_FOLLOW_FRIENDS">Chỉ bạn bè</option>
+
+                                        <option value="SELF_ONLY">Riêng tư (Chỉ mình tôi)</option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            <div>
+
+                                <label class="block font-bold text-slate-700 mb-1">TikTok Access Token (OAuth 2.0)</label>
+
+                                <div class="relative">
+
+                                    <input type="password" id="integ_tiktok_token" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 pr-10 text-xs text-slate-800 font-mono focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" placeholder="act.example123...">
+
+                                    <button type="button" onclick="togglePasswordVis('integ_tiktok_token', this)" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600">
+
+                                        <i class="fa-solid fa-eye"></i>
+
+                                    </button>
+
+                                </div>
+
+                                <p class="text-[10px] text-[#059669] font-bold mt-1" id="integ_tiktok_token_hint">✅ Đã liên kết kênh: @thong_tin_ve_thue</p>
+
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+
+                                <div>
+
+                                    <label class="block font-bold text-slate-700 mb-1">Client Key</label>
+
+                                    <input type="text" id="integ_tiktok_client_key" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 font-mono focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" value="awg8wrdqd51lrcfx">
+
+                                </div>
+
+                                <div>
+
+                                    <label class="block font-bold text-slate-700 mb-1">Client Secret</label>
+
+                                    <input type="password" id="integ_tiktok_client_secret" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 font-mono focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" value="aujSZ5kwoO3SoFWkDLAQur4e0HBfylwP">
+
+                                </div>
+
+                            </div>
+
+                            <div>
+
+                                <label class="block font-bold text-slate-700 mb-1">
+                                    Đường Hầm HTTPS Công Khai (Ngrok / Cloudflare Tunnel)
+                                    <span class="text-[10px] font-normal text-slate-500 ml-1.5">(Cho TikTok API tải ảnh từ Localhost)</span>
+                                </label>
+
+                                <div class="flex items-center gap-2">
+
+                                    <input type="url" id="integ_tiktok_public_url" class="flex-1 bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 font-mono focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" placeholder="https://xxxx-xx-xx.ngrok-free.app hoặc https://xxxx.trycloudflare.com">
+
+                                    <button type="button" onclick="autoDetectNgrokTunnel()" class="btn-outline-mark py-2 px-3 text-xs font-bold shrink-0 flex items-center gap-1.5 text-amber-800 bg-amber-50/80 border-amber-300 hover:bg-amber-100 transition shadow-xs" title="Tự động kiểm tra và nhận diện đường hầm Cloudflare hoặc Ngrok đang chạy">
+                                        <i class="fa-solid fa-bolt text-amber-500"></i>
+                                        <span>⚡ Nhận Diện Đường Hầm</span>
+                                    </button>
+
+                                </div>
+
+                                <p class="text-[10px] text-slate-500 mt-1 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-circle-info text-sky-500"></i>
+                                    <span>TikTok Server cần địa chỉ HTTPS này để kéo các file slide trong <code class="font-mono text-slate-700 bg-slate-100 px-1 py-0.5 rounded">static/generated_slides/</code></span>
+                                </p>
+
+                                <!-- BẢNG THÔNG TIN 4 LINK TỰ ĐỘNG CHO TIKTOK DEVELOPER PORTAL -->
+                                <div id="tt_tunnel_helper_panel" class="mt-2.5 p-3 bg-gradient-to-br from-amber-50/70 to-slate-50 border border-amber-200/80 rounded-xl space-y-2 text-xs shadow-xs">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-bold text-slate-700 flex items-center gap-1.5">
+                                            <i class="fa-solid fa-shield-halved text-emerald-600"></i>
+                                            <span>Đường dẫn cấu hình TikTok Developer Portal:</span>
+                                        </span>
+                                        <span class="text-[10px] text-slate-500 font-medium">Bấm <b>Copy</b> để dán trực tiếp</span>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px]">
+                                        <div class="bg-white p-2 rounded-lg border border-slate-200 flex items-center justify-between gap-2 shadow-xs">
+                                            <div class="min-w-0">
+                                                <div class="text-[10px] font-semibold text-slate-500 uppercase">Web/Desktop URL *</div>
+                                                <div id="helper_web_url" class="font-mono text-blue-700 font-semibold truncate select-all">https://rev-briefs-utils-reform.trycloudflare.com/</div>
+                                            </div>
+                                            <button type="button" onclick="copyHelperText('helper_web_url')" class="px-2 py-1 rounded bg-slate-100 hover:bg-blue-100 hover:text-blue-700 text-slate-600 font-bold shrink-0 text-[10px] transition">Copy</button>
+                                        </div>
+                                        <div class="bg-white p-2 rounded-lg border border-slate-200 flex items-center justify-between gap-2 shadow-xs">
+                                            <div class="min-w-0">
+                                                <div class="text-[10px] font-semibold text-slate-500 uppercase">Terms of Service URL *</div>
+                                                <div id="helper_terms_url" class="font-mono text-blue-700 font-semibold truncate select-all">https://rev-briefs-utils-reform.trycloudflare.com/terms</div>
+                                            </div>
+                                            <button type="button" onclick="copyHelperText('helper_terms_url')" class="px-2 py-1 rounded bg-slate-100 hover:bg-blue-100 hover:text-blue-700 text-slate-600 font-bold shrink-0 text-[10px] transition">Copy</button>
+                                        </div>
+                                        <div class="bg-white p-2 rounded-lg border border-slate-200 flex items-center justify-between gap-2 shadow-xs">
+                                            <div class="min-w-0">
+                                                <div class="text-[10px] font-semibold text-slate-500 uppercase">Privacy Policy URL *</div>
+                                                <div id="helper_privacy_url" class="font-mono text-blue-700 font-semibold truncate select-all">https://rev-briefs-utils-reform.trycloudflare.com/privacy</div>
+                                            </div>
+                                            <button type="button" onclick="copyHelperText('helper_privacy_url')" class="px-2 py-1 rounded bg-slate-100 hover:bg-blue-100 hover:text-blue-700 text-slate-600 font-bold shrink-0 text-[10px] transition">Copy</button>
+                                        </div>
+                                        <div class="bg-white p-2 rounded-lg border border-slate-200 flex items-center justify-between gap-2 shadow-xs">
+                                            <div class="min-w-0">
+                                                <div class="text-[10px] font-semibold text-slate-500 uppercase">Redirect URI (OAuth) *</div>
+                                                <div id="helper_redirect_url" class="font-mono text-blue-700 font-semibold truncate select-all">https://rev-briefs-utils-reform.trycloudflare.com/api/tiktok/oauth-callback</div>
+                                            </div>
+                                            <button type="button" onclick="copyHelperText('helper_redirect_url')" class="px-2 py-1 rounded bg-slate-100 hover:bg-blue-100 hover:text-blue-700 text-slate-600 font-bold shrink-0 text-[10px] transition">Copy</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="pt-2 border-t border-[#e3e7f0] flex items-center justify-end space-x-2">
+
+                        <button type="button" onclick="authorizeTikTokOAuth()" class="btn-outline-mark py-2 px-3 text-xs text-slate-700 hover:text-black">
+                            <i class="fa-brands fa-tiktok text-rose-500"></i>
+                            <span>Ủy Quyền OAuth</span>
+                        </button>
+
+                        <button type="button" onclick="testIntegration('tiktok')" id="btnTest_tiktok" class="btn-outline-mark py-2 px-3.5 text-xs">
+
+                            <i class="fa-solid fa-vial text-[#df8a5a]"></i>
+
+                            <span>Kiểm Tra Kênh</span>
+
+                        </button>
+
+                        <button type="button" onclick="saveIntegration('tiktok')" id="btnSave_tiktok" class="btn-primary-mark py-2 px-4 text-xs">
+
+                            <i class="fa-solid fa-floppy-disk"></i>
+
+                            <span>Lưu Cấu Hình</span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div> <!-- KẾT THÚC TAB 2 -->
+
+    </main>
+
+    </div> <!-- END APP LAYOUT WRAPPER -->
+
+    <!-- ========================================================= -->
+
+    <!-- 3. FOOTER: MODERN 2026 EDITION                            -->
+
+    <!-- ========================================================= -->
+
+    <footer class="bg-white border-t border-[#e3e7f0] py-6 mt-auto text-xs text-[#64748b]">
+
+        <div class="max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+
+            <div class="flex items-center space-x-2">
+
+                <span class="text-base font-black text-[#282d38]">tiktok studio<span class="text-[#df8a5a]">*</span></span>
+
+                <span class="text-[#cbd5e1]">|</span>
+
+                <span>Hệ thống tự động hóa sản xuất video chính sách thuế đa nền tảng.</span>
+
+            </div>
+
+            <div class="flex items-center space-x-4">
+
+                <span class="px-3 py-1 rounded-full bg-[#fdf4ee] text-[#df8a5a] font-extrabold text-[11px]">
+
+                    2026 Release • v2.6
+
+                </span>
+
+                <span>Tối ưu hóa trải nghiệm & hiệu suất.</span>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+    <!-- ========================================================= -->
+
+    <!-- 4. MODALS (DRIVE, AI CONFIG, RESULT)                     -->
+
+    <!-- ========================================================= -->
+
+    <!-- MODAL: CẤU HÌNH GOOGLE DRIVE -->
+
+    <div id="driveConfigModal" class="fixed inset-0 bg-[#282d38]/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+
+        <div class="mark-card max-w-lg w-full p-6 space-y-4 shadow-2xl relative">
+
+            <button onclick="closeDriveConfigModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700">
+
+                <i class="fa-solid fa-xmark text-lg"></i>
+
+            </button>
+
+            <div class="flex items-center space-x-3.5">
+
+                <div class="icon-3d">
+
+                    <i class="fa-brands fa-google-drive"></i>
+
+                </div>
+
+                <div>
+
+                    <h3 class="text-base font-bold text-[#282d38]">Cấu Hình Kết Nối Google Drive</h3>
+
+                    <p class="text-xs text-[#64748b]">Xác thực OAuth 2.0 đồng bộ với Google Sheets</p>
+
+                </div>
+
+            </div>
+
+            <div class="space-y-3.5 text-xs">
+
+                <div id="modalStatusBox" class="p-3.5 rounded-2xl bg-[#ffffff] border border-[#e3e7f0]">
+
+                    <div class="font-bold text-slate-800 mb-1 flex items-center gap-2">
+
+                        <i class="fa-solid fa-circle-info text-[#df8a5a]"></i>
+
+                        <span>Trạng thái kết nối hiện tại:</span>
+
+                    </div>
+
+                    <div id="modalStatusMessage" class="text-slate-600 font-medium">Đang kiểm tra...</div>
+
+                </div>
+
+                <div class="p-4 rounded-2xl bg-white border border-[#e3e7f0] space-y-2.5">
+
+                    <div class="font-bold text-slate-800 flex items-center justify-between">
+
+                        <span>Bước 1: Nạp file credentials.json</span>
+
+                        <a href="https://console.cloud.google.com/apis/credentials" target="_blank" class="text-[11px] text-[#df8a5a] hover:underline font-bold">
+
+                            Google Cloud Console <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+
+                        </a>
+
+                    </div>
+
+                    <div class="flex items-center space-x-2 pt-1">
+
+                        <input type="file" id="credentialsFileInput" accept=".json" class="text-xs text-slate-600 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#df8a5a] file:text-white hover:file:bg-[#c87648] cursor-pointer">
+
+                        <button onclick="uploadCredentials()" class="btn-primary-mark py-1.5 px-3 text-xs">
+
+                            Tải lên
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="pt-1 space-y-2">
+
+                    <button onclick="startGoogleAuth()" id="btnStartAuth" class="btn-primary-mark w-full py-2.5 justify-center text-xs">
+
+                        <i class="fa-brands fa-google text-xs"></i>
+
+                        <span>Bước 2: Đăng Nhập Google Qua Trình Duyệt</span>
+
+                    </button>
+
+                    <p class="text-[10px] text-slate-400 text-center">Sau khi nạp file credentials.json, bấm nút trên để hoàn tất đăng nhập.</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL: CẤU HÌNH GEMINI & NOTEBOOKLM -->
+
+    <div id="aiConfigModal" class="fixed inset-0 bg-[#282d38]/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+
+        <div class="mark-card max-w-lg w-full p-6 space-y-4 shadow-2xl relative">
+
+            <button onclick="closeAiConfigModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700">
+
+                <i class="fa-solid fa-xmark text-lg"></i>
+
+            </button>
+
+            <div class="flex items-center space-x-3.5">
+
+                <div class="icon-3d">
+
+                    <i class="fa-solid fa-brain"></i>
+
+                </div>
+
+                <div>
+
+                    <h3 class="text-base font-bold text-[#282d38]">Cơ Sở Tri Thức & Cấu Hình Gemini</h3>
+
+                    <p class="text-xs text-[#64748b]">Tra cứu quy định thuế và sinh kịch bản Slide</p>
+
+                </div>
+
+            </div>
+
+            <form id="aiConfigForm" onsubmit="event.preventDefault(); saveAiConfig();" class="space-y-3.5 text-xs">
+
+                <div>
+
+                    <div class="flex items-center justify-between mb-1">
+
+                        <label class="font-bold text-slate-700">Gemini API Key <span class="text-rose-500">*</span></label>
+
+                        <span id="cfg_keyStatusBadge" class="text-[10px] text-[#059669] font-mono font-bold bg-[#ecfdf5] px-2 py-0.5 rounded-full border border-emerald-200">Đã nạp</span>
+
+                    </div>
+
+                    <input type="password" id="cfg_geminiApiKey" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 font-mono focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" placeholder="AIzaSy...">
+
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+
+                    <div>
+
+                        <label class="block font-bold text-slate-700 mb-1">Mô hình AI</label>
+
+                        <select id="cfg_geminiModel" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 focus:outline-none focus:border-[#df8a5a] focus:bg-white transition">
+
+                            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+
+                            <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+
+                            <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+
+                        </select>
+
+                    </div>
+
+                    <div>
+
+                        <label class="block font-bold text-slate-700 mb-1">NotebookLM Chuyên Môn</label>
+
+                        <input type="text" id="cfg_notebooklmName" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 font-medium focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" value="Tax_Nghiệp vụ thuế">
+
+                    </div>
+
+                </div>
+
+                <div class="p-3 rounded-2xl bg-[#ffffff] border border-[#e3e7f0]">
+
+                    <label class="flex items-center space-x-2 cursor-pointer">
+
+                        <input type="checkbox" id="cfg_enableWebSearch" checked class="w-4 h-4 rounded text-[#df8a5a] focus:ring-[#df8a5a]">
+
+                        <span class="font-bold text-slate-800">Bật Google Search Grounding</span>
+
+                    </label>
+
+                    <p class="text-[10px] text-slate-500 pl-6 mt-0.5">Tự động tra cứu trực tiếp văn bản pháp quy mới nhất trên Internet.</p>
+
+                </div>
+
+                <div>
+
+                    <label class="block font-bold text-slate-700 mb-1">Tài liệu / Ghi chú pháp quy bổ trợ</label>
+
+                    <textarea id="cfg_customTaxKnowledge" rows="2" class="w-full bg-[#ffffff] border border-[#e3e7f0] rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:border-[#df8a5a] focus:bg-white transition" placeholder="Dán các điểm lưu ý đặc biệt hoặc thông tư cần áp dụng..."></textarea>
+
+                </div>
+
+                <div class="flex items-center justify-end space-x-2 pt-2 border-t border-[#e3e7f0]">
+
+                    <button type="button" onclick="closeAiConfigModal()" class="btn-outline-mark py-2 px-3.5 text-xs">
+
+                        Đóng
+
+                    </button>
+
+                    <button type="submit" id="btnSaveAiConfig" class="btn-primary-mark py-2 px-4 text-xs">
+
+                        <i class="fa-solid fa-floppy-disk"></i>
+
+                        <span>Lưu Cấu Hình</span>
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL: KẾT QUẢ TẠO NỘI DUNG SLIDE -->
+
+    <div id="aiResultModal" class="fixed inset-0 bg-[#282d38]/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+
+        <div class="mark-card max-w-5xl w-full p-6 space-y-4 shadow-2xl relative max-h-[92vh] flex flex-col">
+
+            <button onclick="closeAiResultModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700">
+
+                <i class="fa-solid fa-xmark text-lg"></i>
+
+            </button>
+
+            <div class="flex items-center space-x-3.5">
+
+                <div class="w-11 h-11 rounded-2xl bg-[#ecfdf5] border border-emerald-200 flex items-center justify-center text-[#059669] text-xl">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                </div>
+
+                <div>
+
+                    <h3 class="text-base font-bold text-[#282d38] flex items-center gap-2">
+
+                        <span>Đã Tạo Kịch Bản Slide Thành Công!</span>
+
+                        <span class="text-[10px] px-2.5 py-0.5 rounded-full bg-[#ecfdf5] text-[#059669] font-bold border border-emerald-200">Drive Synced</span>
+
+                    </h3>
+
+                    <p class="text-xs text-[#64748b]">Đã tạo thư mục và lưu tài liệu vào Google Drive</p>
+
+                </div>
+
+            </div>
+
+            <!-- Links to Drive Folder & Doc -->
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+
+                <a id="resFolderLink" href="#" target="_blank" class="p-3.5 rounded-2xl bg-[#ffffff] border border-[#e3e7f0] hover:border-[#df8a5a] hover:bg-white transition flex items-center justify-between group shadow-xs">
+
+                    <div class="flex items-center space-x-3 truncate">
+
+                        <i class="fa-solid fa-folder text-amber-500 text-xl"></i>
+
+                        <div class="truncate text-left">
+
+                            <span class="text-xs font-bold text-slate-800 group-hover:text-[#df8a5a] transition block truncate" id="resFolderName">Thư mục Drive</span>
+
+                            <span class="text-[10px] text-slate-500">Trong Tạo video</span>
+
+                        </div>
+
+                    </div>
+
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 group-hover:text-[#df8a5a] ml-2"></i>
+
+                </a>
+
+                <a id="resDocLink" href="#" target="_blank" class="p-3.5 rounded-2xl bg-[#fdf4ee]/60 border border-[#f5d5c5] hover:border-[#df8a5a] hover:bg-[#fdf4ee] transition flex items-center justify-between group shadow-xs">
+
+                    <div class="flex items-center space-x-3 truncate">
+
+                        <i class="fa-solid fa-file-lines text-[#df8a5a] text-xl"></i>
+
+                        <div class="truncate text-left">
+
+                            <span class="text-xs font-bold text-[#df8a5a] group-hover:text-[#c87648] transition block truncate">File 'Nội dung Slide'</span>
+
+                            <span class="text-[10px] text-[#df8a5a] font-semibold">Mở Google Docs</span>
+
+                        </div>
+
+                    </div>
+
+                    <i class="fa-solid fa-arrow-up-right-from-square text-xs text-[#df8a5a] ml-2"></i>
+
+                </a>
+
+            </div>
+
+            <!-- Preview Script -->
+
+            <div class="flex-1 overflow-hidden flex flex-col space-y-2 pt-1">
+
+                <div class="flex items-center justify-between text-xs text-slate-700">
+
+                    <span class="font-bold">Xem trước Kịch bản Slide TikTok (9:16)</span>
+
+                    <button type="button" onclick="copyAiScript()" class="text-[#df8a5a] hover:underline font-bold text-[11px] flex items-center gap-1">
+
+                        <i class="fa-regular fa-copy"></i>
+
+                        <span id="btnCopyScriptText">Sao chép kịch bản</span>
+
+                    </button>
+
+                </div>
+
+                <div class="flex-1 overflow-y-auto bg-[#ffffff] border border-[#e3e7f0] rounded-2xl p-5 font-mono text-xs text-slate-800 whitespace-pre-wrap leading-relaxed max-h-[460px] select-text scrollbar-thin shadow-inner" id="resSlideScript">
+
+                </div>
+
+            </div>
+
+            <div class="flex items-center justify-end pt-2 border-t border-[#e3e7f0]">
+
+                <button type="button" onclick="closeAiResultModal()" class="btn-primary-mark py-2 px-5 text-xs">
+
+                    Đã Xong & Quay Lại Bảng
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    
+
+    <!-- ========================================================= -->
+
+    <!-- MODAL: CẤU HÌNH NỀN TẢNG (PLATFORM CONFIG MODAL)          -->
+
+    <!-- ========================================================= -->
+
+    <div id="platformConfigModal" class="fixed inset-0 bg-[#282d38]/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+
+        <div class="mark-card max-w-5xl w-full p-6 space-y-5 shadow-2xl relative max-h-[92vh] flex flex-col">
+
+            <button onclick="closePlatformConfigModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 transition">
+
+                <i class="fa-solid fa-xmark text-lg"></i>
+
+            </button>
+
+            <!-- Modal Header -->
+
+            <div class="flex items-center space-x-3.5 pb-3 border-b border-[#e3e7f0]">
+
+                <div class="icon-3d">
+
+                    <i class="fa-solid fa-sliders"></i>
+
+                </div>
+
+                <div>
+
+                    <h3 class="text-base font-bold text-[#282d38] flex items-center gap-2">
+
+                        <span>Cấu Hình Nền Tảng TikTok Studio</span>
+
+                        <span class="text-[10px] px-2.5 py-0.5 rounded-full bg-[#fdf4ee] text-[#df8a5a] font-bold">Quản Trị Hệ Thống</span>
+
+                    </h3>
+
+                    <p class="text-xs text-[#64748b]">Thiết lập các thông số tác nghiệp, kiểu sinh ảnh cuộn và quy chuẩn tự động hóa.</p>
+
+                </div>
+
+            </div>
+
+            <!-- Tab Navigation inside Modal -->
+
+            <div class="flex items-center gap-2 border-b border-[#e3e7f0] pb-2 overflow-x-auto">
+
+                <button type="button" onclick="switchPlatformTab('carousel')" id="tabBtn_platform_carousel" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-[#fdf4ee] text-[#df8a5a] border border-[#f5d5c5]">
+
+                    <i class="fa-solid fa-images"></i>
+
+                    <span>Thiết lập thông số ảnh cuộn</span>
+
+                </button>
+
+                <button type="button" onclick="switchPlatformTab('video')" id="tabBtn_platform_video" class="px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-600 hover:bg-slate-100 transition flex items-center gap-2">
+
+                    <i class="fa-solid fa-film"></i>
+
+                    <span>Cấu hình Render Video 9:16</span>
+
+                </button>
+
+                <button type="button" onclick="switchPlatformTab('ai')" id="tabBtn_platform_ai" class="px-3.5 py-1.5 rounded-xl text-xs font-medium text-slate-600 hover:bg-slate-100 transition flex items-center gap-2">
+
+                    <i class="fa-solid fa-robot"></i>
+
+                    <span>Quy chuẩn Kênh TikTok</span>
+
+                </button>
+
+            </div>
+
+            <!-- Tab 1: Thiết lập thông số ảnh cuộn -->
+
+            <div id="platformTab_carousel" class="flex-1 overflow-y-auto space-y-4 scrollbar-thin pr-1">
+
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-[#fdf6f2] border border-[#f5d5c5]">
+
+                    <div>
+
+                        <h4 class="text-xs font-bold text-[#df8a5a] uppercase tracking-wide flex items-center gap-1.5">
+
+                            <i class="fa-solid fa-layer-group"></i>
+
+                            <span>Danh mục kiểu thông số ảnh cuộn (Carousel Presets)</span>
+
+                        </h4>
+
+                        <p class="text-xs text-slate-600 mt-0.5">
+
+                            Mỗi kiểu bao gồm <strong>Tên</strong>, <strong>Mô tả</strong> và <strong>Chỉ dẫn AI</strong>. Mô tả và chỉ dẫn là cơ sở cốt lõi để AI tạo sinh hình ảnh cho từng slide.
+
+                        </p>
+
+                    </div>
+
+                    <button type="button" onclick="openCreatePresetModal()" class="btn-primary-mark py-2 px-3.5 text-xs font-bold shadow-sm shrink-0 whitespace-nowrap">
+
+                        <i class="fa-solid fa-plus text-xs"></i>
+
+                        <span>Thêm kiểu mới</span>
+
+                    </button>
+
+                </div>
+
+                <!-- Presets Grid Container -->
+
+                <!-- Category Filter Pills -->
+                <div id="carouselCategoryFilters" class="flex flex-wrap items-center gap-2 mb-3 bg-slate-50/80 p-2 rounded-xl border border-slate-200/70">
+                    <span class="text-[11px] font-bold text-slate-500 mr-1"><i class="fa-solid fa-filter text-[10px] mr-1"></i>Danh mục:</span>
+                    <button type="button" onclick="filterCarouselPresets('all')" id="presetFilter_all" class="preset-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-[#df8a5a] text-white shadow-2xs transition">Tất cả (15)</button>
+                    <button type="button" onclick="filterCarouselPresets('Xanh & Trắng')" id="presetFilter_blue" class="preset-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-slate-700 hover:bg-blue-50 hover:text-blue-700 border border-slate-200 shadow-2xs transition">📁 Xanh & Trắng (5)</button>
+                    <button type="button" onclick="filterCarouselPresets('Đỏ - Trắng - Đen')" id="presetFilter_red" class="preset-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-slate-700 hover:bg-red-50 hover:text-red-700 border border-slate-200 shadow-2xs transition">📁 Đỏ - Trắng - Đen (5)</button>
+                    <button type="button" onclick="filterCarouselPresets('Cam Vàng - Trắng - Đen')" id="presetFilter_orange" class="preset-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-slate-700 hover:bg-amber-50 hover:text-amber-700 border border-slate-200 shadow-2xs transition">📁 Cam Vàng - Trắng - Đen (5)</button>
+                </div>
+
+                <div id="carouselPresetsList"  class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+
+                    <!-- Populated dynamically via JS -->
+
+                </div>
+
+            </div>
+
+            <!-- Tab 2: Video config placeholder -->
+
+            <div id="platformTab_video" class="hidden flex-1 overflow-y-auto space-y-4 text-xs text-slate-600 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+
+                <div class="font-bold text-slate-800 text-sm">Cấu hình Tự Động Render Video Dọc 9:16</div>
+
+                <p>Khung hình mặc định: 1080x1920 (TikTok 9:16) • Tốc độ khung hình: 30 FPS • Bộ giải mã: H.264 / AAC.</p>
+
+                <p class="text-slate-400">Các thông số video được tối ưu tự động tương thích với API HeyGen và ElevenLabs.</p>
+
+            </div>
+
+            <!-- Tab 3: AI & Channel rules placeholder -->
+
+            <div id="platformTab_ai" class="hidden flex-1 overflow-y-auto space-y-4 text-xs text-slate-600 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+
+                <div class="font-bold text-slate-800 text-sm">Quy chuẩn Kênh TikTok @thong_tin_ve_thue</div>
+
+                <p>Khung giờ đăng đề xuất: 11h30 - 12h30 và 19h30 - 21h00 hàng ngày.</p>
+
+                <p>Hashtag tự động đính kèm: #thue #hcmtax #LearnOnTikTok #chinhsachthue.</p>
+
+            </div>
+
+            <!-- Footer -->
+
+            <div class="flex items-center justify-end pt-3 border-t border-[#e3e7f0]">
+
+                <button type="button" onclick="closePlatformConfigModal()" class="btn-primary-mark py-2 px-5 text-xs">
+
+                    Đóng
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SUB-MODAL: THÊM / SỬA THÔNG SỐ ẢNH CUỘN -->
+
+    <div id="presetEditSubModal" class="fixed inset-0 bg-[#282d38]/60 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+
+        <div class="mark-card max-w-xl w-full p-6 space-y-4 shadow-2xl relative">
+
+            <button onclick="closePresetEditModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700">
+
+                <i class="fa-solid fa-xmark text-lg"></i>
+
+            </button>
+
+            <div class="flex items-center space-x-3 pb-2 border-b border-[#e3e7f0]">
+
+                <div class="w-9 h-9 rounded-xl bg-[#fdf4ee] text-[#df8a5a] flex items-center justify-center text-sm font-bold border border-[#f5d5c5]">
+
+                    <i class="fa-solid fa-pen-ruler"></i>
+
+                </div>
+
+                <div>
+
+                    <h4 id="presetEditModalTitle" class="text-sm font-bold text-[#282d38]">Thêm Thông Số Ảnh Cuộn Mới</h4>
+
+                    <p class="text-xs text-[#64748b]">Nhập Tên, Mô tả và Chỉ dẫn thiết kế cho AI tạo slide</p>
+
+                </div>
+
+            </div>
+
+            <form id="presetEditForm" onsubmit="event.preventDefault(); submitPresetForm();" class="space-y-3.5 text-xs">
+
+                <input type="hidden" id="editPresetId" value="">
+
+                <!-- Field: Ảnh minh họa phong cách -->
+
+                <div>
+
+                    <label class="block font-bold text-slate-700 mb-1 flex items-center justify-between">
+
+                        <span>Ảnh minh họa phong cách (Hình mẫu 4:5 - 1080x1350px)</span>
+
+                        <span class="text-[10px] text-slate-400 font-normal">Giúp người dùng dễ hình dung phong cách</span>
+
+                    </label>
+
+                    <div class="flex items-center gap-3 p-2.5 bg-[#fdfaf8] rounded-xl border border-[#f5d5c5]">
+
+                        <div class="w-16 h-20 aspect-[4/5] rounded-xl overflow-hidden border-2 border-[#df8a5a]/40 bg-slate-100 shrink-0 shadow-xs relative">
+
+                            <img id="presetForm_imagePreview" src="/static/images/presets/preset_mark_dao_infographic.jpg" class="w-full h-full object-cover" alt="Preview">
+
+                        </div>
+
+                        <div class="flex-1 space-y-2">
+
+                            <input type="text" id="presetForm_imageUrl" placeholder="Đường dẫn ảnh mẫu (Ví dụ: /static/images/presets/...)"
+
+                                   oninput="document.getElementById('presetForm_imagePreview').src = this.value || '/static/images/presets/preset_mark_dao_infographic.jpg'"
+
+                                   class="w-full bg-white border border-[#e3e7f0] rounded-xl px-3 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-[#df8a5a] transition">
+
+                            <div class="flex items-center gap-2">
+
+                                <input type="file" id="presetForm_fileInput" accept="image/*" class="hidden" onchange="uploadPresetImageFile(this)">
+
+                                <button type="button" onclick="document.getElementById('presetForm_fileInput').click()" class="px-3 py-1.5 rounded-lg bg-white hover:bg-[#df8a5a] hover:text-white text-slate-700 border border-[#e3e7f0] text-[11px] font-semibold transition flex items-center gap-1.5 shadow-2xs">
+
+                                    <i class="fa-solid fa-cloud-arrow-up text-[10px]"></i>
+
+                                    <span>Tải ảnh minh họa lên</span>
+
+                                </button>
+
+                                <span class="text-[10px] text-slate-500 font-semibold bg-orange-100/70 text-orange-800 px-2 py-0.5 rounded">Tỷ lệ 4:5 (1080x1350px)</span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">
+                            Tên thông số ảnh cuộn <span class="text-rose-500">*</span>
+                        </label>
+                        <input type="text" id="presetForm_name" required placeholder="Ví dụ: Xanh Dương Doanh Nghiệp"
+                               class="w-full bg-white border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 font-bold focus:outline-none focus:border-[#df8a5a] transition">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">
+                            Danh mục màu chủ đạo
+                        </label>
+                        <select id="presetForm_category" class="w-full bg-white border border-[#e3e7f0] rounded-xl px-3.5 py-2 text-xs text-slate-800 font-bold focus:outline-none focus:border-[#df8a5a] transition">
+                            <option value="Xanh & Trắng">📁 Xanh & Trắng</option>
+                            <option value="Đỏ - Trắng - Đen">📁 Đỏ - Trắng - Đen</option>
+                            <option value="Cam Vàng - Trắng - Đen">📁 Cam Vàng - Trắng - Đen</option>
+                            <option value="Khác">📁 Khác</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+
+                    <label class="block font-bold text-slate-700 mb-1">
+
+                        Mô tả phong cách ảnh cuộn <span class="text-rose-500">*</span>
+
+                    </label>
+
+                    <textarea id="presetForm_description" rows="2" required placeholder="Mô tả ngắn gọn về đặc điểm thị giác, màu sắc, đối tượng khán giả..."
+
+                              class="w-full bg-white border border-[#e3e7f0] rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-[#df8a5a] leading-relaxed transition"></textarea>
+
+                </div>
+
+                <div>
+
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                        <label class="font-bold text-[#df8a5a] flex items-center gap-1.5">
+                            <span>Chỉ dẫn AI tạo ảnh (AI Prompt / Design Instruction) <span class="text-rose-500">*</span></span>
+                        </label>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] text-slate-400 font-normal hidden sm:inline">Cơ sở để AI sinh hình ảnh slide</span>
+                            <button type="button" id="btnGeneratePresetAiPrompt" onclick="generatePresetAiPrompt()"
+                                    title="Dựa vào Mô tả phong cách ảnh cuộn để Gemini AI tạo tự động Chỉ dẫn AI tạo ảnh"
+                                    class="px-3 py-1 bg-gradient-to-r from-[#df8a5a] to-[#c96f3b] hover:from-[#c96f3b] hover:to-[#b55d2c] text-white text-[11px] font-bold rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-wand-magic-sparkles text-[11px]" id="iconGeneratePresetAiPrompt"></i>
+                                <span id="textGeneratePresetAiPrompt">AI Prompt</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <textarea id="presetForm_instruction" rows="4" required placeholder="Chỉ dẫn chi tiết: Tỷ lệ dọc 4:5 (kích thước 1080x1350px) tối ưu cho ảnh cuộn TikTok, phân cấp tiêu đề, bố cục thẻ card, bảng màu chủ đạo (#df8a5a, trắng), hình vector biểu tượng tài chính thuế, vùng an toàn safe zone..."
+
+                              class="w-full bg-[#fdf6f2] border border-[#f5d5c5] rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:border-[#df8a5a] font-mono leading-relaxed transition"></textarea>
+
+                </div>
+
+                <div class="flex items-center gap-2 pt-1">
+
+                    <input type="checkbox" id="presetForm_isDefault" class="w-4 h-4 rounded text-[#df8a5a] focus:ring-[#df8a5a]">
+
+                    <label for="presetForm_isDefault" class="text-xs text-slate-700 font-semibold cursor-pointer">
+
+                        Đặt làm kiểu thông số mặc định khi tạo mới
+
+                    </label>
+
+                </div>
+
+                <div class="flex items-center justify-end space-x-2 pt-3 border-t border-[#e3e7f0]">
+
+                    <button type="button" onclick="closePresetEditModal()" class="btn-outline-mark py-2 px-4 text-xs">
+
+                        Hủy
+
+                    </button>
+
+                    <button type="submit" id="btnSavePreset" class="btn-primary-mark py-2 px-5 text-xs font-bold shadow-md">
+
+                        <i class="fa-solid fa-floppy-disk text-xs"></i>
+
+                        <span>Lưu thông số</span>
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================================= -->
+
+    <!-- MODAL: XEM TRƯỚC SLIDE HÌNH ẢNH (SLIDE PREVIEW MODAL)      -->
+
+    <!-- ========================================================= -->
+
+    <div id="slidePreviewModal" class="fixed inset-0 bg-[#282d38]/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+
+        <div class="mark-card max-w-5xl w-full p-6 space-y-4 shadow-2xl relative max-h-[92vh] flex flex-col">
+
+            <button onclick="closeSlidePreviewModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700">
+
+                <i class="fa-solid fa-xmark text-lg"></i>
+
+            </button>
+
+            <div class="flex items-center space-x-3.5">
+
+                <div class="w-11 h-11 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 text-xl shadow-xs">
+
+                    <i class="fa-solid fa-images"></i>
+
+                </div>
+
+                <div>
+
+                    <h3 class="text-base font-bold text-[#282d38] flex items-center gap-2">
+
+                        <span>Đã Tạo Thành Công Chuỗi Slide Hình Ảnh!</span>
+
+                        <span id="slideTotalBadge" class="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-bold">6 Slides</span>
+
+                    </h3>
+
+                    <p class="text-xs text-[#64748b]">Hình ảnh đã được tạo và lưu trực tiếp cùng thư mục với file 'Nội dung Slide' trên Google Drive.</p>
+
+                </div>
+
+            </div>
+
+            <!-- Links to Drive Folder -->
+
+            <div class="pt-1">
+
+                <a id="slideFolderLink" href="#" target="_blank" class="p-3.5 rounded-2xl bg-[#ffffff] border border-[#e3e7f0] hover:border-emerald-500 hover:bg-emerald-50/20 transition flex items-center justify-between group shadow-xs">
+
+                    <div class="flex items-center space-x-3 truncate">
+
+                        <i class="fa-solid fa-folder text-emerald-500 text-xl"></i>
+
+                        <div class="truncate text-left">
+
+                            <span class="text-xs font-bold text-slate-800 group-hover:text-emerald-700 transition block truncate" id="slideFolderName">Thư mục Google Drive</span>
+
+                            <span class="text-[10px] text-slate-500">Bấm để mở và xem toàn bộ file ảnh trên Google Drive</span>
+
+                        </div>
+
+                    </div>
+
+                    <span class="text-xs font-bold text-emerald-600 flex items-center gap-1.5 group-hover:translate-x-0.5 transition">
+
+                        <span>Mở thư mục Google Drive</span>
+
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+
+                    </span>
+
+                </a>
+
+            </div>
+
+            <!-- Slides Preview Grid / Gallery -->
+
+            <div class="flex-1 overflow-y-auto space-y-3 pt-1 scrollbar-thin">
+
+                <div class="flex items-center justify-between text-xs text-slate-700 font-bold px-1">
+
+                    <span>Xem trước các slide hình ảnh 9:16 (Ảnh cuộn TikTok):</span>
+
+                    <span id="slidePresetUsed" class="text-[11px] font-normal text-[#df8a5a]">Phong cách: Infographic</span>
+
+                </div>
+
+                <div id="slidesGalleryContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+
+                    <!-- Slides thumbnails rendered dynamically -->
+
+                </div>
+
+            </div>
+
+            <div class="flex items-center justify-end pt-2 border-t border-[#e3e7f0]">
+
+                <button type="button" onclick="closeSlidePreviewModal()" class="btn-primary-mark py-2 px-5 text-xs font-bold">
+
+                    Đã Xong & Quay Lại Bảng
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    
+
+    <!-- MODAL: PHÓNG TO ẢNH MẪU MINH HỌA -->
+
+    <div id="imageLightboxModal" class="fixed inset-0 bg-[#282d38]/70 backdrop-blur-md z-[70] hidden flex items-center justify-center p-4" onclick="closeImageLightbox()">
+
+        <div class="relative max-w-sm w-full bg-transparent flex flex-col items-center" onclick="event.stopPropagation()">
+
+            <button onclick="closeImageLightbox()" class="absolute -top-10 right-0 text-white hover:text-amber-300 text-xl font-bold">
+
+                <i class="fa-solid fa-xmark"></i> Đóng
+
+            </button>
+
+            <div class="rounded-2xl overflow-hidden shadow-2xl border-2 border-white/30 bg-black aspect-[9/16] max-h-[82vh]">
+
+                <img id="lightboxImg" src="" alt="Ảnh mẫu" class="w-full h-full object-contain">
+
+            </div>
+
+            <div id="lightboxCaption" class="mt-3 text-center text-white font-bold text-xs bg-black/60 px-4 py-1.5 rounded-full backdrop-blur-sm">
+
+                Ảnh minh họa phong cách
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+
+    
+
+    <!-- ========================================================= -->
+
+    <!-- MODAL: KẾT QUẢ ĐĂNG ẢNH CUỘN LÊN TIKTOK (TIKTOK PUBLISH MODAL) -->
+
+    <!-- ========================================================= -->
+
+    <div id="tiktokPublishModal" class="fixed inset-0 bg-[#282d38]/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+
+        <div class="mark-card max-w-4xl w-full p-6 space-y-5 shadow-2xl relative max-h-[92vh] flex flex-col">
+
+            <button onclick="closeTikTokPublishModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 transition">
+
+                <i class="fa-solid fa-xmark text-lg"></i>
+
+            </button>
+
+            <!-- Modal Header -->
+
+            <div class="flex items-center space-x-3.5 pb-3 border-b border-[#e3e7f0]">
+
+                <div class="w-12 h-12 rounded-2xl bg-black text-white flex items-center justify-center text-2xl shadow-md shrink-0">
+
+                    <i class="fa-brands fa-tiktok text-rose-500"></i>
+
+                </div>
+
+                <div>
+
+                    <h3 class="text-base font-bold text-[#282d38] flex items-center gap-2">
+
+                        <span>Đăng Ảnh Cuộn Lên TikTok Thành Công</span>
+
+                        <span class="text-[10px] px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-600 font-bold border border-rose-200">
+
+                            <i class="fa-solid fa-lock text-[9px] mr-1"></i>Chỉ mình tôi (SELF_ONLY)
+
+                        </span>
+
+                    </h3>
+
+                    <p class="text-xs text-[#64748b]">Bộ ảnh cuộn đã được xuất bản trực tiếp lên kênh TikTok ở chế độ riêng tư.</p>
+
+                </div>
+
+            </div>
+
+            <!-- Content Body: Info & Gallery -->
+
+            <div class="space-y-4 overflow-y-auto flex-1 pr-1 scrollbar-thin">
+
+                <!-- Meta Info Pill Grid -->
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
+
+                        <div class="text-slate-400 font-medium text-[10px]">Kênh đích phát hành</div>
+
+                        <div id="ttPubAccount" class="font-bold text-slate-800 font-mono mt-0.5">@thong_tin_ve_thue</div>
+
+                    </div>
+
+                    <div class="p-3 bg-[#fdf4ee] rounded-xl border border-[#f5d5c5] text-xs">
+
+                        <div class="text-slate-500 font-medium text-[10px]">Định dạng & Chế độ</div>
+
+                        <div class="font-bold text-[#df8a5a] mt-0.5 flex items-center gap-1.5">
+
+                            <i class="fa-solid fa-images"></i>
+
+                            <span>Ảnh cuộn • Chỉ mình tôi</span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="p-3 bg-sky-50 rounded-xl border border-sky-200 text-xs">
+                        <div class="text-sky-600 font-medium text-[10px]">Đường hầm Ngrok HTTPS</div>
+                        <div id="ttPubTunnelUrl" class="font-bold text-sky-800 font-mono mt-0.5 truncate text-[11px]">Đang kiểm tra...</div>
+                    </div>
+
+                    <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs">
+                        <div class="text-emerald-600 font-medium text-[10px]">Google Sheet Cột L & K</div>
+                        <div class="font-bold text-emerald-700 mt-0.5 flex items-center gap-1">
+                            <i class="fa-solid fa-check-circle"></i>
+                            <span>Đã tích chọn Duyệt & Đăng</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status & Action Banner (Spanning full width) -->
+                <div id="ttPubAuthNotice" class="p-4 bg-amber-50/95 border-2 border-amber-300 rounded-2xl text-xs space-y-2.5 shadow-xs">
+                    <div class="flex items-center justify-between flex-wrap gap-2">
+                        <div class="flex items-center gap-2 font-bold text-amber-900">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-600 text-base"></i>
+                            <span class="text-xs sm:text-sm">Giải thích & Hướng dẫn hoàn tất đăng thật lên TikTok:</span>
+                        </div>
+                        <span class="text-[10px] px-2.5 py-0.5 rounded-full bg-amber-200 text-amber-900 font-bold font-mono">Chưa có OAuth Token</span>
+                    </div>
+                    <p class="text-slate-700 leading-relaxed text-[11.5px]">
+                        TikTok yêu cầu tài khoản cá nhân phải đăng nhập ủy quyền (OAuth 2.0) mới cho phép tự động đẩy bài qua API từ xa. Hệ thống đã <strong>đóng gói hoàn chỉnh đủ bộ 6 slide ảnh 9:16</strong> và <strong>kịch bản tiêu đề + hashtag chuẩn SEO</strong> trên máy tính của bạn.
+                    </p>
+                    <div class="flex items-center gap-2.5 pt-1 flex-wrap">
+                        <button type="button" onclick="launchTikTokStudioAssistant()" class="btn-primary-mark py-2.5 px-5 text-xs font-bold shadow-md inline-flex items-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-rocket text-sm"></i>
+                            <span>Đăng Thật Lên TikTok (1-Click Mở Tất Cả)</span>
+                        </button>
+                        <button type="button" onclick="openTikTokFolderOnly()" class="btn-outline-mark py-2.5 px-3.5 text-xs font-bold inline-flex items-center gap-1.5 text-slate-700 bg-white border-slate-300 hover:bg-slate-50 shadow-xs cursor-pointer">
+                            <i class="fa-solid fa-folder-open text-amber-500"></i>
+                            <span>Mở Thư Mục Ảnh</span>
+                        </button>
+                        <button type="button" onclick="downloadSlidesZip()" class="btn-outline-mark py-2.5 px-3.5 text-xs font-bold inline-flex items-center gap-1.5 text-emerald-800 bg-white border-emerald-300 hover:bg-emerald-50 shadow-xs cursor-pointer" title="Tải trọn bộ 6 file ảnh vào thư mục Downloads">
+                            <i class="fa-solid fa-file-zipper text-emerald-600"></i>
+                            <span>Tải 6 Ảnh (ZIP)</span>
+                        </button>
+                        <button type="button" onclick="copyTikTokCaption()" class="btn-outline-mark py-2.5 px-3.5 text-xs font-bold inline-flex items-center gap-1.5 text-slate-700 bg-white border-slate-300 hover:bg-slate-50 shadow-xs cursor-pointer">
+                            <i class="fa-regular fa-copy text-[#df8a5a]"></i>
+                            <span>Sao Chép Caption</span>
+                        </button>
+                        <a href="https://www.tiktok.com/tiktokstudio/upload" target="_blank" class="btn-outline-mark py-2.5 px-3.5 text-xs font-bold inline-flex items-center gap-1.5 text-rose-700 bg-white border-rose-300 hover:bg-rose-50 shadow-xs cursor-pointer">
+                            <i class="fa-brands fa-tiktok text-rose-500"></i>
+                            <span>Mở TikTok Studio Web</span>
+                        </a>
+                        <a id="ttPubTestImageLink" href="#" target="_blank" class="btn-outline-mark py-2.5 px-3.5 text-xs font-bold inline-flex items-center gap-1.5 text-sky-800 bg-white border-sky-300 hover:bg-sky-50 shadow-xs cursor-pointer">
+                            <i class="fa-solid fa-arrow-up-right-from-square text-sky-600"></i>
+                            <span>Mở Xem Slide Qua Ngrok</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Local Folder Path & 1-Click ZIP Download Bar -->
+                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs flex items-center justify-between gap-3">
+                    <div class="truncate flex items-center gap-2 text-slate-700 min-w-0">
+                        <i class="fa-solid fa-folder-tree text-amber-500 shrink-0 text-sm"></i>
+                        <span class="text-slate-500 text-[11px] shrink-0">Thư mục trên máy tính:</span>
+                        <code id="ttPubLocalPath" class="font-mono text-[11px] text-slate-800 bg-white px-2.5 py-1 rounded-lg border border-slate-200 truncate select-all font-semibold">...</code>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button type="button" onclick="copyLocalFolderPath()" class="btn-outline-mark py-1.5 px-3 text-[11px] font-bold text-slate-700 bg-white hover:bg-slate-100 flex items-center gap-1.5 shadow-2xs cursor-pointer">
+                            <i class="fa-regular fa-copy"></i>
+                            <span>Sao chép đường dẫn</span>
+                        </button>
+                        <button type="button" onclick="downloadSlidesZip()" class="btn-primary-mark py-1.5 px-3 text-[11px] font-bold flex items-center gap-1.5 shadow-2xs cursor-pointer">
+                            <i class="fa-solid fa-file-zipper"></i>
+                            <span>Tải ZIP</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Topic & Caption Box -->
+
+                <div class="p-3.5 bg-white rounded-xl border border-[#e3e7f0] text-xs space-y-1.5 shadow-2xs">
+
+                    <div class="flex items-center justify-between text-slate-500 font-semibold text-[11px]">
+
+                        <span>Tiêu đề & Caption bài đăng:</span>
+
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="copyTikTokCaption()" class="text-[10px] font-bold text-[#df8a5a] bg-[#fdf4ee] px-2.5 py-0.5 rounded border border-[#f5d5c5] hover:bg-[#fae6db] transition flex items-center gap-1 cursor-pointer">
+                                <i class="fa-regular fa-copy"></i>
+                                <span>Sao chép</span>
+                            </button>
+                            <span id="ttPubTime" class="text-slate-400 font-mono text-[10px]">...</span>
+                        </div>
+
+                    </div>
+
+                    <div id="ttPubCaption" class="font-mono text-slate-800 bg-slate-50 p-2.5 rounded-lg border border-slate-200/80 whitespace-pre-wrap leading-relaxed text-[11px]">
+
+                        ...
+
+                    </div>
+
+                </div>
+
+                <!-- Slides Preview Grid (Photo Carousel) -->
+
+                <div>
+
+                    <div class="flex items-center justify-between mb-2">
+
+                        <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+
+                            <i class="fa-solid fa-images text-[#df8a5a]"></i>
+
+                            <span>Bộ ảnh cuộn đã xuất bản:</span>
+
+                            <span id="ttPubSlideCount" class="text-[#df8a5a] font-mono font-bold">(... ảnh)</span>
+
+                        </span>
+
+                        <span class="text-[11px] text-slate-400">Tỷ lệ 9:16 chuẩn TikTok Safe Zone</span>
+
+                    </div>
+
+                    <div id="ttPubSlidesContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+
+                        <!-- Dynamic slide thumbnails -->
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Footer Buttons -->
+
+            <div class="flex items-center justify-between pt-3 border-t border-[#e3e7f0]">
+
+                <div class="text-[11px] text-slate-500 flex items-center gap-1.5">
+
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+
+                    <span>ID: <code id="ttPubId" class="font-mono font-bold text-slate-700">tt_pub_...</code></span>
+
+                </div>
+
+                <div class="flex items-center gap-2">
+
+                    <button type="button" onclick="closeTikTokPublishModal()" class="btn-outline-mark py-2 px-4 text-xs">
+
+                        Đóng
+
+                    </button>
+
+                    <button type="button" onclick="launchTikTokStudioAssistant()" class="btn-primary-mark py-2 px-5 text-xs font-bold inline-flex items-center gap-2 cursor-pointer">
+                        <i class="fa-brands fa-tiktok"></i>
+                        <span>Đăng Thật Qua TikTok Studio (1-Click)</span>
+                    </button>
+                    <a id="ttPubOpenLink" href="https://www.tiktok.com/@thong_tin_ve_thue" target="_blank" class="btn-primary-mark py-2 px-4 text-xs inline-flex items-center gap-1.5">
+
+                        <i class="fa-brands fa-tiktok"></i>
+
+                        <span>Xem Trên TikTok</span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-2.5 pointer-events-none"></div>
+
+    <script src="/static/js/app.js?v={{ version }}"></script>
+
+</body>
+
+</html>

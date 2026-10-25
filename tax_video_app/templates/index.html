@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tax Video AI Bot - Web Edition</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#EEF2FF',
+              500: '#6366F1',
+              600: '#4F46E5',
+              700: '#4338CA',
+            },
+            cyber: {
+              cyan: '#06B6D4',
+              emerald: '#10B981',
+              amber: '#F59E0B',
+              rose: '#EF4444',
+              dark: '#0F172A',
+              card: '#1E293B',
+              border: '#334155',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0F172A; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    /* Timeline styling */
+    .timeline-range::-webkit-slider-thumb {
+      appearance: none;
+      width: 14px;
+      height: 24px;
+      border-radius: 4px;
+      background: #06B6D4;
+      cursor: ew-resize;
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.6);
+    }
+  </style>
+</head>
+<body class="bg-[#0A0F1D] text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-cyan-500 selection:text-white">
+
+  <!-- TOP HEADER -->
+  <header class="bg-[#111827]/90 backdrop-blur border-b border-slate-800 sticky top-0 z-40">
+    <div class="max-w-[1700px] mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Logo & Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-cyan-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+          <i data-lucide="video" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+              TAX VIDEO AI BOT
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">WEB EDITION</span>
+            </h1>
+          </div>
+          <p class="text-xs text-slate-400">Hệ Thống Tự Động Tìm Kiếm, Dựng Video 9:16 & Đăng TikTok</p>
+        </div>
+      </div>
+
+      <!-- Quick Actions / Badges -->
+      <div class="flex items-center gap-2">
+        <!-- Cookies Status & Upload -->
+        <div id="cookieBadge" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border bg-slate-800 border-slate-700 text-slate-300">
+          <i data-lucide="cookie" class="w-4 h-4 text-amber-400"></i>
+          <span id="cookieStatusText">Đang kiểm tra...</span>
+          <label class="ml-1 cursor-pointer hover:text-cyan-400 underline" title="Tải lên file cookies.txt">
+            Nạp file
+            <input type="file" id="cookieFileInput" accept=".txt" class="hidden" onchange="uploadCookies(this)">
+          </label>
+        </div>
+
+        <!-- Output Folder Action -->
+        <button onclick="openOutputFolder()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-medium text-slate-300 transition">
+          <i data-lucide="folder-open" class="w-4 h-4 text-cyan-400"></i>
+          Mở Thư Mục Video
+        </button>
+
+        <!-- Completed Files Modal Trigger -->
+        <button onclick="toggleFilesModal(true)" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-xs font-semibold text-emerald-400 transition">
+          <i data-lucide="film" class="w-4 h-4"></i>
+          Kho Video Đã Xuất (<span id="fileCountBadge">0</span>)
+        </button>
+      </div>
+
+    </div>
+
+    <!-- MAIN NAVIGATION TABS BAR (YÊU CẦU 1: NẰM Ở PHÍA TRÊN NỘI DUNG) -->
+    <div class="max-w-[1700px] mx-auto px-4 border-t border-slate-800/80 bg-[#0E1526]">
+      <nav class="flex space-x-2 py-2" aria-label="Tabs">
+        <!-- Tab 1 -->
+        <button id="navTab1" onclick="switchTab('tab1')" class="nav-tab active-tab flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs transition duration-150 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-600/30 border border-indigo-500/30">
+          <i data-lucide="search" class="w-4 h-4"></i>
+          <span>1. TÌM KIẾM & XỬ LÝ VIDEO</span>
+        </button>
+
+        <!-- Tab 2 -->
+        <button id="navTab2" onclick="switchTab('tab2')" class="nav-tab flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs transition duration-150 text-slate-400 hover:text-white hover:bg-slate-800/60 border border-transparent">
+          <i data-lucide="scissors" class="w-4 h-4 text-cyan-400"></i>
+          <span>2. CHỈNH SỬA VIDEO (CAPCUT STYLE)</span>
+          <span id="tab2CountBadge" class="px-2 py-0.5 rounded-full text-[10px] bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">0</span>
+        </button>
+
+        <!-- Tab 3 -->
+        <button id="navTab3" onclick="switchTab('tab3')" class="nav-tab flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs transition duration-150 text-slate-400 hover:text-white hover:bg-slate-800/60 border border-transparent">
+          <i data-lucide="settings" class="w-4 h-4 text-amber-400"></i>
+          <span>3. CẤU HÌNH (TIKTOK & HASHTAG)</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-[1700px] mx-auto p-4 w-full flex-1 flex flex-col gap-4">
+
+    <!-- ========================================== -->
+    <!-- TAB 1: TÌM KIẾM & XỬ LÝ VIDEO (NỘI DUNG GỐC) -->
+    <!-- ========================================== -->
+    <div id="panelTab1" class="tab-panel flex flex-col gap-4">
+
+      <!-- CONFIGURATION & SEARCH FILTER CARD -->
+      <div class="bg-[#111827] border border-slate-800 rounded-xl p-4 shadow-xl">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          
+          <!-- Cột 1: Khoảng ngày & API Key -->
+          <div class="lg:col-span-4 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-cyan-400 tracking-wider flex items-center gap-1.5">
+                <i data-lucide="calendar" class="w-4 h-4"></i> KHOẢNG THỜI GIAN QUÉT
+              </span>
+              <button onclick="setQuickDates(0)" class="text-[11px] text-slate-400 hover:text-cyan-400 underline">Hôm nay</button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">Từ ngày (DD/MM/YYYY):</label>
+                <input type="text" id="startDate" placeholder="DD/MM/YYYY" class="w-full bg-[#1E293B] border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500">
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">Đến ngày (DD/MM/YYYY):</label>
+                <input type="text" id="endDate" placeholder="DD/MM/YYYY" class="w-full bg-[#1E293B] border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500">
+              </div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="text-[11px] text-slate-400">YouTube Data API Key v3:</label>
+                <button onclick="toggleApiKeyMask()" class="text-[11px] text-slate-400 hover:text-cyan-400 flex items-center gap-1">
+                  <i data-lucide="eye" class="w-3 h-3" id="eyeIcon"></i> <span id="eyeText">Ẩn/Hiện</span>
+                </button>
+              </div>
+              <input type="password" id="apiKey" class="w-full bg-[#1E293B] border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+            </div>
+          </div>
+
+          <!-- Cột 2: Chọn Đài Truyền Hình (7 Kênh) -->
+          <div class="lg:col-span-5 flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-cyan-400 tracking-wider flex items-center gap-1.5">
+                <i data-lucide="tv" class="w-4 h-4"></i> ĐÀI TRUYỀN HÌNH / KÊNH YOUTUBE (7 KÊNH)
+              </span>
+              <div class="flex items-center gap-2">
+                <button onclick="toggleAllChannels(true)" class="text-[11px] text-cyan-400 hover:underline">Chọn hết</button>
+                <span class="text-slate-600">|</span>
+                <button onclick="toggleAllChannels(false)" class="text-[11px] text-slate-400 hover:underline">Bỏ chọn</button>
+              </div>
+            </div>
+
+            <div id="channelsContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-2 bg-[#1E293B]/40 p-2.5 rounded-lg border border-slate-800/80">
+              <!-- Channel pills injected via JS -->
+            </div>
+          </div>
+
+          <!-- Cột 3: Từ khóa & Nút Giai đoạn 1 -->
+          <div class="lg:col-span-3 flex flex-col justify-between gap-3">
+            <div>
+              <span class="text-xs font-bold text-cyan-400 tracking-wider flex items-center gap-1.5 mb-1.5">
+                <i data-lucide="tag" class="w-4 h-4"></i> TỪ KHÓA TÌM KIẾM
+              </span>
+              <input type="text" id="keywordsInput" class="w-full bg-[#1E293B] border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" placeholder="thuế, hộ kinh doanh, doanh nghiệp...">
+              <p class="text-[10px] text-slate-500 mt-1">Cách nhau bằng dấu phẩy (,)</p>
+            </div>
+
+            <!-- Nút Quét Giai Đoạn 1 -->
+            <button id="btnStage1" onclick="runStage1Search()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 transition active:scale-[0.98]">
+              <i data-lucide="search" class="w-4 h-4" id="stage1Icon"></i>
+              <span id="stage1BtnText">🔍 GIAI ĐOẠN 1: QUÉT TÌM VIDEO</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ACTION TOOLBAR FOR STAGE 2 -->
+      <div class="bg-[#111827] border border-slate-800 rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-3 shadow-md">
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+            <i data-lucide="list-checks" class="w-4 h-4 text-cyan-400"></i> KẾT QUẢ TÌM THẤY:
+            <span id="resultsCountBadge" class="px-2 py-0.5 rounded-full bg-slate-800 text-cyan-400 border border-slate-700 font-bold">0 video</span>
+          </span>
+          <span class="text-slate-600">|</span>
+          <button onclick="selectAllStage1(true)" class="text-xs text-cyan-400 hover:underline flex items-center gap-1">
+            <i data-lucide="check-square" class="w-3.5 h-3.5"></i> Chọn tất cả
+          </button>
+          <button onclick="selectAllStage1(false)" class="text-xs text-slate-400 hover:underline flex items-center gap-1">
+            <i data-lucide="square" class="w-3.5 h-3.5"></i> Bỏ chọn tất cả
+          </button>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Nút Giai đoạn 2 -->
+          <button id="btnStage2" onclick="runStage2Process()" class="py-2 px-5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold text-sm shadow-lg shadow-emerald-600/30 flex items-center gap-2 transition active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed">
+            <i data-lucide="clapperboard" class="w-4 h-4" id="stage2Icon"></i>
+            <span id="stage2BtnText">🎬 GIAI ĐOẠN 2: XỬ LÝ VIDEO ĐÃ CHỌN (<span id="selectedCountText">0</span>)</span>
+          </button>
+
+          <!-- Nút Dừng -->
+          <button id="btnStop" onclick="stopProcess()" disabled class="py-2 px-4 rounded-xl bg-rose-600/20 hover:bg-rose-600/40 border border-rose-500/40 text-rose-400 font-semibold text-xs flex items-center gap-1.5 transition disabled:opacity-30 disabled:cursor-not-allowed">
+            <i data-lucide="square" class="w-3.5 h-3.5"></i> Dừng quy trình
+          </button>
+        </div>
+      </div>
+
+      <!-- TABLE AREA (STAGE 1 RESULTS) -->
+      <div class="bg-[#111827] border border-slate-800 rounded-xl overflow-hidden shadow-2xl flex-1 flex flex-col min-h-[360px]">
+        <div class="overflow-x-auto overflow-y-auto max-h-[480px]">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="bg-[#1E293B] text-slate-300 font-bold uppercase tracking-wider sticky top-0 z-10 border-b border-slate-700">
+              <tr>
+                <th class="p-3 w-16 text-center">Chọn [X]</th>
+                <th class="p-3 w-12 text-center">STT</th>
+                <th class="p-3 w-36">Kênh YouTube</th>
+                <th class="p-3 w-64">Tên Video</th>
+                <th class="p-3 w-72 text-cyan-400">
+                  <span class="flex items-center gap-1">
+                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Chữ đưa vào Video (9:16)
+                  </span>
+                </th>
+                <th class="p-3 min-w-[300px]">Nội dung mô tả (Đầy đủ 100%)</th>
+                <th class="p-3 w-40 text-amber-400">Từ khóa</th>
+                <th class="p-3 w-28 text-center">Link YouTube</th>
+              </tr>
+            </thead>
+            <tbody id="videoTableBody" class="divide-y divide-slate-800 text-slate-200">
+              <tr>
+                <td colspan="8" class="p-12 text-center text-slate-500">
+                  <i data-lucide="inbox" class="w-10 h-10 mx-auto mb-2 opacity-40"></i>
+                  Chưa có dữ liệu. Vui lòng bấm <b>"GIAI ĐOẠN 1: QUÉT TÌM VIDEO"</b> để bắt đầu quét tin tức.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: CHỈNH SỬA VIDEO (CAPCUT STYLE & TIKTOK) -->
+    <!-- ========================================== -->
+    <div id="panelTab2" class="tab-panel hidden flex flex-col gap-4">
+
+      <!-- TOP: BỘ CHỌN VIDEO VỪA XỬ LÝ Ở GIAI ĐOẠN 2 -->
+      <div class="bg-[#111827] border border-slate-800 rounded-xl p-4 shadow-xl">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-cyan-600/20 text-cyan-400 flex items-center justify-center border border-cyan-500/30">
+              <i data-lucide="film" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h2 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                CHỌN VIDEO ĐÃ XỬ LÝ (9:16) ĐỂ CHỈNH SỬA
+              </h2>
+              <p class="text-xs text-slate-400">Danh sách các video đã kết xuất ở Giai đoạn 2 trong thư mục <code id="editorFolderLabel" class="text-cyan-400">D:\Data_Video</code></p>
+            </div>
+          </div>
+
+          <button onclick="refreshEditorVideoList()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Làm mới danh sách
+          </button>
+        </div>
+
+        <div class="mt-3">
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Chọn 1 video:</label>
+          <select id="videoSelectDropdown" onchange="onSelectEditorVideo(this.value)" class="w-full bg-[#1E293B] border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500 cursor-pointer">
+            <option value="">-- Đang nạp danh sách video... --</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- MAIN STUDIO: 2 CỘT (TRÌNH PHÁT BÊN TRÁI, BỘ ĐIỀU KHIỂN BÊN PHẢI) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        
+        <!-- CỘT TRÁI (LG: 5 CỘT): TRÌNH PHÁT VIDEO PLAYER -->
+        <div class="lg:col-span-5 bg-[#111827] border border-slate-800 rounded-xl p-4 shadow-xl flex flex-col items-center justify-center">
+          <div class="w-full flex items-center justify-between pb-2 mb-2 border-b border-slate-800">
+            <span class="text-xs font-bold text-cyan-400 flex items-center gap-1.5">
+              <i data-lucide="play-circle" class="w-4 h-4"></i> TRÌNH PHÁT XEM TRƯỚC
+            </span>
+            <span id="playerDurationBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">00:00 / 00:00</span>
+          </div>
+
+          <!-- Video Element (Tỉ lệ chuẩn 9:16) -->
+          <div class="w-full max-w-[320px] aspect-[9/16] bg-black rounded-2xl overflow-hidden shadow-2xl border border-slate-800 relative flex items-center justify-center group">
+            <video id="editorVideoPlayer" playsinline controls class="w-full h-full object-contain"></video>
+            <div id="videoPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-slate-500 bg-[#0F172A] p-4 text-center">
+              <i data-lucide="clapperboard" class="w-12 h-12 mb-2 opacity-30"></i>
+              <p class="text-xs">Vui lòng chọn 1 video từ danh sách phía trên để bắt đầu chỉnh sửa</p>
+            </div>
+          </div>
+
+          <!-- Nút xem lại nhanh -->
+          <div class="mt-3 flex items-center gap-2 w-full justify-center">
+            <button onclick="replayVideo()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold flex items-center gap-1.5 transition">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Phát lại từ đầu
+            </button>
+            <button onclick="previewTrimmedRange()" class="px-4 py-2 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 border border-indigo-500/40 text-xs font-bold flex items-center gap-1.5 transition">
+              <i data-lucide="play" class="w-3.5 h-3.5"></i> Phát đoạn cắt
+            </button>
+          </div>
+        </div>
+
+        <!-- CỘT PHẢI (LG: 7 CỘT): CÔNG CỤ CẮT CAPCUT, CHỈNH ÂM LƯỢNG, HASHTAG & ĐĂNG TIKTOK -->
+        <div class="lg:col-span-7 flex flex-col gap-4">
+
+          <!-- 1. BỘ CẮT PHẦN TRƯỚC / SAU (CAPCUT STYLE TRIMMER) -->
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4 shadow-xl">
+            <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-800">
+              <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="scissors" class="w-4 h-4"></i> 1. CẮT PHẦN TRƯỚC & SAU VIDEO (GIỐNG CAPCUT)
+              </span>
+              <span id="trimSummaryBadge" class="text-xs font-bold text-emerald-400 bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-800/60">
+                Gốc: 0s | Giữ lại: 0s
+              </span>
+            </div>
+
+            <!-- CapCut Visual Markers -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+              <!-- Mốc bắt đầu (Cắt bỏ phần trước) -->
+              <div class="bg-slate-900/60 border border-slate-800 p-3 rounded-xl flex flex-col gap-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-semibold text-slate-300 flex items-center gap-1">
+                    <i data-lucide="arrow-right-circle" class="w-3.5 h-3.5 text-cyan-400"></i> Điểm bắt đầu (Cắt trước):
+                  </span>
+                  <span id="startSecText" class="text-xs font-mono text-cyan-400 font-bold">0.0s</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <input type="number" id="trimStartInput" min="0" step="0.5" value="0" class="w-24 bg-[#1E293B] border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-cyan-500" onchange="onTrimInputChange()">
+                  <span class="text-xs text-slate-400">giây</span>
+                  <button onclick="setTrimStartFromCurrent()" class="flex-1 py-1 px-2.5 rounded-lg bg-cyan-600/20 hover:bg-cyan-600/40 text-cyan-300 border border-cyan-500/30 text-[11px] font-bold flex items-center justify-center gap-1 transition" title="Lấy thời điểm hiện tại của video player">
+                    <i data-lucide="bookmark" class="w-3 h-3"></i> Đặt tại mốc này
+                  </button>
+                </div>
+              </div>
+
+              <!-- Mốc kết thúc (Cắt bỏ phần sau) -->
+              <div class="bg-slate-900/60 border border-slate-800 p-3 rounded-xl flex flex-col gap-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-semibold text-slate-300 flex items-center gap-1">
+                    <i data-lucide="arrow-left-circle" class="w-3.5 h-3.5 text-amber-400"></i> Điểm kết thúc (Cắt sau):
+                  </span>
+                  <span id="endSecText" class="text-xs font-mono text-amber-400 font-bold">0.0s</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <input type="number" id="trimEndInput" min="0" step="0.5" value="0" class="w-24 bg-[#1E293B] border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-amber-500" onchange="onTrimInputChange()">
+                  <span class="text-xs text-slate-400">giây</span>
+                  <button onclick="setTrimEndFromCurrent()" class="flex-1 py-1 px-2.5 rounded-lg bg-amber-600/20 hover:bg-amber-600/40 text-amber-300 border border-amber-500/30 text-[11px] font-bold flex items-center justify-center gap-1 transition" title="Lấy thời điểm hiện tại của video player">
+                    <i data-lucide="bookmark" class="w-3 h-3"></i> Đặt tại mốc này
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reset Trim button -->
+            <div class="flex items-center justify-end">
+              <button onclick="resetTrim()" class="text-[11px] text-slate-400 hover:text-cyan-400 underline flex items-center gap-1">
+                <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Đặt lại toàn bộ độ dài gốc
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. BỘ TĂNG GIẢM ÂM LƯỢNG (VOLUME CONTROL) -->
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4 shadow-xl">
+            <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-800">
+              <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="volume-2" class="w-4 h-4"></i> 2. TĂNG GIẢM ÂM LƯỢNG
+              </span>
+              <span id="volumeBadge" class="text-xs font-mono font-bold text-cyan-400 bg-cyan-950 px-2.5 py-0.5 rounded-full border border-cyan-800">
+                100% (Chuẩn gốc)
+              </span>
+            </div>
+
+            <div class="space-y-3">
+              <div class="flex items-center gap-4">
+                <i data-lucide="volume-x" class="w-4 h-4 text-slate-500"></i>
+                <input type="range" id="volumeSlider" min="0" max="300" step="5" value="100" oninput="onVolumeSliderChange(this.value)" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500">
+                <i data-lucide="volume-2" class="w-4 h-4 text-cyan-400"></i>
+              </div>
+
+              <!-- Nút preset âm lượng -->
+              <div class="flex flex-wrap items-center gap-2">
+                <button onclick="setVolume(0)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-300">Tắt tiếng (0%)</button>
+                <button onclick="setVolume(50)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-300">Nhỏ (50%)</button>
+                <button onclick="setVolume(100)" class="px-2.5 py-1 rounded-lg bg-cyan-600/30 hover:bg-cyan-600/50 text-[11px] text-cyan-300 border border-cyan-500/40 font-bold">Chuẩn (100%)</button>
+                <button onclick="setVolume(150)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-300">To (+150%)</button>
+                <button onclick="setVolume(200)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-300">Rất to (+200%)</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- NÚT ÁP DỤNG CẮT & CHỈNH ÂM LƯỢNG -->
+          <div class="bg-gradient-to-r from-slate-900 to-[#111827] border border-cyan-500/30 p-4 rounded-xl flex items-center justify-between gap-3 shadow-lg">
+            <div>
+              <h4 class="text-xs font-bold text-white flex items-center gap-1.5">
+                <i data-lucide="check-circle" class="w-4 h-4 text-cyan-400"></i> XUẤT BẢN VIDEO ĐÃ CHỈNH SỬA
+              </h4>
+              <p class="text-[11px] text-slate-400">Hệ thống sẽ dùng FFmpeg áp dụng cắt và tăng/giảm âm lượng, sau đó nạp lại video vào player để xem lại.</p>
+            </div>
+            <button id="btnApplyEdit" onclick="applyVideoEdits()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs shadow-lg shadow-cyan-600/30 flex items-center gap-2 transition active:scale-[0.98] shrink-0">
+              <i data-lucide="scissors" class="w-4 h-4" id="applyEditIcon"></i>
+              <span id="applyEditBtnText">✂️ Áp Dụng Cắt & Chỉnh Âm Lượng</span>
+            </button>
+          </div>
+
+          <!-- 3. CẤU HÌNH HASHTAG & NỘI DUNG TIKTOK -->
+          <div class="bg-[#111827] border border-slate-800 rounded-xl p-4 shadow-xl space-y-4">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+              <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="hash" class="w-4 h-4"></i> 3. CẤU HÌNH NỘI DUNG & HASHTAG TIKTOK
+              </span>
+              <button onclick="reloadDefaultHashtagsIntoEditor()" class="text-[11px] text-slate-400 hover:text-cyan-400 underline flex items-center gap-1">
+                <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Lấy lại hashtag từ Cấu hình
+              </button>
+            </div>
+
+            <!-- Cấu hình Nội Dung Video (Tiêu đề TikTok) -->
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="block text-xs font-semibold text-slate-300">Nội dung / Tiêu đề bài đăng TikTok:</label>
+                <span id="captionCharCount" class="text-[10px] text-slate-500">0/2200 ký tự</span>
+              </div>
+              <textarea id="tiktokCaptionInput" rows="2" oninput="updateCaptionCount()" placeholder="Nhập tiêu đề / mô tả tóm tắt nội dung video..." class="w-full bg-[#1E293B] border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-cyan-500 leading-relaxed"></textarea>
+            </div>
+
+            <!-- Cấu hình Hashtag: Hiển thị từ Tab Cấu hình & cho phép nhập thêm -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="block text-xs font-semibold text-slate-300">Hashtag (Lấy từ Cấu hình & Cho phép nhập thêm):</label>
+                <span id="hashtagCount" class="text-[10px] text-slate-500">0 tags</span>
+              </div>
+
+              <!-- Thêm hashtag nhanh -->
+              <div class="flex items-center gap-2 mb-2">
+                <div class="relative flex-1">
+                  <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-500 text-xs">#</span>
+                  <input type="text" id="addHashtagInput" placeholder="Nhập thêm hashtag rồi bấm Thêm (hoặc Enter)..." class="w-full bg-[#1E293B] border border-slate-700 rounded-lg pl-7 pr-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500" onkeydown="if(event.key === 'Enter') addCustomHashtag()">
+                </div>
+                <button onclick="addCustomHashtag()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-cyan-400 text-xs font-semibold transition">
+                  + Thêm
+                </button>
+              </div>
+
+              <!-- Textarea chỉnh sửa danh sách hashtag đầy đủ -->
+              <textarea id="tiktokHashtagsInput" rows="3" oninput="renderHashtagsList()" class="w-full bg-[#1E293B] border border-slate-700 rounded-xl p-2.5 text-xs text-cyan-300 font-mono leading-relaxed focus:outline-none focus:border-cyan-500"></textarea>
+            </div>
+
+            <!-- 4. NÚT ĐĂNG VIDEO LÊN TIKTOK -->
+            <div class="pt-2 border-t border-slate-800 flex items-center justify-between gap-3">
+              <div class="text-[11px] text-slate-400">
+                Đăng tải video đã chỉnh sửa cùng Tiêu đề và Hashtag lên TikTok.
+              </div>
+              <button id="btnPostTikTok" onclick="postToTikTok()" class="py-3 px-6 rounded-xl bg-gradient-to-r from-rose-600 via-pink-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white font-extrabold text-sm shadow-xl shadow-rose-600/30 flex items-center gap-2 transition active:scale-[0.98]">
+                <i data-lucide="share-2" class="w-4 h-4" id="postTikTokIcon"></i>
+                <span id="postTikTokBtnText">🚀 ĐĂNG VIDEO LÊN TIKTOK</span>
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: CẤU HÌNH (TIKTOK API & HASHTAG)     -->
+    <!-- ========================================== -->
+    <div id="panelTab3" class="tab-panel hidden flex flex-col gap-4">
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        
+        <!-- CỘT 1 (LG: 6 CỘT): CẤU HÌNH KẾT NỐI TIKTOK -->
+        <div class="lg:col-span-6 bg-[#111827] border border-slate-800 rounded-xl p-5 shadow-xl flex flex-col gap-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-rose-600/20 text-rose-400 flex items-center justify-center border border-rose-500/30">
+                <i data-lucide="share-2" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider">CẤU HÌNH KẾT NỐI TIKTOK</h3>
+                <p class="text-xs text-slate-400">Thiết lập kết nối để đăng video trực tiếp lên TikTok</p>
+              </div>
+            </div>
+
+            <!-- TikTok Status Badge -->
+            <span id="tiktokStatusBadge" class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300">
+              Chưa kết nối
+            </span>
+          </div>
+
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">
+                TikTok User Access Token (Content Posting API):
+              </label>
+              <div class="relative">
+                <input type="password" id="tiktokAccessToken" placeholder="Dán Access Token (Bearer) từ TikTok Developer..." class="w-full bg-[#1E293B] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500 font-mono pr-20">
+                <button type="button" onclick="togglePasswordMask('tiktokAccessToken')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-slate-400 hover:text-white">
+                  Ẩn/Hiện
+                </button>
+              </div>
+              <p class="text-[11px] text-slate-500 mt-1">Yêu cầu quyền (scopes): <code class="text-cyan-400">video.upload, video.publish</code></p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">Client Key:</label>
+                <input type="text" id="tiktokClientKey" placeholder="Client Key" class="w-full bg-[#1E293B] border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">Client Secret:</label>
+                <input type="password" id="tiktokClientSecret" placeholder="Client Secret" class="w-full bg-[#1E293B] border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">Quyền riêng tư mặc định:</label>
+                <select id="tiktokPrivacyLevel" class="w-full bg-[#1E293B] border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+                  <option value="PUBLIC_TO_EVERYONE">Công khai (Public)</option>
+                  <option value="MUTUAL_FOLLOW_FRIENDS">Bạn bè (Friends)</option>
+                  <option value="SELF_ONLY">Chỉ mình tôi (Private)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] text-slate-400 mb-1">Session ID (Web Cookie Creator):</label>
+                <input type="password" id="tiktokSessionId" placeholder="sessionid cookie (nếu dùng web)" class="w-full bg-[#1E293B] border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+              </div>
+            </div>
+
+            <!-- Tùy chọn tương tác -->
+            <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 space-y-2">
+              <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Cài đặt tương tác video:</span>
+              <div class="grid grid-cols-3 gap-2">
+                <label class="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer">
+                  <input type="checkbox" id="chkDisableComment" class="rounded border-slate-700 text-rose-500">
+                  <span>Khóa Comment</span>
+                </label>
+                <label class="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer">
+                  <input type="checkbox" id="chkDisableDuet" class="rounded border-slate-700 text-rose-500">
+                  <span>Khóa Duet</span>
+                </label>
+                <label class="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer">
+                  <input type="checkbox" id="chkDisableStitch" class="rounded border-slate-700 text-rose-500">
+                  <span>Khóa Stitch</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Hướng dẫn nhanh -->
+            <div class="p-3 bg-indigo-950/30 border border-indigo-800/40 rounded-xl text-xs text-indigo-300 leading-relaxed">
+              💡 <b>Hướng dẫn đăng TikTok:</b> Tạo ứng dụng tại <a href="https://developers.tiktok.com" target="_blank" class="underline text-cyan-400">developers.tiktok.com</a>, kích hoạt sản phẩm <b>Content Posting API</b>, tạo Access Token và dán vào đây để đăng video tự động chỉ với 1 click!
+            </div>
+          </div>
+
+          <!-- Nút Lưu & Kiểm Tra -->
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between gap-3">
+            <button onclick="testTikTokConnection()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-bold border border-slate-700 flex items-center gap-1.5 transition">
+              <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Kiểm tra kết nối TikTok
+            </button>
+            <button onclick="saveTikTokSettings()" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg shadow-emerald-600/30 flex items-center gap-1.5 transition">
+              <i data-lucide="save" class="w-3.5 h-3.5"></i> Lưu Cấu Hình TikTok
+            </button>
+          </div>
+        </div>
+
+        <!-- CỘT 2 (LG: 6 CỘT): CHỈNH SỬA & LƯU HASHTAG MẶC ĐỊNH -->
+        <div class="lg:col-span-6 bg-[#111827] border border-slate-800 rounded-xl p-5 shadow-xl flex flex-col justify-between gap-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-amber-600/20 text-amber-400 flex items-center justify-center border border-amber-500/30">
+                <i data-lucide="hash" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider">CHỈNH SỬA & LƯU HASHTAG MẶC ĐỊNH</h3>
+                <p class="text-xs text-slate-400">Hashtag sẽ tự động được đưa vào Tab Chỉnh Sửa Video</p>
+              </div>
+            </div>
+
+            <button onclick="resetDefaultHashtagsToPreset()" class="text-xs text-slate-400 hover:text-cyan-400 underline flex items-center gap-1">
+              <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Khôi phục danh sách gốc
+            </button>
+          </div>
+
+          <div class="space-y-3 flex-1 flex flex-col">
+            <label class="block text-xs font-semibold text-slate-300">
+              Danh sách Hashtag Mặc Định (Chỉnh sửa tùy ý):
+            </label>
+            <textarea id="configHashtagsInput" rows="7" class="w-full flex-1 bg-[#1E293B] border border-slate-700 rounded-xl p-3 text-xs text-cyan-300 font-mono leading-relaxed focus:outline-none focus:border-cyan-500"></textarea>
+
+            <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800">
+              <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Xem trước các Tag nhận diện:</div>
+              <div id="configTagsPreview" class="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto">
+                <!-- Tags preview pills injected via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Nút Lưu Hashtag -->
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-end gap-3">
+            <button onclick="saveDefaultHashtags()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-lg shadow-emerald-600/30 flex items-center gap-1.5 transition">
+              <i data-lucide="save" class="w-4 h-4"></i> 💾 Lưu Hashtag Mặc Định
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- REALTIME LOG CONSOLE (DOCKING AT BOTTOM)   -->
+    <!-- ========================================== -->
+    <div class="bg-[#090D16] border border-slate-800 rounded-xl p-3 shadow-2xl">
+      <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-800/80">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-xs font-bold text-cyan-400 tracking-wider">🖥️ NHẬT KÝ THỰC THI THỜI GIAN THỰC (REALTIME CONSOLE LOG)</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="clearConsoleLog()" class="text-[11px] text-slate-400 hover:text-slate-200 flex items-center gap-1">
+            <i data-lucide="trash-2" class="w-3 h-3"></i> Xóa log
+          </button>
+        </div>
+      </div>
+
+      <div id="consoleLogArea" class="font-mono text-xs text-slate-300 h-28 overflow-y-auto space-y-1 p-1">
+        <div class="text-slate-500">[00:00:00] [INFO] Hệ thống sẵn sàng. Vui lòng chọn Tab chức năng phía trên...</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL: EDIT OVERLAY TEXT (SINGLETON) -->
+  <div id="editModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#1E293B] border border-slate-700 rounded-2xl max-w-xl w-full p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-700">
+        <h3 class="text-sm font-bold text-cyan-400 flex items-center gap-2">
+          <i data-lucide="edit-3" class="w-4 h-4"></i> CHỈNH SỬA CHỮ HIỂN THỊ TRÊN BANNER DƯỚI (9:16)
+        </h3>
+        <button onclick="closeEditModal()" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="my-4 space-y-3">
+        <div class="p-3 rounded-lg bg-slate-900/60 border border-slate-800 text-xs text-slate-400 leading-relaxed">
+          📌 Chữ sẽ xuất hiện dưới ô <b>"THÔNG TIN VỀ THUẾ"</b> trên banner <code class="text-amber-400">_Bottom_1.png</code>. Hệ thống sẽ tự động <b>VIẾT HOA TOÀN BỘ</b> và áp dụng <b>CỠ CHỮ 52 BOLD</b>.
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Nội dung tiêu đề chữ 9:16:</label>
+          <textarea id="modalTextInput" rows="4" class="w-full bg-[#0F172A] border border-slate-700 rounded-xl p-3 text-sm text-white font-medium focus:outline-none focus:border-cyan-500 uppercase" oninput="updateModalPreview(this.value)"></textarea>
+        </div>
+
+        <div class="bg-[#0F172A] p-2.5 rounded-lg border border-slate-800">
+          <div class="text-[10px] uppercase tracking-wider text-slate-500 font-bold mb-1">Xem trước chữ hiển thị:</div>
+          <div id="modalPreviewText" class="text-sm font-black text-white uppercase tracking-wide break-words">...</div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-700">
+        <button onclick="closeEditModal()" class="px-4 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs font-medium transition">Hủy</button>
+        <button onclick="saveEditModal()" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-lg shadow-emerald-600/30">
+          <i data-lucide="save" class="w-4 h-4"></i> Lưu & Cập Nhật
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: OUTPUT FILES & VIDEO PREVIEW -->
+  <div id="filesModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#1E293B] border border-slate-700 rounded-2xl max-w-4xl w-full p-6 shadow-2xl flex flex-col max-h-[85vh]">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-700">
+        <h3 class="text-sm font-bold text-cyan-400 flex items-center gap-2">
+          <i data-lucide="film" class="w-5 h-5"></i> KHO VIDEO & NHẬT KÝ EXCEL ĐÃ KẾT XUẤT
+        </h3>
+        <button onclick="toggleFilesModal(false)" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="py-3 flex items-center justify-between text-xs text-slate-400">
+        <span>Thư mục: <code id="filesDirLabel" class="text-cyan-400">D:\Data_Video</code></span>
+        <div class="flex items-center gap-2">
+          <button onclick="openOutputFolder()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white text-xs font-medium flex items-center gap-1">
+            <i data-lucide="folder-open" class="w-3.5 h-3.5"></i> Mở trên Windows
+          </button>
+          <button onclick="loadOutputFiles()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white text-xs font-medium flex items-center gap-1">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Làm mới
+          </button>
+        </div>
+      </div>
+
+      <!-- File List Table -->
+      <div class="overflow-y-auto flex-1 rounded-xl border border-slate-800">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-900 text-slate-300 font-bold sticky top-0">
+            <tr>
+              <th class="p-2.5">Tên File</th>
+              <th class="p-2.5 w-24">Loại</th>
+              <th class="p-2.5 w-24">Dung lượng</th>
+              <th class="p-2.5 w-36">Thời gian</th>
+              <th class="p-2.5 w-36 text-center">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="filesTableBody" class="divide-y divide-slate-800 text-slate-200">
+            <!-- Files injected via JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Video Player Preview Area (if clicked) -->
+      <div id="videoPreviewContainer" class="hidden mt-4 p-3 bg-black/60 rounded-xl border border-slate-700 flex flex-col items-center">
+        <div class="flex items-center justify-between w-full mb-2">
+          <span class="text-xs font-bold text-cyan-400 flex items-center gap-1">
+            <i data-lucide="play" class="w-3.5 h-3.5"></i> Xem trước: <span id="previewVideoTitle" class="text-white"></span>
+          </span>
+          <button onclick="closeVideoPreview()" class="text-xs text-slate-400 hover:text-white">Đóng video</button>
+        </div>
+        <video id="html5VideoPlayer" controls class="max-h-[350px] rounded-lg shadow-lg" playsinline></video>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <script>
+    // Global State
+    let appConfig = {};
+    let tiktokConfig = {};
+    let stage1Videos = [];
+    let editorVideos = [];
+    let currentSelectedVideo = null;
+    let activeEditingVideoId = null;
+    let pollInterval = null;
+    let currentVideoDuration = 0;
+
+    const PRESET_DEFAULT_HASHTAGS = "#Cucthue #ThueTPHCM #ruirothue #thanhtrathue #canhbaothue #phapluatthue #quanlyruiro #Thongtinvethue #ketoanthue #chudoanhnghiep #kinhdoanh #ketoan #quantridoanhnghiep #LearnOnTikTok #xuhuong #edutok #chiasekienthuc #viralvideotiktok #viraltiktok #TNCN #Thunhapcanhan #Giamkhautru #Nguoiphuthuoc #Giamtrugiacanh #Tienluongtiencong";
+
+    // Khởi tạo
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+      setDefaultDates();
+      loadConfig();
+      loadTikTokConfig();
+      initLogStream();
+      loadOutputFiles();
+      setupVideoPlayerEvents();
+    });
+
+    // ==========================================
+    // TAB NAVIGATION SWITCHING
+    // ==========================================
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.add('hidden'));
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.className = "nav-tab flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs transition duration-150 text-slate-400 hover:text-white hover:bg-slate-800/60 border border-transparent";
+      });
+
+      if (tabId === 'tab1') {
+        document.getElementById('panelTab1').classList.remove('hidden');
+        document.getElementById('navTab1').className = "nav-tab active-tab flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs transition duration-150 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-600/30 border border-indigo-500/30";
+      } else if (tabId === 'tab2') {
+        document.getElementById('panelTab2').classList.remove('hidden');
+        document.getElementById('navTab2').className = "nav-tab active-tab flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs transition duration-150 bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg shadow-cyan-600/30 border border-cyan-500/30";
+        refreshEditorVideoList();
+      } else if (tabId === 'tab3') {
+        document.getElementById('panelTab3').classList.remove('hidden');
+        document.getElementById('navTab3').className = "nav-tab active-tab flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs transition duration-150 bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-lg shadow-amber-600/30 border border-amber-500/30";
+        loadTikTokConfig();
+      }
+
+      lucide.createIcons();
+    }
+
+    // ==========================================
+    // CONFIG & DATA LOADERS
+    // ==========================================
+    function setDefaultDates() {
+      const today = new Date();
+      const past = new Date();
+      past.setDate(today.getDate() - 3);
+
+      const fmt = (d) => {
+        const dd = String(d.getDate()).padStart(2, '0');
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const yyyy = d.getFullYear();
+        return `${dd}/${mm}/${yyyy}`;
+      };
+
+      document.getElementById("startDate").value = fmt(past);
+      document.getElementById("endDate").value = fmt(today);
+    }
+
+    function setQuickDates(offsetDays = 0) {
+      const d = new Date();
+      d.setDate(d.getDate() - offsetDays);
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const yyyy = d.getFullYear();
+      const s = `${dd}/${mm}/${yyyy}`;
+      document.getElementById("startDate").value = s;
+      document.getElementById("endDate").value = s;
+    }
+
+    async function loadConfig() {
+      try {
+        const res = await fetch("/api/config");
+        appConfig = await res.json();
+        
+        document.getElementById("apiKey").value = appConfig.api_key || "";
+        document.getElementById("keywordsInput").value = appConfig.keywords || "";
+        
+        renderChannels(appConfig.channels || []);
+
+        const cookieStatus = document.getElementById("cookieStatusText");
+        if (appConfig.has_cookies) {
+          cookieStatus.innerHTML = '<span class="text-emerald-400 font-semibold">Đã nạp Cookies (.txt)</span>';
+        } else {
+          cookieStatus.innerHTML = '<span class="text-amber-400">Chưa nạp Cookies</span>';
+        }
+
+        lucide.createIcons();
+      } catch (err) {
+        console.error("Lỗi tải config:", err);
+      }
+    }
+
+    async function loadTikTokConfig() {
+      try {
+        const res = await fetch("/api/tiktok/config");
+        tiktokConfig = await res.json();
+        const hashtags = tiktokConfig.hashtags || PRESET_DEFAULT_HASHTAGS;
+        
+        // Tab 3 fields
+        document.getElementById("configHashtagsInput").value = hashtags;
+        renderConfigTagsPreview(hashtags);
+
+        const api = tiktokConfig.tiktok_api || {};
+        document.getElementById("tiktokAccessToken").value = api.access_token || "";
+        document.getElementById("tiktokClientKey").value = api.client_key || "";
+        document.getElementById("tiktokClientSecret").value = api.client_secret || "";
+        document.getElementById("tiktokSessionId").value = api.session_id || "";
+        if (api.privacy_level) document.getElementById("tiktokPrivacyLevel").value = api.privacy_level;
+        document.getElementById("chkDisableComment").checked = !!api.disable_comment;
+        document.getElementById("chkDisableDuet").checked = !!api.disable_duet;
+        document.getElementById("chkDisableStitch").checked = !!api.disable_stitch;
+
+        const badge = document.getElementById("tiktokStatusBadge");
+        if (api.access_token) {
+          badge.className = "text-[11px] font-semibold px-2.5 py-1 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-400";
+          badge.innerText = "Đã cấu hình Token";
+        } else {
+          badge.className = "text-[11px] font-semibold px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300";
+          badge.innerText = "Chưa kết nối";
+        }
+
+        // Tab 2 default hashtags
+        if (!document.getElementById("tiktokHashtagsInput").value.trim()) {
+          document.getElementById("tiktokHashtagsInput").value = hashtags;
+          renderHashtagsList();
+        }
+
+      } catch (e) {
+        console.error("Lỗi nạp tiktok config:", e);
+      }
+    }
+
+    function renderChannels(channels) {
+      const container = document.getElementById("channelsContainer");
+      container.innerHTML = channels.map((ch, idx) => `
+        <label class="flex items-center gap-2 p-1.5 rounded-lg bg-slate-900/60 hover:bg-slate-800/80 cursor-pointer border border-slate-800 transition">
+          <input type="checkbox" name="channel_chk" value="${ch.id}" checked class="rounded border-slate-700 text-cyan-500 focus:ring-0">
+          <span class="text-[11px] font-medium text-slate-200 truncate" title="${ch.name}">${ch.name}</span>
+        </label>
+      `).join("");
+    }
+
+    function toggleAllChannels(state) {
+      document.querySelectorAll('input[name="channel_chk"]').forEach(cb => cb.checked = state);
+    }
+
+    function toggleApiKeyMask() {
+      const input = document.getElementById("apiKey");
+      input.type = input.type === "password" ? "text" : "password";
+    }
+
+    function togglePasswordMask(id) {
+      const input = document.getElementById(id);
+      input.type = input.type === "password" ? "text" : "password";
+    }
+
+    async function uploadCookies(input) {
+      if (!input.files || input.files.length === 0) return;
+      const formData = new FormData();
+      formData.append("file", input.files[0]);
+
+      try {
+        const res = await fetch("/api/cookies/upload", { method: "POST", body: formData });
+        const data = await res.json();
+        if (data.status === "success") {
+          alert("Nạp Cookies thành công!");
+          loadConfig();
+        } else {
+          alert("Lỗi: " + data.message);
+        }
+      } catch (e) {
+        alert("Lỗi upload cookies: " + e);
+      }
+    }
+
+    // SSE Realtime Log
+    function initLogStream() {
+      const evtSource = new EventSource("/api/logs/stream");
+      const logArea = document.getElementById("consoleLogArea");
+
+      evtSource.onmessage = (event) => {
+        try {
+          const item = JSON.parse(event.data);
+          const colorMap = {
+            "INFO": "text-cyan-400",
+            "SUCCESS": "text-emerald-400 font-semibold",
+            "WARNING": "text-amber-400",
+            "ERROR": "text-rose-400 font-bold"
+          };
+          const colorClass = colorMap[item.level] || "text-slate-300";
+
+          const div = document.createElement("div");
+          div.className = "flex items-start gap-2 leading-relaxed";
+          div.innerHTML = `
+            <span class="text-slate-500 shrink-0">[${item.time}]</span>
+            <span class="${colorClass} shrink-0">[${item.level}]</span>
+            <span class="text-slate-200 break-words">${item.message}</span>
+          `;
+          logArea.appendChild(div);
+          logArea.scrollTop = logArea.scrollHeight;
+        } catch (e) {
+          // Heartbeat ping
+        }
+      };
+    }
+
+    function clearConsoleLog() {
+      document.getElementById("consoleLogArea").innerHTML = "";
+    }
+
+    // ==========================================
+    // TAB 1: GIAI ĐOẠN 1 & 2
+    // ==========================================
+    async function runStage1Search() {
+      const startDate = document.getElementById("startDate").value.trim();
+      const endDate = document.getElementById("endDate").value.trim();
+      const apiKey = document.getElementById("apiKey").value.trim();
+      const keywords = document.getElementById("keywordsInput").value.trim();
+
+      const selectedChannels = Array.from(document.querySelectorAll('input[name="channel_chk"]:checked')).map(cb => cb.value);
+
+      if (!startDate || !endDate) {
+        alert("Vui lòng nhập khoảng ngày bắt đầu và kết thúc!");
+        return;
+      }
+
+      if (selectedChannels.length === 0) {
+        alert("Vui lòng chọn ít nhất 1 đài truyền hình!");
+        return;
+      }
+
+      await fetch("/api/config", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ api_key: apiKey, keywords: keywords })
+      });
+
+      const btn = document.getElementById("btnStage1");
+      btn.disabled = true;
+      document.getElementById("stage1BtnText").innerText = "ĐANG QUÉT YOUTUBE...";
+
+      try {
+        const res = await fetch("/api/stage1/search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            start_date: startDate,
+            end_date: endDate,
+            channel_ids: selectedChannels,
+            keywords: keywords.split(",").map(k => k.trim()).filter(Boolean)
+          })
+        });
+        const data = await res.json();
+        if (data.status === "error") {
+          alert("Lỗi: " + data.message);
+          btn.disabled = false;
+          document.getElementById("stage1BtnText").innerText = "🔍 GIAI ĐOẠN 1: QUÉT TÌM VIDEO";
+          return;
+        }
+
+        startPollingStage1();
+
+      } catch (err) {
+        alert("Lỗi kết nối máy chủ: " + err);
+        btn.disabled = false;
+        document.getElementById("stage1BtnText").innerText = "🔍 GIAI ĐOẠN 1: QUÉT TÌM VIDEO";
+      }
+    }
+
+    function startPollingStage1() {
+      if (pollInterval) clearInterval(pollInterval);
+      pollInterval = setInterval(async () => {
+        try {
+          const res = await fetch("/api/stage1/results");
+          const data = await res.json();
+          stage1Videos = data.videos || [];
+          renderTable();
+
+          if (!data.is_searching) {
+            clearInterval(pollInterval);
+            pollInterval = null;
+            const btn = document.getElementById("btnStage1");
+            btn.disabled = false;
+            document.getElementById("stage1BtnText").innerText = "🔍 GIAI ĐOẠN 1: QUÉT TÌM VIDEO";
+          }
+        } catch (e) {
+          console.error("Polling error:", e);
+        }
+      }, 1500);
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById("videoTableBody");
+      document.getElementById("resultsCountBadge").innerText = `${stage1Videos.length} video`;
+
+      const selectedCount = stage1Videos.filter(v => v.selected).length;
+      document.getElementById("selectedCountText").innerText = selectedCount;
+
+      if (stage1Videos.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="p-12 text-center text-slate-500">
+              <i data-lucide="inbox" class="w-10 h-10 mx-auto mb-2 opacity-40"></i>
+              Không tìm thấy video nào phù hợp điều kiện lọc.
+            </td>
+          </tr>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      const sorted = [...stage1Videos].sort((a, b) => (b.selected ? 1 : 0) - (a.selected ? 1 : 0));
+
+      tbody.innerHTML = sorted.map((vid, index) => {
+        const isSel = vid.selected;
+        const rowClass = isSel ? "bg-cyan-950/20 hover:bg-cyan-950/30 border-l-4 border-l-cyan-500" : "hover:bg-slate-800/40";
+        return `
+          <tr class="${rowClass} transition group">
+            <td class="p-3 text-center">
+              <input type="checkbox" ${isSel ? "checked" : ""} onchange="toggleSelectVideo('${vid.video_id}', this.checked)" class="w-4 h-4 rounded border-slate-700 text-cyan-500 focus:ring-0 cursor-pointer">
+            </td>
+            <td class="p-3 text-center font-bold text-slate-400">${index + 1}</td>
+            <td class="p-3 font-medium text-indigo-300">
+              <span class="px-2 py-0.5 rounded bg-indigo-950/50 border border-indigo-800/60">${vid.channel_name}</span>
+            </td>
+            <td class="p-3 font-semibold text-slate-100 max-w-xs break-words">${vid.title}</td>
+            <td class="p-3">
+              <div class="flex items-start justify-between gap-2 p-2 rounded-lg bg-slate-900 border border-slate-800 group-hover:border-slate-700">
+                <span class="font-bold text-white uppercase break-words">${vid.overlay_text || '<span class="text-slate-500 italic">Chưa nhập chữ</span>'}</span>
+                <button onclick="openEditModal('${vid.video_id}')" class="px-2 py-1 rounded bg-slate-800 hover:bg-cyan-600 text-[11px] font-semibold text-cyan-400 hover:text-white shrink-0 transition flex items-center gap-1">
+                  <i data-lucide="edit-3" class="w-3 h-3"></i> Sửa
+                </button>
+              </div>
+            </td>
+            <td class="p-3 max-w-sm">
+              <div class="max-h-24 overflow-y-auto text-slate-300 whitespace-pre-line text-[11px] leading-relaxed p-1 bg-slate-900/40 rounded border border-slate-800/50">
+                ${vid.description || 'Không có mô tả'}
+              </div>
+            </td>
+            <td class="p-3">
+              <span class="px-2 py-1 rounded bg-amber-950/40 border border-amber-800/60 text-amber-300 font-medium">
+                ${vid.keywords_str || 'Thuế'}
+              </span>
+            </td>
+            <td class="p-3 text-center">
+              <a href="${vid.url}" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-600/20 hover:bg-red-600/40 border border-red-500/40 text-red-400 text-[11px] font-semibold transition">
+                <i data-lucide="external-link" class="w-3 h-3"></i> Xem
+              </a>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      lucide.createIcons();
+    }
+
+    async function toggleSelectVideo(videoId, isSelected) {
+      const vid = stage1Videos.find(v => v.video_id === videoId);
+      if (vid) {
+        vid.selected = isSelected;
+        renderTable();
+        await fetch("/api/stage1/update-item", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ video_id: videoId, selected: isSelected })
+        });
+      }
+    }
+
+    async function selectAllStage1(state) {
+      stage1Videos.forEach(v => v.selected = state);
+      renderTable();
+      await fetch("/api/stage1/select-all", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ selected: state })
+      });
+    }
+
+    function openEditModal(videoId) {
+      activeEditingVideoId = videoId;
+      const vid = stage1Videos.find(v => v.video_id === videoId);
+      if (!vid) return;
+
+      const modal = document.getElementById("editModal");
+      const textInput = document.getElementById("modalTextInput");
+      textInput.value = vid.overlay_text || "";
+      updateModalPreview(textInput.value);
+
+      modal.classList.remove("hidden");
+      textInput.focus();
+    }
+
+    function closeEditModal() {
+      document.getElementById("editModal").classList.add("hidden");
+      activeEditingVideoId = null;
+    }
+
+    function updateModalPreview(val) {
+      const upper = (val || "").toUpperCase();
+      document.getElementById("modalPreviewText").innerText = upper || "(Chưa có nội dung)";
+    }
+
+    async function saveEditModal() {
+      if (!activeEditingVideoId) return;
+      const newText = document.getElementById("modalTextInput").value.trim().toUpperCase();
+
+      const vid = stage1Videos.find(v => v.video_id === activeEditingVideoId);
+      if (vid) {
+        vid.overlay_text = newText;
+        renderTable();
+
+        await fetch("/api/stage1/update-item", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ video_id: activeEditingVideoId, overlay_text: newText })
+        });
+      }
+
+      closeEditModal();
+    }
+
+    async function runStage2Process() {
+      const selected = stage1Videos.filter(v => v.selected);
+      if (selected.length === 0) {
+        alert("Vui lòng chọn ít nhất 1 video bằng cách tích chọn ở cột đầu tiên!");
+        return;
+      }
+
+      const btn = document.getElementById("btnStage2");
+      const btnStop = document.getElementById("btnStop");
+      btn.disabled = true;
+      btnStop.disabled = false;
+      document.getElementById("stage2BtnText").innerText = `ĐANG XỬ LÝ ${selected.length} VIDEO...`;
+
+      try {
+        const res = await fetch("/api/stage2/process", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ videos: selected })
+        });
+        const data = await res.json();
+        if (data.status === "error") {
+          alert("Lỗi: " + data.message);
+          btn.disabled = false;
+          btnStop.disabled = true;
+          return;
+        }
+
+        startPollingFiles();
+
+      } catch (err) {
+        alert("Lỗi kết nối server: " + err);
+        btn.disabled = false;
+        btnStop.disabled = true;
+      }
+    }
+
+    async function stopProcess() {
+      if (confirm("Bạn có chắc chắn muốn phát lệnh dừng tiến trình đang chạy?")) {
+        await fetch("/api/stage2/stop", { method: "POST" });
+        document.getElementById("btnStage2").disabled = false;
+        document.getElementById("btnStop").disabled = true;
+        document.getElementById("stage2BtnText").innerText = "🎬 GIAI ĐOẠN 2: XỬ LÝ VIDEO ĐÃ CHỌN";
+      }
+    }
+
+    // ==========================================
+    // TAB 2: CHỈNH SỬA VIDEO (CAPCUT STYLE & TIKTOK)
+    // ==========================================
+    async function refreshEditorVideoList() {
+      try {
+        const res = await fetch("/api/files");
+        const data = await res.json();
+        const files = data.files || [];
+        
+        // Lấy danh sách video 9:16 (không phải excel và không phải gốc)
+        editorVideos = files.filter(f => f.is_cut);
+        document.getElementById("tab2CountBadge").innerText = editorVideos.length;
+        document.getElementById("editorFolderLabel").innerText = data.output_dir || "D:\\Data_Video";
+
+        const dropdown = document.getElementById("videoSelectDropdown");
+        if (editorVideos.length === 0) {
+          dropdown.innerHTML = '<option value="">-- Chưa có video 9:16 nào trong thư mục. Hãy xử lý Giai đoạn 2 trước! --</option>';
+          return;
+        }
+
+        dropdown.innerHTML = '<option value="">-- Chọn 1 video để chỉnh sửa & đăng TikTok --</option>' + 
+          editorVideos.map(v => `<option value="${encodeURIComponent(v.name)}">${v.name} (${v.size_mb} MB - ${v.modified})</option>`).join("");
+
+        // Nếu trước đó đang chọn 1 video, giữ lại selection
+        if (currentSelectedVideo) {
+          dropdown.value = encodeURIComponent(currentSelectedVideo);
+        }
+
+      } catch (e) {
+        console.error("Lỗi tải video chỉnh sửa:", e);
+      }
+    }
+
+    async function onSelectEditorVideo(encodedName) {
+      if (!encodedName) {
+        currentSelectedVideo = null;
+        document.getElementById("videoPlaceholder").classList.remove("hidden");
+        const player = document.getElementById("editorVideoPlayer");
+        player.src = "";
+        return;
+      }
+
+      const decodedName = decodeURIComponent(encodedName);
+      currentSelectedVideo = decodedName;
+
+      // Cập nhật Caption gợi ý từ tên video
+      const baseClean = decodedName.replace(/\.mp4$/i, '').replace(/_edited(_\d+)?$/i, '');
+      document.getElementById("tiktokCaptionInput").value = baseClean;
+      updateCaptionCount();
+
+      // Nạp Hashtags từ Tab 3 nếu chưa có
+      if (!document.getElementById("tiktokHashtagsInput").value.trim()) {
+        reloadDefaultHashtagsIntoEditor();
+      }
+
+      // Load video vào player
+      const player = document.getElementById("editorVideoPlayer");
+      document.getElementById("videoPlaceholder").classList.add("hidden");
+      player.src = `/api/preview/${encodedName}`;
+      player.load();
+
+      // Reset Trimmer values
+      document.getElementById("trimStartInput").value = "0";
+      document.getElementById("startSecText").innerText = "0.0s";
+      document.getElementById("volumeSlider").value = "100";
+      onVolumeSliderChange(100);
+    }
+
+    function setupVideoPlayerEvents() {
+      const player = document.getElementById("editorVideoPlayer");
+
+      player.addEventListener("loadedmetadata", () => {
+        currentVideoDuration = player.duration;
+        const durStr = formatTime(player.duration);
+        document.getElementById("playerDurationBadge").innerText = `00:00 / ${durStr}`;
+        document.getElementById("trimEndInput").value = player.duration.toFixed(1);
+        document.getElementById("endSecText").innerText = `${player.duration.toFixed(1)}s`;
+        updateTrimSummary();
+      });
+
+      player.addEventListener("timeupdate", () => {
+        const curStr = formatTime(player.currentTime);
+        const durStr = formatTime(player.duration || 0);
+        document.getElementById("playerDurationBadge").innerText = `${curStr} / ${durStr}`;
+      });
+    }
+
+    function formatTime(seconds) {
+      if (!seconds || isNaN(seconds)) return "00:00";
+      const m = Math.floor(seconds / 60);
+      const s = Math.floor(seconds % 60);
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function setTrimStartFromCurrent() {
+      const player = document.getElementById("editorVideoPlayer");
+      const cur = Math.max(0, player.currentTime);
+      document.getElementById("trimStartInput").value = cur.toFixed(1);
+      document.getElementById("startSecText").innerText = `${cur.toFixed(1)}s`;
+      updateTrimSummary();
+    }
+
+    function setTrimEndFromCurrent() {
+      const player = document.getElementById("editorVideoPlayer");
+      const cur = Math.max(0, player.currentTime);
+      document.getElementById("trimEndInput").value = cur.toFixed(1);
+      document.getElementById("endSecText").innerText = `${cur.toFixed(1)}s`;
+      updateTrimSummary();
+    }
+
+    function onTrimInputChange() {
+      const start = parseFloat(document.getElementById("trimStartInput").value) || 0;
+      const end = parseFloat(document.getElementById("trimEndInput").value) || 0;
+      document.getElementById("startSecText").innerText = `${start.toFixed(1)}s`;
+      document.getElementById("endSecText").innerText = `${end.toFixed(1)}s`;
+      updateTrimSummary();
+    }
+
+    function resetTrim() {
+      document.getElementById("trimStartInput").value = "0";
+      document.getElementById("startSecText").innerText = "0.0s";
+      document.getElementById("trimEndInput").value = currentVideoDuration.toFixed(1);
+      document.getElementById("endSecText").innerText = `${currentVideoDuration.toFixed(1)}s`;
+      updateTrimSummary();
+    }
+
+    function updateTrimSummary() {
+      const start = parseFloat(document.getElementById("trimStartInput").value) || 0;
+      let end = parseFloat(document.getElementById("trimEndInput").value) || currentVideoDuration;
+      if (end <= 0) end = currentVideoDuration;
+      const kept = Math.max(0, end - start);
+      document.getElementById("trimSummaryBadge").innerText = `Gốc: ${currentVideoDuration.toFixed(1)}s | Giữ lại: ${kept.toFixed(1)}s (Cắt bỏ: ${(currentVideoDuration - kept).toFixed(1)}s)`;
+    }
+
+    function replayVideo() {
+      const player = document.getElementById("editorVideoPlayer");
+      player.currentTime = 0;
+      player.play().catch(() => {});
+    }
+
+    function previewTrimmedRange() {
+      const player = document.getElementById("editorVideoPlayer");
+      const start = parseFloat(document.getElementById("trimStartInput").value) || 0;
+      const end = parseFloat(document.getElementById("trimEndInput").value) || currentVideoDuration;
+      
+      player.currentTime = start;
+      player.play().catch(() => {});
+
+      const checkEnd = () => {
+        if (player.currentTime >= end) {
+          player.pause();
+          player.removeEventListener("timeupdate", checkEnd);
+        }
+      };
+      player.addEventListener("timeupdate", checkEnd);
+    }
+
+    // Volume adjustment
+    function onVolumeSliderChange(val) {
+      document.getElementById("volumeSlider").value = val;
+      const badge = document.getElementById("volumeBadge");
+      let desc = "";
+      if (val == 0) desc = "Tắt tiếng (Mute)";
+      else if (val == 100) desc = "Chuẩn gốc (100%)";
+      else if (val < 100) desc = `Nhỏ hơn gốc (${val}%)`;
+      else desc = `Khuếch đại (${val}%)`;
+      badge.innerText = `${val}% - ${desc}`;
+
+      // Điều chỉnh âm lượng realtime trên player
+      const player = document.getElementById("editorVideoPlayer");
+      player.volume = Math.min(1.0, val / 100.0);
+    }
+
+    function setVolume(val) {
+      onVolumeSliderChange(val);
+    }
+
+    // Áp dụng Cắt & Chỉnh âm lượng (FFmpeg)
+    async function applyVideoEdits() {
+      if (!currentSelectedVideo) {
+        alert("Vui lòng chọn 1 video để chỉnh sửa!");
+        return;
+      }
+
+      const start = parseFloat(document.getElementById("trimStartInput").value) || 0;
+      const end = parseFloat(document.getElementById("trimEndInput").value) || 0;
+      const vol = parseInt(document.getElementById("volumeSlider").value) || 100;
+
+      if (end > 0 && end <= start) {
+        alert("Thời gian kết thúc phải lớn hơn thời gian bắt đầu!");
+        return;
+      }
+
+      const btn = document.getElementById("btnApplyEdit");
+      btn.disabled = true;
+      document.getElementById("applyEditBtnText").innerText = "ĐANG XỬ LÝ FFMPEG...";
+
+      try {
+        const res = await fetch("/api/video/edit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            filename: currentSelectedVideo,
+            start_time: start,
+            end_time: end,
+            volume_percent: vol
+          })
+        });
+        const data = await res.json();
+        if (data.status === "error") {
+          alert("Lỗi: " + data.message);
+          return;
+        }
+
+        alert(`Chỉnh sửa video thành công! Tên file mới: ${data.filename}`);
+
+        // Làm mới danh sách video và tự động chọn file mới tạo
+        await refreshEditorVideoList();
+        const dropdown = document.getElementById("videoSelectDropdown");
+        dropdown.value = encodeURIComponent(data.filename);
+        onSelectEditorVideo(dropdown.value);
+
+      } catch (err) {
+        alert("Lỗi khi gửi yêu cầu chỉnh sửa: " + err);
+      } finally {
+        btn.disabled = false;
+        document.getElementById("applyEditBtnText").innerText = "✂️ Áp Dụng Cắt & Chỉnh Âm Lượng";
+      }
+    }
+
+    // Hashtags & Captions in Editor
+    function reloadDefaultHashtagsIntoEditor() {
+      const hashtags = document.getElementById("configHashtagsInput").value.trim() || PRESET_DEFAULT_HASHTAGS;
+      document.getElementById("tiktokHashtagsInput").value = hashtags;
+      renderHashtagsList();
+    }
+
+    function addCustomHashtag() {
+      const input = document.getElementById("addHashtagInput");
+      let val = input.value.trim();
+      if (!val) return;
+      if (!val.startsWith("#")) val = "#" + val;
+
+      const current = document.getElementById("tiktokHashtagsInput").value.trim();
+      document.getElementById("tiktokHashtagsInput").value = current ? `${current} ${val}` : val;
+      input.value = "";
+      renderHashtagsList();
+    }
+
+    function renderHashtagsList() {
+      const text = document.getElementById("tiktokHashtagsInput").value || "";
+      const tags = text.match(/#[^\s#]+/g) || [];
+      document.getElementById("hashtagCount").innerText = `${tags.length} tags`;
+    }
+
+    function updateCaptionCount() {
+      const val = document.getElementById("tiktokCaptionInput").value || "";
+      document.getElementById("captionCharCount").innerText = `${val.length}/2200 ký tự`;
+    }
+
+    // ĐĂNG VIDEO LÊN TIKTOK
+    async function postToTikTok() {
+      if (!currentSelectedVideo) {
+        alert("Vui lòng chọn 1 video để đăng lên TikTok!");
+        return;
+      }
+
+      const caption = document.getElementById("tiktokCaptionInput").value.trim();
+      const hashtags = document.getElementById("tiktokHashtagsInput").value.trim();
+
+      if (!caption) {
+        if (!confirm("Tiêu đề bài đăng đang trống. Bạn có chắc muốn tiếp tục đăng?")) return;
+      }
+
+      if (!confirm(`Bạn có chắc chắn muốn đăng video '${currentSelectedVideo}' lên TikTok?`)) {
+        return;
+      }
+
+      const btn = document.getElementById("btnPostTikTok");
+      btn.disabled = true;
+      document.getElementById("postTikTokBtnText").innerText = "ĐANG ĐĂNG LÊN TIKTOK...";
+
+      try {
+        const res = await fetch("/api/tiktok/post", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            filename: currentSelectedVideo,
+            caption: caption,
+            hashtags: hashtags
+          })
+        });
+        const data = await res.json();
+        
+        if (data.status === "warning") {
+          alert("⚠️ " + data.message);
+          if (data.requires_config) {
+            switchTab('tab3');
+          }
+        } else if (data.status === "error") {
+          alert("❌ Lỗi đăng TikTok: " + data.message);
+        } else {
+          alert("🎉 " + data.message);
+        }
+      } catch (e) {
+        alert("Lỗi kết nối máy chủ: " + e);
+      } finally {
+        btn.disabled = false;
+        document.getElementById("postTikTokBtnText").innerText = "🚀 ĐĂNG VIDEO LÊN TIKTOK";
+      }
+    }
+
+    // ==========================================
+    // TAB 3: CẤU HÌNH TIKTOK & HASHTAG MẶC ĐỊNH
+    // ==========================================
+    function renderConfigTagsPreview(tagsString) {
+      const container = document.getElementById("configTagsPreview");
+      const tags = (tagsString || "").match(/#[^\s#]+/g) || [];
+      if (tags.length === 0) {
+        container.innerHTML = '<span class="text-slate-500 italic text-[11px]">Chưa có hashtag nào</span>';
+        return;
+      }
+      container.innerHTML = tags.map(t => `
+        <span class="px-2 py-0.5 rounded-full bg-cyan-950/70 border border-cyan-800/80 text-cyan-300 font-mono text-[11px]">${t}</span>
+      `).join("");
+    }
+
+    document.getElementById("configHashtagsInput").addEventListener("input", (e) => {
+      renderConfigTagsPreview(e.target.value);
+    });
+
+    function resetDefaultHashtagsToPreset() {
+      if (confirm("Khôi phục lại danh sách hashtag mặc định ban đầu?")) {
+        document.getElementById("configHashtagsInput").value = PRESET_DEFAULT_HASHTAGS;
+        renderConfigTagsPreview(PRESET_DEFAULT_HASHTAGS);
+      }
+    }
+
+    async function saveDefaultHashtags() {
+      const hashtags = document.getElementById("configHashtagsInput").value.trim();
+      try {
+        const res = await fetch("/api/tiktok/config", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ hashtags: hashtags })
+        });
+        const data = await res.json();
+        alert(data.message || "Đã lưu hashtag mặc định thành công!");
+        loadTikTokConfig();
+      } catch (e) {
+        alert("Lỗi lưu hashtag: " + e);
+      }
+    }
+
+    async function saveTikTokSettings() {
+      const token = document.getElementById("tiktokAccessToken").value.trim();
+      const clientKey = document.getElementById("tiktokClientKey").value.trim();
+      const clientSecret = document.getElementById("tiktokClientSecret").value.trim();
+      const sessionId = document.getElementById("tiktokSessionId").value.trim();
+      const privacy = document.getElementById("tiktokPrivacyLevel").value;
+      const disableComment = document.getElementById("chkDisableComment").checked;
+      const disableDuet = document.getElementById("chkDisableDuet").checked;
+      const disableStitch = document.getElementById("chkDisableStitch").checked;
+
+      const payload = {
+        tiktok_api: {
+          access_token: token,
+          client_key: clientKey,
+          client_secret: clientSecret,
+          session_id: sessionId,
+          privacy_level: privacy,
+          disable_comment: disableComment,
+          disable_duet: disableDuet,
+          disable_stitch: disableStitch
+        }
+      };
+
+      try {
+        const res = await fetch("/api/tiktok/config", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        alert("Đã lưu cấu hình kết nối TikTok thành công!");
+        loadTikTokConfig();
+      } catch (e) {
+        alert("Lỗi lưu cấu hình TikTok: " + e);
+      }
+    }
+
+    async function testTikTokConnection() {
+      const token = document.getElementById("tiktokAccessToken").value.trim();
+      if (!token) {
+        alert("Vui lòng nhập Access Token trước khi kiểm tra kết nối!");
+        return;
+      }
+
+      await saveTikTokSettings();
+
+      try {
+        const res = await fetch("/api/tiktok/test", { method: "POST" });
+        const data = await res.json();
+        if (data.status === "success") {
+          alert("✅ " + data.message);
+        } else {
+          alert("❌ " + data.message);
+        }
+      } catch (e) {
+        alert("Lỗi khi kiểm tra: " + e);
+      }
+    }
+
+    // ==========================================
+    // OUTPUT FILES & MODALS
+    // ==========================================
+    let filesPoll = null;
+    function startPollingFiles() {
+      if (filesPoll) clearInterval(filesPoll);
+      filesPoll = setInterval(loadOutputFiles, 4000);
+    }
+
+    async function loadOutputFiles() {
+      try {
+        const res = await fetch("/api/files");
+        const data = await res.json();
+        const files = data.files || [];
+        document.getElementById("fileCountBadge").innerText = files.length;
+        document.getElementById("filesDirLabel").innerText = data.output_dir || "";
+
+        const cutVideos = files.filter(f => f.is_cut);
+        document.getElementById("tab2CountBadge").innerText = cutVideos.length;
+
+        const tbody = document.getElementById("filesTableBody");
+        if (files.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-500">Chưa có file nào trong thư mục xuất.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = files.map(f => {
+          let badge = '';
+          if (f.is_excel) {
+            badge = '<span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-bold border border-emerald-800">EXCEL</span>';
+          } else if (f.is_goc) {
+            badge = '<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-bold border border-slate-700">VIDEO GỐC</span>';
+          } else {
+            badge = '<span class="px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 font-bold border border-cyan-800">VIDEO 9:16</span>';
+          }
+
+          let previewBtn = '';
+          if (f.name.endsWith(".mp4")) {
+            previewBtn = `<button onclick="previewVideo('${encodeURIComponent(f.name)}', '${f.name}')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-400 text-[11px] font-semibold flex items-center gap-1"><i data-lucide="play" class="w-3 h-3"></i> Xem</button>`;
+          }
+
+          return `
+            <tr class="hover:bg-slate-800/40">
+              <td class="p-2.5 font-medium text-slate-100 break-words">${f.name}</td>
+              <td class="p-2.5">${badge}</td>
+              <td class="p-2.5 text-slate-400">${f.size_mb} MB</td>
+              <td class="p-2.5 text-slate-500 text-[11px]">${f.modified}</td>
+              <td class="p-2.5 text-center flex items-center justify-center gap-2">
+                ${previewBtn}
+                <a href="/api/download/${encodeURIComponent(f.name)}" class="px-2 py-1 rounded bg-cyan-600 hover:bg-cyan-500 text-white text-[11px] font-bold flex items-center gap-1">
+                  <i data-lucide="download" class="w-3 h-3"></i> Tải về
+                </a>
+              </td>
+            </tr>
+          `;
+        }).join("");
+
+        lucide.createIcons();
+
+      } catch (e) {
+        console.error("Lỗi đọc files:", e);
+      }
+    }
+
+    function toggleFilesModal(show) {
+      const modal = document.getElementById("filesModal");
+      if (show) {
+        loadOutputFiles();
+        modal.classList.remove("hidden");
+      } else {
+        closeVideoPreview();
+        modal.classList.add("hidden");
+      }
+    }
+
+    function previewVideo(encodedName, title) {
+      const container = document.getElementById("videoPreviewContainer");
+      const player = document.getElementById("html5VideoPlayer");
+      document.getElementById("previewVideoTitle").innerText = title;
+
+      player.src = `/api/preview/${encodedName}`;
+      container.classList.remove("hidden");
+      player.play().catch(() => {});
+    }
+
+    function closeVideoPreview() {
+      const container = document.getElementById("videoPreviewContainer");
+      const player = document.getElementById("html5VideoPlayer");
+      player.pause();
+      player.src = "";
+      container.classList.add("hidden");
+    }
+
+    async function openOutputFolder() {
+      try {
+        const res = await fetch("/api/open-folder", { method: "POST" });
+        const data = await res.json();
+        if (data.status === "error") {
+          alert("Lỗi: " + data.message);
+        }
+      } catch (e) {
+        alert("Lỗi mở thư mục: " + e);
+      }
+    }
+  </script>
+</body>
+</html>

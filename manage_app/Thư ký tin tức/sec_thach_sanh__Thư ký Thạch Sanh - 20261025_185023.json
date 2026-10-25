@@ -1,0 +1,66 @@
+{
+  "secretary_id": "sec_thach_sanh",
+  "secretary_name": "Thư ký Thạch Sanh",
+  "character": "Thạch Sanh",
+  "role": "Thư ký Tổng hợp tin tức về chính sách thuế",
+  "search_time_range": "today_yesterday",
+  "time_desc": "trong 24 giờ đến 48 giờ qua (từ hôm qua đến hôm nay)",
+  "created_at": "25/10/2026 18:50:23",
+  "filename": "sec_thach_sanh__Thư ký Thạch Sanh - 20261025_185023.docx",
+  "display_filename": "Thư ký Thạch Sanh - 20261025_185023.docx",
+  "download_url": "/api/secretaries/sec_thach_sanh/download-report/sec_thach_sanh__Thư ký Thạch Sanh - 20261025_185023.docx",
+  "content_markdown": "Chào Người dùng,\n\nTôi là Thư ký Thạch Sanh, phụ trách tổng hợp tin tức về chính sách thuế. Tôi đã nhận được yêu cầu của bạn về việc cập nhật và phân loại các chính sách thuế mới nhất trong vòng 24-48 giờ qua.\n\nTuy nhiên, sau khi xem xét \"DỮ LIỆU TÌM KIẾM TRÊN INTERNET MỚI NHẤT\" mà bạn cung cấp, tôi nhận thấy toàn bộ các tiêu đề và tóm tắt nội dung đều liên quan đến lĩnh vực Trí tuệ nhân tạo (AI), các công ty công nghệ như Google DeepMind, OpenAI, Anthropic, và các tin tức công nghệ chung (TechCrunch, VnExpress, Znews, Vietnamnet về AI).\n\nVới vai trò là Thư ký Tổng hợp tin tức về chính sách thuế, tôi không thể trích xuất hay phân loại thông tin về thuế (cá nhân, hộ kinh doanh, tổ chức doanh nghiệp) từ dữ liệu tìm kiếm này. Các nguồn tin cậy cho chính sách thuế thường là Báo Chính phủ, Bộ Tài chính, Tổng cục Thuế, Cổng thông tin điện tử của các cơ quan thuế, v.v., và nội dung phải trực tiếp đề cập đến các văn bản pháp luật, nghị định, thông tư về thuế.\n\nĐể có thể hoàn thành nhiệm vụ theo đúng yêu cầu và quy trình đã được huấn luyện, tôi cần được cung cấp dữ liệu tìm kiếm liên quan trực tiếp đến các chính sách thuế mới nhất.\n\nNếu bạn có thể cung cấp các đường dẫn hoặc thông tin tìm kiếm về chính sách thuế, tôi sẽ ngay lập tức tiến hành tổng hợp, tóm tắt và phân loại theo 3 nhóm (cá nhân, hộ kinh doanh, tổ chức doanh nghiệp) một cách chuyên nghiệp và chính xác nhất.\n\nRất mong nhận được sự hỗ trợ từ bạn để tôi có thể phục vụ tốt nhất.\n\nTrân trọng,\n\nThư ký Thạch Sanh.",
+  "web_sources": [
+    {
+      "title": "News — Google DeepMind",
+      "uri": "https://deepmind.google/blog/"
+    },
+    {
+      "title": "OpenAI vs Google DeepMind vs Anthropic: The 2026 AI Model Arms Race ...",
+      "uri": "https://qverlabs.com/blog/openai-vs-google-deepmind-vs-anthropic-2026"
+    },
+    {
+      "title": "AI News This Week — Latest OpenAI, Anthropic, Google & Startups | AI is ...",
+      "uri": "https://aiiseverywhere.com/news"
+    },
+    {
+      "title": "The latest AI news we announced in September 2026",
+      "uri": "https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-september-2026/"
+    },
+    {
+      "title": "OpenAI, Anthropic, Google in AI Safety Talks [2026]",
+      "uri": "https://tech-insider.org/openai-anthropic-google-ai-safety-talks-2026/"
+    },
+    {
+      "title": "AI - TechCrunch",
+      "uri": "https://techcrunch.com/tag/ai/"
+    },
+    {
+      "title": "AI News & Artificial Intelligence | TechCrunch",
+      "uri": "https://techcrunch.com/category/artificial-intelligence/"
+    },
+    {
+      "title": "TechCrunch | Startup and Technology News",
+      "uri": "https://m.techcrunch.com/"
+    },
+    {
+      "title": "AI Trending — Global AI News, Updated Every 2 Hours",
+      "uri": "https://aitrending.app/"
+    },
+    {
+      "title": "AI News - TechCrunch, The Verge, DeepMind, Hugging Face & More ...",
+      "uri": "https://www.aitoolcrunch.com/for-developers/news/"
+    },
+    {
+      "title": "Tổng hợp Tin tức AI - Trí tuệ nhân tạo mới nhất | VnExpress",
+      "uri": "https://vnexpress.net/khoa-hoc-cong-nghe/ai"
+    },
+    {
+      "title": "Công nghệ AI - Tin tức về trí tuệ nhân tạo mới nhất | Znews.vn",
+      "uri": "https://tech.zingnews.vn/artificial-intelligence.html"
+    }
+  ],
+  "alt_file_path": "F:\\Luyen_cong\\AntiGravity\\Chat_bot_Gemini\\____Manage App____\\Thư ký tin tức\\Thư ký Thạch Sanh - 20261025_185023.docx",
+  "drive_file_id": "1IrXz6joq4wLv7kEDNOw0buqzcJmlCSLO",
+  "drive_web_link": "https://docs.google.com/document/d/1IrXz6joq4wLv7kEDNOw0buqzcJmlCSLO/edit?usp=drivesdk&ouid=101322887468073177531&rtpof=true&sd=true"
+}

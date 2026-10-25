@@ -1,0 +1,15 @@
+{
+  "hashtags": "#Cucthue #ThueTPHCM #ruirothue #thanhtrathue #canhbaothue #phapluatthue #quanlyruiro #Thongtinvethue #ketoanthue #chudoanhnghiep #kinhdoanh #ketoan #quantridoanhnghiep #LearnOnTikTok #xuhuong #edutok #chiasekienthuc #viralvideotiktok #viraltiktok #TNCN #Thunhapcanhan #Giamkhautru #Nguoiphuthuoc #Giamtrugiacanh #Tienluongtiencong",
+  "tiktok_api": {
+    "auth_method": "api",
+    "client_key": "",
+    "client_secret": "",
+    "access_token": "",
+    "session_id": "",
+    "privacy_level": "PUBLIC_TO_EVERYONE",
+    "disable_duet": false,
+    "disable_stitch": false,
+    "disable_comment": false,
+    "auto_add_music": false
+  }
+}

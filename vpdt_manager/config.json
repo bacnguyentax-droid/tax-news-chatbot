@@ -1,0 +1,11 @@
+{
+  "login_url": "http://vpdt.cucthue.hochiminhcity.gov.vn/web/guest/login",
+  "base_url": "http://vpdt.cucthue.hochiminhcity.gov.vn",
+  "username": "hoabac",
+  "password": "Tncn1005@i",
+  "headless": false,
+  "browser_slow_mo_ms": 300,
+  "default_timeout_ms": 30000,
+  "save_session": true,
+  "rules": []
+}

@@ -1,0 +1,618 @@
+{
+  "last_fields": "thuế, hộ kinh doanh, thu nhập cá nhân, doanh nghiệp, tổ chức, giá trị gia tăng, thu nhập doanh nghiệp, giao dịch liên kết, hóa đơn điện tử",
+  "date_filter": {
+    "preset": "1_week",
+    "from_date": "",
+    "to_date": ""
+  },
+  "google_drive": {
+    "client_id": "",
+    "client_secret": "",
+    "refresh_token": "",
+    "default_folder_id": "1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK",
+    "default_folder_name": "📁 Tax_Nghiệp vụ thuế",
+    "user_email": "bacnguyentax@gmail.com",
+    "user_name": "HCMTAX HCM"
+  },
+  "notebooklm": {
+    "default_notebook_id": "nb_tax_nghiep_vu_thue",
+    "storage_dir": "C:/NotebookLM_Sources",
+    "notebooks": [
+      {
+        "id": "nb_tax_nghiep_vu_thue",
+        "name": "Tax_Nghiệp vụ thuế",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax_Nghiệp vụ thuế",
+        "description": "Kho tri thức chính sách và nghiệp vụ thuế toàn ngành (Mặc định)",
+        "is_default": true
+      },
+      {
+        "id": "nb_python",
+        "name": "Tổng hợp về lập trình python",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tổng hợp về lập trình python",
+        "description": "Tài liệu kỹ thuật và lập trình Python phục vụ tự động hóa",
+        "is_default": false
+      },
+      {
+        "id": "nb_tax_quan_tri_du_lieu",
+        "name": "Tax_Quản trị dữ liệu - Quản lý rủi ro",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax_Quản trị dữ liệu - Quản lý rủi ro",
+        "description": "Quản trị dữ liệu lớn ngành Thuế và phân tích rủi ro",
+        "is_default": false
+      },
+      {
+        "id": "nb_tax_hkd_ca_nhan",
+        "name": "Tax_HKD - cá nhân",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax_HKD - cá nhân",
+        "description": "Chính sách và quản lý thuế hộ kinh doanh, cá nhân kinh doanh",
+        "is_default": false
+      },
+      {
+        "id": "nb_slide_nnt_rui_ro_hddt",
+        "name": "Slide_NNT _ Rủi ro cao HDDT",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Slide_NNT _ Rủi ro cao HDDT",
+        "description": "Tài liệu cảnh báo và nhận diện người nộp thuế rủi ro cao về HĐĐT",
+        "is_default": false
+      },
+      {
+        "id": "nb_tin_tuc_thue_hang_ngay",
+        "name": "Tin tức thuế hàng ngày",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tin tức thuế hàng ngày",
+        "description": "Cập nhật tin tức, diễn đàn và thông tin thời sự thuế hàng ngày",
+        "is_default": false
+      },
+      {
+        "id": "nb_video_thue_tien_ma_hoa",
+        "name": "Video-Thuế-Tiền mã hóa",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Video-Thuế-Tiền mã hóa",
+        "description": "Tài liệu, bài giảng và chính sách thuế đối với tài sản số, tiền mã hóa",
+        "is_default": false
+      },
+      {
+        "id": "nb_nd_chuyen_don_vi_su_nghiep",
+        "name": "Nghị định Chuyển Đơn vị Sự nghiệp thành doanh nghiệp",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Nghị định Chuyển Đơn vị Sự nghiệp thành doanh nghiệp",
+        "description": "Chính sách chuyển đổi đơn vị sự nghiệp công lập thành doanh nghiệp",
+        "is_default": false
+      },
+      {
+        "id": "nb_tap_huan_mua_ban_hoa_don",
+        "name": "Tập huấn Mua bán hóa đơn",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tập huấn Mua bán hóa đơn",
+        "description": "Chuyên đề nhận diện, phòng ngừa và xử lý vi phạm mua bán hóa đơn",
+        "is_default": false
+      },
+      {
+        "id": "nb_tax_chuc_nang_nhiem_vu",
+        "name": "Tax-Chức năng nhiệm vụ - phân công thực hiện",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax-Chức năng nhiệm vụ - phân công thực hiện",
+        "description": "Quy chế tổ chức bộ máy, chức năng nhiệm vụ và phân công thực hiện",
+        "is_default": false
+      },
+      {
+        "id": "nb_tax_cong_tac_van_thu",
+        "name": "Tax-Công tác văn thư",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax-Công tác văn thư",
+        "description": "Quy định công tác văn thư, lưu trữ và thể thức văn bản hành chính",
+        "is_default": false
+      },
+      {
+        "id": "nb_tieng_anh",
+        "name": "Tiếng Anh",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tiếng Anh",
+        "description": "Tài liệu và thuật ngữ tiếng Anh chuyên ngành tài chính - thuế",
+        "is_default": false
+      },
+      {
+        "id": "nb_tax_cntt_ung_dung",
+        "name": "Tax_CNTT (ứng dụng)",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax_CNTT (ứng dụng)",
+        "description": "Ứng dụng công nghệ thông tin và phần mềm nghiệp vụ ngành Thuế",
+        "is_default": false
+      },
+      {
+        "id": "nb_danh_muc_vbpl_quan_ly_thue",
+        "name": "Danh Mục Văn Bản Pháp Quy Về Quản Lý Thuế",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Danh Mục Văn Bản Pháp Quy Về Quản Lý Thuế",
+        "description": "Hệ thống hóa toàn bộ văn bản quy phạm pháp luật về quản lý thuế",
+        "is_default": false
+      },
+      {
+        "id": "nb_tax_trao_doi_thong_tin_qt",
+        "name": "Tax-Trao đổi cung cấp thông tin (công ước quốc tế)",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax-Trao đổi cung cấp thông tin (công ước quốc tế)",
+        "description": "Công ước quốc tế, hiệp định tránh đánh thuế 2 lần và trao đổi thông tin",
+        "is_default": false
+      },
+      {
+        "id": "nb_tu_lieu_video_thue",
+        "name": "Tư liệu video thuế",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tư liệu video thuế",
+        "description": "Kho tư liệu video tuyên truyền hỗ trợ người nộp thuế",
+        "is_default": false
+      },
+      {
+        "id": "nb_tu_lieu_lam_video_thue",
+        "name": "Tư liệu làm video Thuế",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tư liệu làm video Thuế",
+        "description": "Tài liệu nguồn, âm thanh, hình ảnh dựng video ngành Thuế",
+        "is_default": false
+      },
+      {
+        "id": "nb_tax_cntt_quy_dinh",
+        "name": "Tax_CNTT (quy định)",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax_CNTT (quy định)",
+        "description": "Quy định, quy chế kỹ thuật và an toàn thông tin ngành Thuế",
+        "is_default": false
+      },
+      {
+        "id": "nb_slide",
+        "name": "Slide",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Slide",
+        "description": "Kho bài giảng, slide trình chiếu các hội nghị, hội thảo tập huấn",
+        "is_default": false
+      },
+      {
+        "id": "nb_tax_chuan_hoa_03_06",
+        "name": "Tax_chuẩn hóa 03-06",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax_chuẩn hóa 03-06",
+        "description": "Chuẩn hóa mã định danh, dữ liệu mã số thuế cá nhân theo Đề án 06",
+        "is_default": false
+      },
+      {
+        "id": "nb_mcp_de_hieu",
+        "name": "Giải thích về MCP dễ hiểu cho đứa 5 tuổi.",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Giải thích về MCP dễ hiểu cho đứa 5 tuổi",
+        "description": "Tài liệu mô tả dễ hiểu về Model Context Protocol (MCP) và AI Agent",
+        "is_default": false
+      },
+      {
+        "id": "nb_tax_an_ninh_mang",
+        "name": "Tax-An ninh mạng",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax-An ninh mạng",
+        "description": "Chỉ thị, quy định bảo đảm an ninh mạng hệ thống thông tin ngành Thuế",
+        "is_default": false
+      },
+      {
+        "id": "nb_tax_de_an_06",
+        "name": "Tax_Đề án 06-Chuyển đổi số",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax_Đề án 06-Chuyển đổi số",
+        "description": "Chương trình chuyển đổi số ngành Thuế và thực hiện Đề án 06/CP",
+        "is_default": false
+      },
+      {
+        "id": "nb_tax_khen_thuong_ky_luat",
+        "name": "Tax_khen thưởng - kỷ luật",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax_khen thưởng - kỷ luật",
+        "description": "Quy chế thi đua khen thưởng và kỷ luật cán bộ công chức ngành Thuế",
+        "is_default": false
+      },
+      {
+        "id": "nb_tax_huong_dan_ung_dung",
+        "name": "Tax-Hướng dẫn ứng dụng",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax-Hướng dẫn ứng dụng",
+        "description": "Sổ tay hướng dẫn thao tác chi tiết các ứng dụng nghiệp vụ thuế",
+        "is_default": false
+      },
+      {
+        "id": "nb_kpi",
+        "name": "KPI",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "KPI",
+        "description": "Khung tiêu chí đánh giá hiệu quả công việc KPI ngành Thuế",
+        "is_default": false
+      },
+      {
+        "id": "nb_vb_chi_dao",
+        "name": "---VB Chỉ đạo---",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "VB Chỉ đạo",
+        "description": "Văn bản chỉ đạo điều hành trọng tâm của Lãnh đạo Thuế các cấp",
+        "is_default": false
+      },
+      {
+        "id": "nb_so_ghi_chu_khong_tieu_de",
+        "name": "Sổ ghi chú không có tiêu đề",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Sổ ghi chú không có tiêu đề",
+        "description": "Ghi chú nháp và tổng hợp nhanh trên NotebookLM",
+        "is_default": false
+      },
+      {
+        "id": "nb_csdl_nnt",
+        "name": "CSDL NNT",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "CSDL NNT",
+        "description": "Cơ sở dữ liệu thông tin Người nộp thuế tập trung",
+        "is_default": false
+      },
+      {
+        "id": "nb_vn_tax_inspection_2023",
+        "name": "Vietnam Tax Inspection Procedures 2023",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Vietnam Tax Inspection Procedures 2023",
+        "description": "Quy trình thanh tra, kiểm tra thuế ban hành năm 2023",
+        "is_default": false
+      },
+      {
+        "id": "nb_tax_ai_lap_trinh",
+        "name": "Tax_AI-lập trình",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax_AI-lập trình",
+        "description": "Ứng dụng Trí tuệ nhân tạo (AI) và lập trình giải pháp tự động ngành Thuế",
+        "is_default": false
+      },
+      {
+        "id": "nb_tax_tap_huan_dao_tao",
+        "name": "Tax_Tập huấn đào tạo",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax_Tập huấn đào tạo",
+        "description": "Chương trình, giáo trình tập huấn bồi dưỡng nghiệp vụ công chức thuế",
+        "is_default": false
+      },
+      {
+        "id": "nb_quan_tri_du_lieu",
+        "name": "Quản trị dữ liệu",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Quản trị dữ liệu",
+        "description": "Phương pháp luận và quy trình quản trị dữ liệu lớn ngành Thuế",
+        "is_default": false
+      },
+      {
+        "id": "nb_tax_phai_tham_gia_xu_ly",
+        "name": "Tax_phải tham gia - xử lý",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax_phải tham gia - xử lý",
+        "description": "Danh mục vụ việc, công việc trọng tâm phải phối hợp và trực tiếp xử lý",
+        "is_default": false
+      },
+      {
+        "id": "nb_tax_cong_tac_quan_ly",
+        "name": "Tax_Công tác quản lý",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax_Công tác quản lý",
+        "description": "Nghiệp vụ quản lý thuế, quản lý nợ và cưỡng chế nợ thuế",
+        "is_default": false
+      },
+      {
+        "id": "nb_vb_bao_mat_ai",
+        "name": "VB_Bảo mật - AI",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "VB_Bảo mật - AI",
+        "description": "Quy định bảo mật dữ liệu, an toàn khi ứng dụng Trí tuệ nhân tạo",
+        "is_default": false
+      },
+      {
+        "id": "nb_hop_han_quoc",
+        "name": "Họp Hàn Quốc",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Họp Hàn Quốc",
+        "description": "Tài liệu làm việc và hợp tác song phương với Cơ quan Thuế Hàn Quốc",
+        "is_default": false
+      },
+      {
+        "id": "nb_tax_quy_hoach_bo_nhiem",
+        "name": "Tax_Quy hoạch bổ nhiệm điều động",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax_Quy hoạch bổ nhiệm điều động",
+        "description": "Chính sách công tác cán bộ, quy hoạch, bổ nhiệm, luân chuyển điều động",
+        "is_default": false
+      },
+      {
+        "id": "nb_nha_o_xa_hoi_noxh",
+        "name": "Nhà ở xã hội (NOXH)",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Nhà ở xã hội (NOXH)",
+        "description": "Chính sách tài chính, ưu đãi thuế và thủ tục pháp lý nhà ở xã hội",
+        "is_default": false
+      },
+      {
+        "id": "nb_tax_so_ket_6_thang_2026",
+        "name": "Tax_Sơ kết 6 tháng 2026",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax_Sơ kết 6 tháng 2026",
+        "description": "Báo cáo sơ kết công tác thuế 6 tháng đầu năm 2026 và phương hướng nhiệm vụ",
+        "is_default": false
+      },
+      {
+        "id": "nb_giai_dua_xe_dap",
+        "name": "Giải đua xe đạp",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Giải đua xe đạp",
+        "description": "Kế hoạch, điều lệ phong trào thể thao giải đua xe đạp công chức",
+        "is_default": false
+      },
+      {
+        "id": "nb_hcmc_tax_exam_2026",
+        "name": "HCMC Tax Department 2026 Examination Question Bank Guidelines",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "HCMC Tax Department 2026 Examination Question Bank Guidelines",
+        "description": "Hướng dẫn ngân hàng câu hỏi khảo sát năng lực công chức Thuế TP.HCM 2026",
+        "is_default": false
+      },
+      {
+        "id": "nb_phap_ly_bat_dong_san",
+        "name": "Pháp lý Bất động sản",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Pháp lý Bất động sản",
+        "description": "Pháp luật đất đai, nhà ở, kinh doanh BĐS và các khoản thu thuế từ đất",
+        "is_default": false
+      },
+      {
+        "id": "nb_chuc_nang_nhiem_vu",
+        "name": "Chức năng nhiệm vụ",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Chức năng nhiệm vụ",
+        "description": "Hệ thống quy định về chức năng, nhiệm vụ quyền hạn các đơn vị",
+        "is_default": false
+      },
+      {
+        "id": "nb_thiet_ke_cntt_gdt_2025",
+        "name": "Thiết kế Chuyển đổi Hệ thống CNTT Tổng cục Thuế 2025",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Thiết kế Chuyển đổi Hệ thống CNTT Tổng cục Thuế 2025",
+        "description": "Kiến trúc tổng thể và thiết kế chuyển đổi số hệ thống CNTT ngành Thuế",
+        "is_default": false
+      },
+      {
+        "id": "nb_hoa_don_dien_tu",
+        "name": "Hóa đơn điện tử",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Hóa đơn điện tử",
+        "description": "Nghị định 123/2020/NĐ-CP, Thông tư 78/2021/TT-BTC về hóa đơn điện tử",
+        "is_default": false
+      },
+      {
+        "id": "nb_bao_ve_bi_mat_nha_nuoc",
+        "name": "Bảo vệ bí mật nhà nước",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Bảo vệ bí mật nhà nước",
+        "description": "Luật Bảo vệ bí mật nhà nước và quy chế quản lý tài liệu mật ngành Thuế",
+        "is_default": false
+      },
+      {
+        "id": "nb_thong_tin_ca_nhan",
+        "name": "Thông tin cá nhân",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Thông tin cá nhân",
+        "description": "Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân người nộp thuế",
+        "is_default": false
+      }
+    ]
+  },
+  "scanner": {
+    "max_results": 100,
+    "doc_types": [
+      "Nghị định",
+      "Thông tư",
+      "Quyết định",
+      "Công văn",
+      "Nghị quyết",
+      "Luật"
+    ],
+    "sources": [
+      {
+        "id": "vbpl",
+        "domain": "vbpl.vn",
+        "name": "Cơ sở dữ liệu Quốc gia về VBPL",
+        "enabled": true
+      },
+      {
+        "id": "mof",
+        "domain": "mof.gov.vn",
+        "name": "Cổng Thông tin Điện tử Bộ Tài chính",
+        "enabled": true
+      },
+      {
+        "id": "gdt",
+        "domain": "gdt.gov.vn",
+        "name": "Cổng Thông tin Điện tử Tổng cục Thuế",
+        "enabled": true
+      },
+      {
+        "id": "quochoi",
+        "domain": "quochoi.vn",
+        "name": "Cổng Thông tin Điện tử Quốc hội",
+        "enabled": true
+      },
+      {
+        "id": "congbao",
+        "domain": "congbao.chinhphu.vn",
+        "name": "Cổng Công báo Nước CHXHCN Việt Nam",
+        "enabled": true
+      }
+    ]
+  },
+  "entertainment_songs": [
+    {
+      "id": "song_1",
+      "title": "E là không thể",
+      "youtube_url": "https://www.youtube.com/watch?v=3S6R-nOA2eY",
+      "youtube_id": "3S6R-nOA2eY"
+    },
+    {
+      "id": "song_2",
+      "title": "Dĩ Vãng Nhạt Nhòa",
+      "youtube_url": "https://www.youtube.com/watch?v=aahqBEJJigI",
+      "youtube_id": "aahqBEJJigI"
+    }
+  ],
+  "ai_secretaries": [
+    {
+      "id": "sec_thach_sanh",
+      "name": "Thư ký Thạch Sanh",
+      "character": "Thạch Sanh",
+      "appearance": "Dũng sĩ vạm vỡ, áo nâu thắt đai vàng, đeo rìu chiến dũng mãnh sau lưng, mắt sáng kiên nghị",
+      "role": "Thư ký Tổng hợp Tin tức & Cảnh báo Rủi ro Pháp lý",
+      "instruction": "Hằng ngày tìm kiếm các tin tức và quy định pháp luật mới nhất về thuế, hóa đơn điện tử, quản trị rủi ro doanh nghiệp trên Internet. Tổng hợp các điểm mới, thời hạn thi hành và cảnh báo các rủi ro pháp lý cần tránh.",
+      "scheduled_time": "08:00",
+      "created_at": "24/10/2026 08:00:00",
+      "avatar_icon": "fa-shield-halved",
+      "badge_color": "emerald"
+    },
+    {
+      "id": "sec_mai_an_tiem",
+      "name": "Thư ký Mai An Tiêm",
+      "character": "Mai An Tiêm",
+      "appearance": "Tự lực cánh sinh kiên định, áo xanh lục tươi sáng, đầu đội quả dưa hấu sọc đỏ xanh tươi mát",
+      "role": "Thư ký Tin tức Kinh tế Nông nghiệp, Ngoại thương & Khởi nghiệp",
+      "instruction": "Tìm kiếm và phân tích các tin tức thị trường kinh tế vĩ mô, tình hình xuất nhập khẩu, chính sách ưu đãi đầu tư, nông nghiệp công nghệ cao và các cơ hội kinh doanh mới tại Việt Nam.",
+      "scheduled_time": "08:30",
+      "created_at": "24/10/2026 08:30:00",
+      "avatar_icon": "fa-seedling",
+      "badge_color": "teal"
+    }
+  ],
+  "drafted_documents": [
+    {
+      "title": "Thông báo kết luận thanh tra thuế 2026",
+      "template_preset": "thong_bao",
+      "doc_type": "THÔNG BÁO",
+      "agency_parent": "",
+      "agency_name": "THUẾ TP.HỒ CHÍ MINH",
+      "doc_number": "105/TB-CTHCM",
+      "location": "Tp. Hồ Chí Minh",
+      "signer_role": "CỤC TRƯỞNG",
+      "signer_name": "Nguyễn Hoa Bắc",
+      "purpose": "",
+      "subject": "Thông báo kết luận thanh tra thuế 2026",
+      "header_ratio": 40,
+      "recipients": [
+        "Lưu: VT."
+      ],
+      "legal_bases": [],
+      "body_paragraphs": [
+        "Nội dung văn bản hành chính sẽ hiển thị trực quan tại đây sau khi bạn hoàn tất thiết lập ban đầu và bấm \"Tạo nội dung\"."
+      ],
+      "id": "draft_feab052e"
+    },
+    {
+      "title": "Thông báo kết luận thanh tra thuế 2026",
+      "template_preset": "thong_bao",
+      "doc_type": "THÔNG BÁO",
+      "agency_parent": "",
+      "agency_name": "THUẾ TP.HỒ CHÍ MINH",
+      "doc_number": "105/TB-CTHCM",
+      "location": "Tp. Hồ Chí Minh",
+      "signer_role": "CỤC TRƯỞNG",
+      "signer_name": "Nguyễn Hoa Bắc",
+      "purpose": "",
+      "subject": "Thông báo kết luận thanh tra thuế 2026",
+      "header_ratio": 40,
+      "recipients": [
+        "Lưu: VT."
+      ],
+      "legal_bases": [],
+      "body_paragraphs": [
+        "Nội dung văn bản hành chính sẽ hiển thị trực quan tại đây sau khi bạn hoàn tất thiết lập ban đầu và bấm \"Tạo nội dung\"."
+      ],
+      "id": "draft_376760f1"
+    },
+    {
+      "title": "Công văn hướng dẫn quyết toán thuế TNDN năm 2026",
+      "template_preset": "thong_bao",
+      "doc_type": "CÔNG VĂN",
+      "agency_parent": "THUẾ THÀNH PHỐ HỒ CHÍ MINH",
+      "agency_name": "PHÒNG QTDL & QLRR",
+      "doc_number": "99/CV-CTHCM",
+      "location": "Tp. Hồ Chí Minh",
+      "signer_role": "CỤC TRƯỞNG",
+      "signer_name": "Nguyễn Hoa Bắc",
+      "purpose": "",
+      "subject": "Công văn hướng dẫn quyết toán thuế TNDN năm 2026",
+      "header_ratio": 40,
+      "recipients": [
+        "Lưu: VT."
+      ],
+      "legal_bases": [],
+      "body_paragraphs": [
+        "Nội dung văn bản hành chính sẽ hiển thị trực quan tại đây sau khi bạn hoàn tất thiết lập ban đầu và bấm \"Tạo nội dung\"."
+      ],
+      "id": "draft_65f96d2a"
+    }
+  ],
+  "gemini": {
+    "admin_doc_drive_folder_id": "16Ua7ZfjOl2klPOEMH5QxDtvUSQ9A-FTr",
+    "admin_doc_drive_folder_name": "____Automation Video____\\\\Văn thư"
+  },
+  "ai_assistants": [
+    {
+      "id": "asst_tax_corp",
+      "name": "Trợ lý Pháp chế & Thuế Doanh Nghiệp",
+      "nickname": "Doraemon",
+      "description": "Chuyên gia giải đáp chính sách thuế TNDN, GTGT, HĐĐT, giao dịch liên kết và chế độ kế toán thuế doanh nghiệp.",
+      "drive_folder_ids": [
+        "1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK"
+      ],
+      "drive_folder_names": [
+        "Tax_Nghiệp vụ thuế"
+      ],
+      "filter_tax_only": true,
+      "enable_web_search": false,
+      "system_prompt": "Bạn là Trợ lý AI cao cấp chuyên về Pháp chế và Chính sách Thuế Doanh nghiệp Việt Nam. Hãy trả lời chuẩn xác, văn phong chuyên nghiệp, dẫn chiếu đầy đủ Luật, Nghị định, Thông tư và căn cứ vào các tài liệu tham khảo trong Google Drive.",
+      "model": "gemini-3.5-flash-lite",
+      "avatar_icon": "fa-briefcase",
+      "badge_color": "emerald"
+    },
+    {
+      "id": "asst_tax_risk",
+      "name": "Trợ lý Quản Lý Rủi Ro & Kiểm Soát HĐĐT",
+      "nickname": "Suneo",
+      "description": "Phân tích rủi ro hóa đơn điện tử, chuỗi cảnh báo KTH, bộ chỉ số tiêu chí TPR và quy trình xử lý người nộp thuế rủi ro cao.",
+      "drive_folder_ids": [
+        "1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK"
+      ],
+      "drive_folder_names": [
+        "Tax_Nghiệp vụ thuế"
+      ],
+      "filter_tax_only": true,
+      "enable_web_search": false,
+      "system_prompt": "Bạn là Trợ lý AI chuyên gia về Quản lý rủi ro và Kiểm soát hóa đơn điện tử ngành Thuế. Hãy phân tích sắc bén, chỉ ra các nguy cơ rủi ro và giải pháp xử lý theo quy định.",
+      "model": "gemini-3.5-flash-lite",
+      "avatar_icon": "fa-shield-halved",
+      "badge_color": "rose"
+    },
+    {
+      "id": "asst_nd30_standard",
+      "name": "Trợ lý Thể Thức & Soạn Thảo Văn Bản NĐ 30",
+      "nickname": "Shizuka",
+      "description": "Thẩm định thể thức, bố cục, phông chữ, cỡ chữ, căn lề và phong cách soạn thảo văn bản hành chính theo chuẩn Nghị định 30/2020/NĐ-CP.",
+      "drive_folder_ids": [
+        "1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK"
+      ],
+      "drive_folder_names": [
+        "Tax_Nghiệp vụ thuế"
+      ],
+      "filter_tax_only": false,
+      "enable_web_search": false,
+      "system_prompt": "Bạn là Chuyên gia Soạn thảo và Thẩm định Thể thức Văn bản Hành chính chuẩn Nghị định 30/2020/NĐ-CP của Chính phủ Việt Nam.",
+      "model": "gemini-3.5-flash-lite",
+      "avatar_icon": "fa-file-signature",
+      "badge_color": "amber"
+    }
+  ]
+}

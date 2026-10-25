@@ -1,0 +1,26 @@
+# Web App TikTok Pipeline & Studio & Manage App
+flask>=2.3.0
+flask-cors>=4.0.0
+requests>=2.31.0
+pandas>=2.0.0
+openpyxl>=3.1.0
+pillow>=10.0.0
+
+# Google Drive & OAuth
+google-api-python-client>=2.100.0
+google-auth-httplib2>=0.2.0
+google-auth-oauthlib>=1.2.0
+
+# Xử lý văn bản, Word & PDF (Văn thư, Báo cáo)
+python-docx>=1.0.0
+mammoth>=1.6.0
+pypdf>=3.17.0
+reportlab>=4.0.0
+
+# Web Scraping & Crawling
+beautifulsoup4>=4.12.0
+curl_cffi>=0.7.0
+
+# Video & Audio processing (Tùy chọn)
+youtube-transcript-api>=0.6.1
+yt-dlp>=2024.3.10

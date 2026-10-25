@@ -1,0 +1,300 @@
+/* Modern Neumorphic / Glassmorphic UI Design - Inspired by Soft Slate & Terracotta Coral Aesthetic */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+    /* Primary Sunset Coral / Terracotta */
+    --primary: #df8a5a;
+    --primary-hover: #c87648;
+    --primary-light: #fdf4ee;
+    --primary-border: #f5d5c5;
+    
+    /* Secondary Dusty Slate Mauve */
+    --mauve: #695375;
+    --mauve-light: #f3eff6;
+    --mauve-border: #ded5e3;
+    
+    /* Dusty Slate Blue */
+    --slate: #5c687e;
+    --slate-light: #eef2f7;
+    --slate-border: #d5dce7;
+    
+    --accent: #e59b6e;
+    --dark: #282d38;
+    --text-muted: #6b7588;
+    --card-bg: rgba(255, 255, 255, 0.90);
+    --page-bg: #f3f5f9;
+    --border: #e3e7f0;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--page-bg);
+    color: var(--dark);
+    background-image: 
+        radial-gradient(at 15% 15%, rgba(105, 107, 142, 0.10) 0px, transparent 48%),
+        radial-gradient(at 85% 12%, rgba(228, 161, 122, 0.15) 0px, transparent 45%),
+        radial-gradient(at 85% 85%, rgba(228, 161, 122, 0.12) 0px, transparent 48%),
+        radial-gradient(at 12% 88%, rgba(105, 83, 117, 0.10) 0px, transparent 48%),
+        radial-gradient(at 50% 50%, rgba(243, 245, 249, 0.6) 0px, transparent 100%);
+    background-attachment: fixed;
+}
+
+code, kbd, samp, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Neumorphic Soft Shadow Card with Frosted Backdrop Blur */
+.mark-card {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    border-radius: 24px;
+    box-shadow: 
+        0 14px 34px -8px rgba(75, 68, 90, 0.08), 
+        0 4px 14px -2px rgba(105, 107, 142, 0.04),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mark-card:hover {
+    box-shadow: 
+        0 20px 42px -6px rgba(223, 138, 90, 0.13), 
+        0 8px 18px -3px rgba(105, 83, 117, 0.06),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 1);
+    transform: translateY(-1px);
+}
+
+/* 3D Icon Container */
+.icon-3d {
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #fdf4ee 0%, #fae5d9 100%);
+    color: #df8a5a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.95), 0 6px 18px -2px rgba(223, 138, 90, 0.25);
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.icon-3d-sm {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #fdf4ee 0%, #fae5d9 100%);
+    color: #df8a5a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.95), 0 4px 14px -2px rgba(223, 138, 90, 0.20);
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+/* Icon Mauve Variant */
+.icon-3d-mauve {
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #f3eff6 0%, #e6dfee 100%);
+    color: #695375;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.95), 0 6px 18px -2px rgba(105, 83, 117, 0.22);
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+/* Number badge */
+.num-badge {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: #df8a5a;
+    line-height: 1;
+    letter-spacing: -0.03em;
+}
+
+/* Title Underline Accent */
+.title-line {
+    width: 32px;
+    height: 4px;
+    background: linear-gradient(90deg, #df8a5a 0%, #e59b6e 100%);
+    border-radius: 9999px;
+}
+
+/* Buttons */
+.btn-primary-mark {
+    background: linear-gradient(135deg, #e59b6e 0%, #df8a5a 50%, #c46845 100%);
+    color: #ffffff;
+    font-weight: 700;
+    border-radius: 14px;
+    padding: 0.55rem 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    box-shadow: 0 6px 20px -2px rgba(223, 138, 90, 0.42), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    border: none;
+}
+
+.btn-primary-mark:hover {
+    background: linear-gradient(135deg, #df8a5a 0%, #c46845 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px -2px rgba(223, 138, 90, 0.52);
+    color: #ffffff;
+}
+
+.btn-outline-mark {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #df8a5a;
+    border: 1.5px solid #f5d5c5;
+    font-weight: 600;
+    border-radius: 14px;
+    padding: 0.55rem 1.15rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-mark:hover {
+    background-color: #fdf4ee;
+    border-color: #df8a5a;
+    color: #c87648;
+}
+
+/* Tab Navigation Capsule */
+.nav-capsule {
+    background: rgba(255, 255, 255, 0.90);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid #e3e7f0;
+    border-radius: 9999px;
+    padding: 4px;
+    box-shadow: 0 4px 16px -2px rgba(75, 68, 90, 0.06);
+    display: inline-flex;
+    align-items: center;
+}
+
+.nav-tab-btn {
+    border-radius: 9999px;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #6b7588;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.nav-tab-btn:hover {
+    color: #df8a5a;
+}
+
+.nav-tab-btn.active {
+    background: linear-gradient(135deg, #e59b6e 0%, #df8a5a 50%, #c46845 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(223, 138, 90, 0.40);
+}
+
+/* Table styling */
+.mark-table thead th {
+    background: linear-gradient(135deg, #f3eff6 0%, #ede8f2 100%) !important;
+    color: #54425e !important;
+    font-weight: 800 !important;
+    font-size: 0.725rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0.85rem 0.9rem;
+    border-bottom: 1.5px solid #dfd5e6;
+}
+
+tr.selected-row {
+    background-color: #fdf6f2 !important;
+    position: relative;
+}
+
+tr.selected-row td:first-child {
+    border-left: 4px solid #df8a5a !important;
+}
+
+/* Badges for status flags */
+.status-badge-active {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 9999px;
+    background-color: #fdf4ee;
+    border: 1.5px solid #f5d5c5;
+    color: #df8a5a;
+    font-weight: 800;
+    font-size: 11px;
+}
+
+.status-badge-empty {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 9999px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #94a3b8;
+    font-size: 11px;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d5dce7;
+    border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #df8a5a;
+}
+
+/* Toast animation */
+.toast {
+    animation: toast-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes toast-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* ========================================================= */
+/* FLOATING LEFT MENU - CANH GIỮA MÀN HÌNH & TRƯỢT THEO      */
+/* ========================================================= */
+#appSidebar {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+#appSidebar:hover {
+    box-shadow: 0 20px 55px -8px rgba(40, 45, 56, 0.18), 0 8px 24px rgba(223, 138, 90, 0.14);
+}

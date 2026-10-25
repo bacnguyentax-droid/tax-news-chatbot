@@ -1,0 +1,101 @@
+{
+  "theme": "tax_blue",
+  "fullscreen": true,
+  "total_mailbox_capacity_gb": 2.0,
+  "alert_thresholds": {
+    "warning_percent": 80,
+    "danger_percent": 90,
+    "critical_percent": 99
+  },
+  "automation": {
+    "auto_delete_21h": {
+      "enabled": true,
+      "time": "21:00",
+      "ask_before_delete": true,
+      "email_addresses": [
+        "noreply@promotions.com",
+        "newsletter@spam.net",
+        "hoadon-dien@power.vn"
+      ]
+    },
+    "auto_move": {
+      "enabled": true,
+      "time": "21:15",
+      "mappings": [
+        {
+          "email": "cntt-ht@gdt.gov.vn",
+          "target_folder": "THÔNG BÁO NÂNG CẤP"
+        },
+        {
+          "email": "hoabac@gdt.gov.vn",
+          "target_folder": "Hoa Bac"
+        },
+        {
+          "email": "nkanh03@gdt.gov.vn",
+          "target_folder": "TCCB"
+        }
+      ]
+    },
+    "weekly_cleanup": {
+      "enabled": true,
+      "day_of_week": "sun",
+      "time": "23:00",
+      "clean_junk": true,
+      "clean_deleted": true
+    },
+    "auto_move_21h30": {
+      "enabled": true,
+      "time": "21:15",
+      "mappings": [
+        {
+          "email": "cntt-ht@gdt.gov.vn",
+          "target_folder": "THÔNG BÁO NÂNG CẤP"
+        },
+        {
+          "email": "hoabac@gdt.gov.vn",
+          "target_folder": "Hoa Bac"
+        },
+        {
+          "email": "nkanh03@gdt.gov.vn",
+          "target_folder": "TCCB"
+        }
+      ]
+    }
+  },
+  "google_integration": {
+    "gdrive": {
+      "connected": false,
+      "email": "",
+      "auth_type": "api_key",
+      "api_key": "",
+      "credentials_file": "",
+      "last_connected_at": ""
+    },
+    "notebooklm": {
+      "connected": false,
+      "email": "",
+      "api_key": "",
+      "workspace_url": "",
+      "workspace_name": "",
+      "last_connected_at": ""
+    }
+  },
+  "unsubscribed_services": [],
+  "cloud_sync": {
+    "local_watch_dir": "C:/Outlook_Sync_Dir",
+    "google_drive_folder": "My Drive/Outlook_Tax_Sync",
+    "notebooklm_folder": "C:/NotebookLM_Sources",
+    "delete_local_after_copy": true,
+    "auto_copy_on_file_added": true
+  },
+  "undo_staging": {
+    "enabled": true,
+    "retention_days": 14,
+    "staging_folder_name": "App_Staging_Trash"
+  },
+  "zalo_integration": {
+    "enabled": true,
+    "webhook_url": "https://chat.zalo.me/api/v1/webhook_sample",
+    "send_weekly_summary": true
+  }
+}

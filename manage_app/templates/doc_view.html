@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ doc.doc_number }} - {{ doc.title }}</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        .document-paper {
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+            min-height: 80vh;
+        }
+        @media print {
+            header, .no-print { display: none !important; }
+            main { padding: 0 !important; max-width: 100% !important; }
+            .document-paper { box-shadow: none !important; border: none !important; padding: 0 !important; }
+        }
+        .mammoth-rendered-document table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        .mammoth-rendered-document td, .mammoth-rendered-document th {
+            padding: 6px 10px;
+            vertical-align: top;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen flex flex-col text-slate-800">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-[#002e5b] text-white px-4 py-2.5 flex flex-wrap items-center justify-between shadow-md sticky top-0 z-50 gap-2">
+        <div class="flex items-center space-x-3">
+            <a href="/" class="px-2.5 py-1.5 rounded bg-[#004b93] hover:bg-[#003b73] text-white text-xs font-bold transition flex items-center space-x-1.5 shadow-sm">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Quay lại Quản lý</span>
+            </a>
+            <div class="border-l border-blue-400/40 pl-3">
+                <span class="text-xs font-bold font-mono px-2.5 py-1 rounded bg-blue-900 border border-blue-400 text-blue-100">
+                    {{ doc.doc_type or 'Văn bản' }} {{ doc.doc_number }}
+                </span>
+            </div>
+        </div>
+
+        <div class="flex items-center flex-wrap gap-2">
+            <!-- Tải file Word gốc -->
+            <a href="/api/documents/word/{{ doc.id }}" class="px-3 py-1.5 rounded bg-[#1e40af] hover:bg-[#1d4ed8] text-white text-xs font-bold transition flex items-center space-x-1.5 shadow-sm" title="Tải file Word (.docx / .doc) nguyên gốc về máy tính">
+                <i class="fa-solid fa-file-word text-blue-200"></i>
+                <span>Tải file Word (.docx)</span>
+            </a>
+
+            <!-- Tải file PDF chính thức -->
+            <a href="/api/documents/pdf/{{ doc.id }}" download class="px-3 py-1.5 rounded bg-[#004b93] hover:bg-[#003b73] text-white text-xs font-bold transition flex items-center space-x-1.5 shadow-sm" title="Tải bản PDF chính thức về máy tính">
+                <i class="fa-solid fa-file-pdf text-blue-200"></i>
+                <span>Tải file PDF gốc</span>
+            </a>
+
+            <!-- In văn bản -->
+            <button onclick="window.print()" class="px-2.5 py-1.5 rounded bg-slate-700 hover:bg-slate-600 text-slate-200 hover:text-white text-xs font-semibold transition flex items-center space-x-1" title="In trực tiếp văn bản">
+                <i class="fa-solid fa-print"></i>
+                <span>In</span>
+            </button>
+
+            <!-- Mở web gốc -->
+            <a href="{{ doc.source_url or '#' }}" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-semibold transition flex items-center space-x-1" title="Mở trang phát hành gốc trên {{ doc.source }}">
+                <span>Web gốc ({{ doc.source }})</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Document Info Banner -->
+    <div class="bg-white border-b border-slate-200 px-6 py-3 shadow-xs no-print">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-2">
+            <div>
+                <p class="text-[11px] font-bold uppercase tracking-wider text-[#004b93]">
+                    {{ doc.issuing_body }} &bull; Ban hành ngày: <span class="font-mono text-slate-900 font-bold">{{ doc.issue_date }}</span>
+                    {% if doc.effective_date %} &bull; Hiệu lực: <span class="font-mono text-slate-900 font-bold">{{ doc.effective_date }}</span>{% endif %}
+                </p>
+                <h1 class="text-sm md:text-base font-black text-slate-900 mt-0.5 leading-snug">
+                    {{ doc.title }}
+                </h1>
+            </div>
+            <div class="flex items-center space-x-2 text-xs shrink-0">
+                <span class="px-2.5 py-1 rounded bg-blue-50 text-[#003b73] border border-blue-200 font-semibold">
+                    Lĩnh vực: <b>{{ doc.field }}</b>
+                </span>
+                <span class="px-2.5 py-1 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold">
+                    <i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i>Đã đối soát chính xác
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area: PDF Viewer & Document Paper Reader -->
+    <main class="max-w-7xl mx-auto w-full flex-1 p-4 grid grid-cols-1 lg:grid-cols-12 gap-4">
+        
+        <!-- Left Column: Viewer Panel (8 Cols) -->
+        <section class="lg:col-span-8 bg-white rounded-lg border border-slate-300 shadow-sm overflow-hidden flex flex-col min-h-[84vh]">
+            
+            <!-- Tab Navigation Bar -->
+            <div class="bg-[#f0f5fa] px-3 pt-2 border-b border-[#cbddec] flex items-center justify-between no-print">
+                <div class="flex items-center space-x-1">
+                    <!-- Tab 1: PDF Viewer -->
+                    <button id="tab-pdf-btn" onclick="switchViewerTab('pdf')" class="px-3.5 py-2 text-xs font-bold rounded-t border-t border-x border-[#cbddec] bg-white text-[#002e5b] flex items-center space-x-1.5 shadow-xs transition">
+                        <i class="fa-solid fa-file-pdf text-blue-700 text-sm"></i>
+                        <span>Xem PDF gốc</span>
+                    </button>
+                    <!-- Tab 2: Word / HTML Reader -->
+                    <button id="tab-word-btn" onclick="switchViewerTab('word')" class="px-3.5 py-2 text-xs font-bold rounded-t border-t border-x border-transparent text-slate-600 hover:text-[#004b93] flex items-center space-x-1.5 transition">
+                        <i class="fa-solid fa-file-word text-blue-600 text-sm"></i>
+                        <span>Đọc Văn bản / Word (HTML)</span>
+                    </button>
+                </div>
+                
+                <div class="flex items-center space-x-2 pb-1.5 text-xs">
+                    <a href="/api/documents/pdf/{{ doc.id }}" target="_blank" class="text-xs text-[#004b93] hover:underline font-bold flex items-center space-x-1" title="Phóng to file PDF trong tab mới">
+                        <span>Phóng to tab mới</span>
+                        <i class="fa-solid fa-expand text-[10px]"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- View Mode 1: PDF Viewer (Embedded iframe) -->
+            <div id="view-pdf-container" class="flex-1 bg-slate-200 relative flex flex-col h-[78vh]">
+                <iframe src="/api/documents/pdf/{{ doc.id }}" class="w-full flex-1 border-0" title="PDF Viewer"></iframe>
+            </div>
+
+            <!-- View Mode 2: Word / HTML Document Paper Reader -->
+            <div id="view-word-container" class="hidden flex-1 bg-slate-100 p-4 md:p-6 overflow-y-auto max-h-[82vh]">
+                <div class="document-paper bg-white rounded border border-slate-300 p-6 md:p-10 max-w-4xl mx-auto shadow-sm">
+                    {{ word_html | safe }}
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Right Column: Summary & Guidance (4 Cols) -->
+        <section class="lg:col-span-4 flex flex-col space-y-4 no-print">
+            
+            <!-- Quick Summary Card -->
+            <div class="bg-white rounded-lg border border-slate-300 shadow-sm p-4 flex flex-col space-y-3">
+                <div class="flex items-center space-x-2 text-xs font-bold text-[#003b73] border-b border-slate-100 pb-2">
+                    <i class="fa-solid fa-file-lines text-[#004b93]"></i>
+                    <span class="uppercase tracking-wide">Trích yếu nội dung văn bản</span>
+                </div>
+                <p class="text-xs text-slate-800 leading-relaxed font-medium">
+                    {{ doc.summary or doc.title }}
+                </p>
+                {% if doc.content and doc.content != doc.summary %}
+                <div class="mt-2 pt-2 border-t border-slate-100">
+                    <h4 class="text-[11px] font-bold text-[#004b93] uppercase mb-1">Căn cứ &amp; Hướng dẫn áp dụng:</h4>
+                    <div class="text-[11px] text-slate-700 leading-relaxed font-mono bg-slate-50 p-2.5 rounded border border-slate-200 max-h-56 overflow-y-auto whitespace-pre-line">
+                        {{ doc.content }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Quick Download Action Box -->
+            <div class="bg-[#f0f5fa] rounded-lg border border-[#cbddec] p-4 text-xs space-y-2.5">
+                <p class="font-bold text-[#002e5b] uppercase text-[11px] flex items-center space-x-1.5 border-b border-[#cbddec] pb-1.5">
+                    <i class="fa-solid fa-cloud-arrow-down text-[#004b93]"></i>
+                    <span>Tải về định dạng phù hợp</span>
+                </p>
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                    <a href="/api/documents/word/{{ doc.id }}" class="px-2.5 py-2 rounded bg-white hover:bg-blue-50 border border-blue-300 text-[#004b93] font-bold text-center flex flex-col items-center justify-center transition shadow-xs">
+                        <i class="fa-solid fa-file-word text-blue-600 text-lg mb-1"></i>
+                        <span>File Word (.docx)</span>
+                        <span class="text-[10px] text-slate-500 font-normal">Chỉnh sửa</span>
+                    </a>
+                    <a href="/api/documents/pdf/{{ doc.id }}" download class="px-2.5 py-2 rounded bg-[#004b93] hover:bg-[#003b73] text-white font-bold text-center flex flex-col items-center justify-center transition shadow-xs">
+                        <i class="fa-solid fa-file-pdf text-blue-100 text-lg mb-1"></i>
+                        <span>Bản PDF gốc</span>
+                        <span class="text-[10px] text-blue-200 font-normal">Chính thức</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Metadata Info Card -->
+            <div class="bg-white rounded-lg border border-slate-300 shadow-sm p-4 text-xs space-y-2">
+                <div class="flex items-center space-x-2 font-bold text-[#003b73] border-b border-slate-100 pb-2">
+                    <i class="fa-solid fa-circle-info text-[#004b93]"></i>
+                    <span class="uppercase tracking-wide">Thuộc tính pháp lý</span>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-100">
+                    <span class="text-slate-500">Số ký hiệu:</span>
+                    <span class="font-mono font-bold text-slate-900">{{ doc.doc_number }}</span>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-100">
+                    <span class="text-slate-500">Cơ quan ban hành:</span>
+                    <span class="font-bold text-slate-900">{{ doc.issuing_body }}</span>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-100">
+                    <span class="text-slate-500">Ngày phát hành:</span>
+                    <span class="font-mono font-bold text-slate-900">{{ doc.issue_date }}</span>
+                </div>
+                <div class="flex justify-between py-1 border-b border-slate-100">
+                    <span class="text-slate-500">Người ký / Chức danh:</span>
+                    <span class="font-semibold text-slate-900">{{ doc.signer_title or 'Lãnh đạo' }} {% if doc.signer_name %}- {{ doc.signer_name }}{% endif %}</span>
+                </div>
+                <div class="flex justify-between py-1">
+                    <span class="text-slate-500">Website nguồn:</span>
+                    <span class="font-mono font-bold text-[#004b93]">{{ doc.source }}</span>
+                </div>
+            </div>
+
+            <!-- Reliability Notice Card -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-[11px] text-blue-900 leading-normal">
+                <p class="font-bold flex items-center space-x-1.5 mb-1 text-[#003b73]">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Bảo đảm nội dung và tập tin chính thức</span>
+                </p>
+                <p>
+                    Văn bản và các tập tin đính kèm (Word/PDF) được thu thập và lưu trữ trực tiếp từ các cổng thông tin chính thống của Nhà nước. Hệ thống bảo đảm tính toàn vẹn của văn bản, phục vụ trực tiếp công tác tra cứu và lưu trữ điện tử.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+        function switchViewerTab(tab) {
+            const pdfContainer = document.getElementById('view-pdf-container');
+            const wordContainer = document.getElementById('view-word-container');
+            const pdfBtn = document.getElementById('tab-pdf-btn');
+            const wordBtn = document.getElementById('tab-word-btn');
+
+            if (tab === 'word') {
+                pdfContainer.classList.add('hidden');
+                wordContainer.classList.remove('hidden');
+
+                // Active Word tab style
+                wordBtn.className = "px-3.5 py-2 text-xs font-bold rounded-t border-t border-x border-[#cbddec] bg-white text-[#002e5b] flex items-center space-x-1.5 shadow-xs transition";
+                pdfBtn.className = "px-3.5 py-2 text-xs font-bold rounded-t border-t border-x border-transparent text-slate-600 hover:text-[#004b93] flex items-center space-x-1.5 transition";
+            } else {
+                wordContainer.classList.add('hidden');
+                pdfContainer.classList.remove('hidden');
+
+                // Active PDF tab style
+                pdfBtn.className = "px-3.5 py-2 text-xs font-bold rounded-t border-t border-x border-[#cbddec] bg-white text-[#002e5b] flex items-center space-x-1.5 shadow-xs transition";
+                wordBtn.className = "px-3.5 py-2 text-xs font-bold rounded-t border-t border-x border-transparent text-slate-600 hover:text-[#004b93] flex items-center space-x-1.5 transition";
+            }
+        }
+    </script>
+
+</body>
+</html>

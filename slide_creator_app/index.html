@@ -1,0 +1,2136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slide Card Creator - Tạo Ảnh Infographic Chuyên Nghiệp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=Montserrat:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="assets/html2canvas.min.js"></script>
+  <script src="assets/jszip.min.js"></script>
+  <style>
+    :root {
+      --font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+      --primary-color: #8f152b;
+      --primary-light: #fff0f3;
+      --primary-border: rgba(185, 35, 60, 0.35);
+      --card-bg: #ffffff;
+      --text-dark: #2c3038;
+      --bg-base: #fcf9f9;
+      --glow-top-right: rgba(255, 195, 205, 0.45);
+      --glow-bottom-right: rgba(255, 205, 215, 0.4);
+      --glow-top-left: rgba(255, 240, 243, 0.3);
+      --footer-bg: linear-gradient(135deg, #99142d 0%, #7d1025 100%);
+      --footer-text: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top App Header */
+    .app-header {
+      background: #1e293b;
+      border-bottom: 1px solid #334155;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .app-title-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .app-logo {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #e11d48, #9f1239);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
+    }
+
+    .app-title h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #f8fafc;
+      letter-spacing: -0.01em;
+    }
+
+    .app-title p {
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      outline: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #e11d48, #be123c);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #f43f5e, #e11d48);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(225, 29, 72, 0.45);
+    }
+
+    .btn-secondary {
+      background: #334155;
+      color: #f1f5f9;
+      border-color: #475569;
+    }
+
+    .btn-secondary:hover {
+      background: #475569;
+      color: #ffffff;
+    }
+
+    .btn-accent {
+      background: #0284c7;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+    }
+
+    .btn-accent:hover {
+      background: #0369a1;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.78rem;
+    }
+
+    /* Main workspace */
+    .workspace {
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      flex: 1;
+      height: calc(100vh - 64px);
+      overflow: hidden;
+    }
+
+    @media (max-width: 1080px) {
+      .workspace {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow: visible;
+      }
+    }
+
+    /* Left Sidebar: Controls */
+    .controls-panel {
+      background: #1e293b;
+      border-right: 1px solid #334155;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #475569 #1e293b;
+    }
+
+    .tabs-header {
+      display: flex;
+      border-bottom: 1px solid #334155;
+      background: #0f172a;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 12px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: transparent;
+      color: #94a3b8;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .tab-btn:hover {
+      color: #f1f5f9;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .tab-btn.active {
+      color: #f43f5e;
+      border-bottom-color: #f43f5e;
+      background: rgba(244, 63, 94, 0.08);
+    }
+
+    .tab-content {
+      padding: 20px;
+      display: none;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .tab-content.active {
+      display: flex;
+    }
+
+    /* Section Group */
+    .control-group {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .group-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .input-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .input-hint {
+      font-size: 0.7rem;
+      color: #64748b;
+      font-weight: 400;
+    }
+
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #f8fafc;
+      padding: 9px 12px;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: #e11d48;
+      box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.2);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 80px;
+      line-height: 1.5;
+    }
+
+    /* Bullets list editor */
+    .bullets-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .bullet-row {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+    }
+
+    .bullet-row-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .bullet-index {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #f43f5e;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .bullet-row-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-icon {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      transition: all 0.15s;
+    }
+
+    .btn-icon:hover {
+      color: #f8fafc;
+      background: #334155;
+    }
+
+    .btn-icon.delete:hover {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    .bullet-tools {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .btn-tag {
+      font-size: 0.72rem;
+      background: #334155;
+      color: #cbd5e1;
+      border: none;
+      border-radius: 4px;
+      padding: 3px 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-tag:hover {
+      background: #e11d48;
+      color: white;
+    }
+
+    /* Preset theme badges */
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .theme-btn {
+      border: 1px solid #334155;
+      background: #1e293b;
+      border-radius: 8px;
+      padding: 10px 8px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .theme-btn:hover {
+      border-color: #64748b;
+      transform: translateY(-1px);
+    }
+
+    .theme-btn.active {
+      border-color: #e11d48;
+      background: rgba(225, 29, 72, 0.1);
+      box-shadow: 0 0 0 2px rgba(225, 29, 72, 0.3);
+    }
+
+    .theme-color-preview {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .theme-name {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      text-align: center;
+    }
+
+    /* Ratio selector */
+    .ratio-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .ratio-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 8px 4px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .ratio-btn.active {
+      border-color: #e11d48;
+      background: rgba(225, 29, 72, 0.1);
+      box-shadow: 0 0 0 2px rgba(225, 29, 72, 0.3);
+    }
+
+    .ratio-icon {
+      font-size: 1.1rem;
+    }
+
+    .ratio-text {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+
+    .ratio-sub {
+      font-size: 0.65rem;
+      color: #64748b;
+    }
+
+    /* Right Preview Area */
+    .preview-panel {
+      background: #090d16;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preview-toolbar {
+      background: #111827;
+      border-bottom: 1px solid #1f2937;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      z-index: 20;
+    }
+
+    .slide-navigator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .slide-chip {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: #1f2937;
+      color: #9ca3af;
+      border: 1px solid #374151;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+
+    .slide-chip:hover {
+      background: #374151;
+      color: #f3f4f6;
+    }
+
+    .slide-chip.active {
+      background: #e11d48;
+      color: #ffffff;
+      border-color: #e11d48;
+      box-shadow: 0 2px 8px rgba(225, 29, 72, 0.4);
+    }
+
+    .preview-viewport {
+      flex: 1;
+      overflow: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      position: relative;
+    }
+
+    /* The Render Canvas / Graphic Container */
+    /* 9:16 aspect ratio base dimensions: 540x960 (for preview) / 1080x1920 (for export) */
+    .slide-frame-wrapper {
+      position: relative;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+
+    /* THE EXACT CARD INFOGRAPHIC ELEMENT */
+    .infographic-canvas {
+      width: 540px;
+      height: 960px;
+      position: relative;
+      background-color: var(--bg-base);
+      font-family: var(--font-family);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-sizing: border-box;
+      padding: 85px 36px 65px 36px;
+      user-select: none;
+    }
+
+    /* Ambient background glows matching reference */
+    .infographic-canvas::before {
+      content: '';
+      position: absolute;
+      top: -10%;
+      right: -15%;
+      width: 480px;
+      height: 480px;
+      background: radial-gradient(circle, var(--glow-top-right) 0%, rgba(255, 230, 235, 0.15) 50%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .infographic-canvas::after {
+      content: '';
+      position: absolute;
+      bottom: -10%;
+      right: -15%;
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, var(--glow-bottom-right) 0%, rgba(255, 230, 235, 0.1) 45%, transparent 68%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ambient-glow-left {
+      position: absolute;
+      top: 15%;
+      left: -20%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, var(--glow-top-left) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Canvas internal content */
+    .canvas-content-wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Top Pill Badge */
+    .canvas-header-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 6px 18px;
+      border-radius: 9999px;
+      background-color: var(--primary-light);
+      border: 1.5px solid var(--primary-border);
+      color: var(--primary-color);
+      font-size: 13.5px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+      max-width: 95%;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    /* Main Title Area */
+    .canvas-title-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 8px;
+      margin-bottom: 24px;
+      width: 100%;
+      padding: 0 10px;
+    }
+
+    .canvas-title-icon {
+      font-size: 34px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+      filter: drop-shadow(0 2px 4px rgba(143, 21, 43, 0.15));
+    }
+
+    .canvas-title-text {
+      color: var(--primary-color);
+      font-size: 24px;
+      font-weight: 900;
+      line-height: 1.25;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      word-break: break-word;
+    }
+
+    /* White Center Card */
+    .canvas-main-card {
+      background: var(--card-bg);
+      border-radius: 26px;
+      padding: 34px 28px;
+      width: 100%;
+      flex: 1;
+      max-height: 540px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-shadow: 0 16px 40px -10px rgba(160, 30, 55, 0.09), 0 4px 12px rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(245, 225, 230, 0.65);
+      position: relative;
+    }
+
+    .canvas-bullets-list {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      list-style: none;
+    }
+
+    .canvas-bullet-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 17.5px;
+      line-height: 1.58;
+      color: var(--text-dark);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    .canvas-bullet-dot {
+      color: var(--primary-color);
+      font-size: 24px;
+      line-height: 0.9;
+      margin-top: 1px;
+      flex-shrink: 0;
+    }
+
+    .canvas-bullet-text {
+      flex: 1;
+    }
+
+    .canvas-bullet-text strong {
+      color: var(--primary-color);
+      font-weight: 800;
+    }
+
+    /* Footer Pill Button */
+    .canvas-footer-pill {
+      margin-top: 26px;
+      background: var(--footer-bg);
+      color: var(--footer-text);
+      padding: 9px 28px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 13.5px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      box-shadow: 0 8px 24px rgba(153, 20, 45, 0.32);
+      max-width: 95%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .canvas-footer-pill svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    /* Watermark / Brand (optional) */
+    .canvas-watermark {
+      position: absolute;
+      bottom: 12px;
+      font-size: 11px;
+      color: #94a3b8;
+      opacity: 0.7;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+    }
+
+    /* Ratio variations */
+    .ratio-1-1 .infographic-canvas {
+      width: 600px;
+      height: 600px;
+      padding: 40px 36px 36px 36px;
+    }
+
+    .ratio-1-1 .canvas-main-card {
+      max-height: 360px;
+      padding: 24px;
+    }
+
+    .ratio-1-1 .canvas-bullets-list {
+      gap: 14px;
+    }
+
+    .ratio-1-1 .canvas-bullet-item {
+      font-size: 15.5px;
+    }
+
+    .ratio-4-5 .infographic-canvas {
+      width: 540px;
+      height: 675px;
+      padding: 48px 36px 40px 36px;
+    }
+
+    .ratio-4-5 .canvas-main-card {
+      max-height: 420px;
+      padding: 26px 24px;
+    }
+
+    .ratio-4-5 .canvas-bullets-list {
+      gap: 16px;
+    }
+
+    .ratio-4-5 .canvas-bullet-item {
+      font-size: 16px;
+    }
+
+    .ratio-16-9 .infographic-canvas {
+      width: 960px;
+      height: 540px;
+      padding: 40px 60px;
+    }
+
+    .ratio-16-9 .canvas-main-card {
+      max-height: 320px;
+      padding: 24px 36px;
+    }
+
+    .ratio-16-9 .canvas-bullets-list {
+      gap: 14px;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #475569;
+      border-left: 4px solid #10b981;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .toast.error {
+      border-left-color: #ef4444;
+    }
+
+    /* Modal for Quick Paste */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 650px;
+      padding: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-header h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    .badge-pill {
+      background: rgba(244, 63, 94, 0.15);
+      color: #f43f5e;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    /* Zoom control */
+    .zoom-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #1f2937;
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid #374151;
+    }
+
+    .zoom-btn {
+      background: transparent;
+      border: none;
+      color: #9ca3af;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .zoom-btn:hover {
+      background: #374151;
+      color: #fff;
+    }
+
+    .zoom-btn.active {
+      background: #4b5563;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="app-title-area">
+      <div class="app-logo">🎨</div>
+      <div class="app-title">
+        <h1>Trình Tạo Slide & Infographic Mạng Xã Hội</h1>
+        <p>Tạo ảnh dọc chuẩn TikTok / Reels / Facebook với 1 cú click</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-secondary" onclick="openQuickPasteModal()">
+        <span>⚡</span> Nhập văn bản nhanh
+      </button>
+      <button class="btn btn-secondary" onclick="copyImageToClipboard()">
+        <span>📋</span> Sao chép ảnh
+      </button>
+      <button class="btn btn-primary" onclick="exportSlideImage('png')">
+        <span>📥</span> Tải ảnh PNG (HD)
+      </button>
+      <button class="btn btn-accent" onclick="exportAllSlidesZip()">
+        <span>📦</span> Tải tất cả (ZIP)
+      </button>
+    </div>
+  </header>
+
+  <!-- Workspace -->
+  <div class="workspace">
+    <!-- Left: Controls & Editor -->
+    <aside class="controls-panel">
+      <!-- Tabs header -->
+      <div class="tabs-header">
+        <button class="tab-btn active" onclick="switchTab('content')">
+          <span>📝</span> Nội dung
+        </button>
+        <button class="tab-btn" onclick="switchTab('style')">
+          <span>🎨</span> Giao diện & Màu
+        </button>
+        <button class="tab-btn" onclick="switchTab('slides')">
+          <span>📑</span> Quản lý Slides (<span id="slideCountBadge">1</span>)
+        </button>
+      </div>
+
+      <!-- Tab 1: Nội dung -->
+      <div id="tab-content" class="tab-content active">
+        <!-- Quick Preset selection -->
+        <div class="control-group">
+          <div class="group-header">
+            <span class="group-title">💡 Chọn mẫu nội dung có sẵn</span>
+          </div>
+          <select class="form-select" id="presetSelect" onchange="applyContentPreset(this.value)">
+            <option value="tax_khoan" selected>📌 Mẫu: Xóa bỏ thuế khoán (Mẫu người dùng)</option>
+            <option value="penalty_tax">⚠️ Mẫu: Mức phạt trốn thuế mới nhất</option>
+            <option value="einvoice">🧾 Mẫu: Hóa đơn điện tử máy tính tiền</option>
+            <option value="pit_deduction">💰 Mẫu: Nâng mức giảm trừ gia cảnh</option>
+          </select>
+        </div>
+
+        <!-- Header Badge -->
+        <div class="control-group">
+          <div class="group-header">
+            <span class="group-title">🏷️ Huy hiệu trên đầu (Pill Badge)</span>
+          </div>
+          <label class="input-label" for="headerTagInput">
+            <span>Nội dung huy hiệu:</span>
+            <span class="input-hint">VD: CHÍNH SÁCH THUẾ HỘ KINH DOANH • SLIDE 02/08</span>
+          </label>
+          <input type="text" id="headerTagInput" class="form-input" value="CHÍNH SÁCH THUẾ HỘ KINH DOANH • SLIDE 02/08" oninput="updateCurrentSlide()">
+        </div>
+
+        <!-- Title & Icon -->
+        <div class="control-group">
+          <div class="group-header">
+            <span class="group-title">📢 Tiêu đề chính</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 80px 1fr; gap: 8px;">
+            <div>
+              <label class="input-label">Icon / Emoji</label>
+              <input type="text" id="titleIconInput" class="form-input" style="text-align: center; font-size: 1.2rem;" value="🚫" oninput="updateCurrentSlide()">
+            </div>
+            <div>
+              <label class="input-label">Nội dung tiêu đề</label>
+              <input type="text" id="titleTextInput" class="form-input" value="XÓA BỎ THUẾ KHOÁN,&#10;CHUYỂN SANG TỰ KÊ KHAI" oninput="updateCurrentSlide()">
+            </div>
+          </div>
+          <!-- Quick emoji bar -->
+          <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px;">
+            <button class="btn-tag" onclick="setTitleIcon('🚫')">🚫 Cấm</button>
+            <button class="btn-tag" onclick="setTitleIcon('⚠️')">⚠️ Cảnh báo</button>
+            <button class="btn-tag" onclick="setTitleIcon('📢')">📢 Thông báo</button>
+            <button class="btn-tag" onclick="setTitleIcon('⚖️')">⚖️ Luật</button>
+            <button class="btn-tag" onclick="setTitleIcon('💰')">💰 Tiền tệ</button>
+            <button class="btn-tag" onclick="setTitleIcon('🏢')">🏢 DN</button>
+            <button class="btn-tag" onclick="setTitleIcon('💡')">💡 Lưu ý</button>
+          </div>
+        </div>
+
+        <!-- Bullets items -->
+        <div class="control-group">
+          <div class="group-header">
+            <span class="group-title">📋 Các ý chính trong thẻ trắng</span>
+            <button class="btn btn-secondary btn-sm" onclick="addBulletItem()">+ Thêm ý</button>
+          </div>
+          <p style="font-size: 0.72rem; color: #94a3b8; line-height: 1.4;">
+            💡 <strong>Mẹo:</strong> Dùng <code>**từ khóa**</code> để tô đỏ nổi bật cụm từ (ví dụ: <code>**thuế khoán**</code>).
+          </p>
+
+          <div id="bulletsContainer" class="bullets-container">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Footer Tag -->
+        <div class="control-group">
+          <div class="group-header">
+            <span class="group-title">🔖 Nút / Thẻ chân trang (Footer Pill)</span>
+          </div>
+          <label class="input-label" for="footerTagInput">
+            <span>Nội dung chân trang:</span>
+          </label>
+          <input type="text" id="footerTagInput" class="form-input" value="📖 THÔNG TIN VỀ THUẾ • CHÍNH THỨC" oninput="updateCurrentSlide()">
+        </div>
+
+        <!-- Watermark / Author -->
+        <div class="control-group">
+          <div class="group-header">
+            <span class="group-title">🔏 Tác giả / Watermark (Tùy chọn)</span>
+          </div>
+          <input type="text" id="watermarkInput" class="form-input" placeholder="Để trống nếu không muốn hiện (VD: @KetoanThue247)" oninput="updateCurrentSlide()">
+        </div>
+      </div>
+
+      <!-- Tab 2: Style & Themes -->
+      <div id="tab-style" class="tab-content">
+        <!-- Aspect Ratio -->
+        <div class="control-group">
+          <div class="group-header">
+            <span class="group-title">📐 Tỷ lệ khung hình</span>
+          </div>
+          <div class="ratio-grid">
+            <button class="ratio-btn active" data-ratio="9-16" onclick="setAspectRatio('9-16')">
+              <span class="ratio-icon">📱</span>
+              <span class="ratio-text">9:16</span>
+              <span class="ratio-sub">TikTok/Story</span>
+            </button>
+            <button class="ratio-btn" data-ratio="1-1" onclick="setAspectRatio('1-1')">
+              <span class="ratio-icon">🔲</span>
+              <span class="ratio-text">1:1</span>
+              <span class="ratio-sub">Vuông FB</span>
+            </button>
+            <button class="ratio-btn" data-ratio="4-5" onclick="setAspectRatio('4-5')">
+              <span class="ratio-icon">📄</span>
+              <span class="ratio-text">4:5</span>
+              <span class="ratio-sub">Feed dọc</span>
+            </button>
+            <button class="ratio-btn" data-ratio="16-9" onclick="setAspectRatio('16-9')">
+              <span class="ratio-icon">💻</span>
+              <span class="ratio-text">16:9</span>
+              <span class="ratio-sub">Ngang</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Color Themes -->
+        <div class="control-group">
+          <div class="group-header">
+            <span class="group-title">🎨 Bảng màu chủ đề</span>
+          </div>
+          <div class="theme-grid">
+            <button class="theme-btn active" onclick="applyTheme('burgundy')">
+              <div class="theme-color-preview" style="background: #8f152b;"></div>
+              <span class="theme-name">Đỏ Rượu (Mẫu)</span>
+            </button>
+            <button class="theme-btn" onclick="applyTheme('blue')">
+              <div class="theme-color-preview" style="background: #1d4ed8;"></div>
+              <span class="theme-name">Xanh Sapphire</span>
+            </button>
+            <button class="theme-btn" onclick="applyTheme('emerald')">
+              <div class="theme-color-preview" style="background: #047857;"></div>
+              <span class="theme-name">Xanh Emerald</span>
+            </button>
+            <button class="theme-btn" onclick="applyTheme('amber')">
+              <div class="theme-color-preview" style="background: #c2410c;"></div>
+              <span class="theme-name">Cam Hổ Phách</span>
+            </button>
+            <button class="theme-btn" onclick="applyTheme('purple')">
+              <div class="theme-color-preview" style="background: #6d28d9;"></div>
+              <span class="theme-name">Tím Thạch Anh</span>
+            </button>
+            <button class="theme-btn" onclick="applyTheme('dark')">
+              <div class="theme-color-preview" style="background: #111827; border-color: #e5e7eb;"></div>
+              <span class="theme-name">Dark Mode</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Font Family -->
+        <div class="control-group">
+          <div class="group-header">
+            <span class="group-title">🔤 Font chữ</span>
+          </div>
+          <select class="form-select" id="fontFamilySelect" onchange="setFontFamily(this.value)">
+            <option value="'Be Vietnam Pro', system-ui, sans-serif" selected>Be Vietnam Pro (Chuẩn tiếng Việt)</option>
+            <option value="'Plus Jakarta Sans', system-ui, sans-serif">Plus Jakarta Sans (Hiện đại)</option>
+            <option value="'Montserrat', system-ui, sans-serif">Montserrat (Đậm đà, nổi bật)</option>
+            <option value="'Inter', system-ui, sans-serif">Inter (Tối giản chuẩn UX)</option>
+            <option value="'Segoe UI', Tahoma, sans-serif">Segoe UI (Windows mượt mà)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Tab 3: Multi-Slide Manager -->
+      <div id="tab-slides" class="tab-content">
+        <div class="control-group">
+          <div class="group-header">
+            <span class="group-title">📑 Danh sách Slides</span>
+            <button class="btn btn-primary btn-sm" onclick="addNewSlide()">+ Thêm Slide</button>
+          </div>
+          <div id="slidesListGroup" style="display: flex; flex-direction: column; gap: 8px;">
+            <!-- Render slide cards -->
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="group-header">
+            <span class="group-title">⚡ Thao tác hàng loạt</span>
+          </div>
+          <button class="btn btn-secondary" onclick="duplicateCurrentSlide()" style="width: 100%;">
+            📋 Nhân bản slide hiện tại
+          </button>
+          <button class="btn btn-accent" onclick="exportAllSlidesZip()" style="width: 100%;">
+            📦 Xuất tất cả Slides thành file ZIP
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right: Live Canvas Preview -->
+    <main class="preview-panel">
+      <!-- Toolbar -->
+      <div class="preview-toolbar">
+        <div class="slide-navigator" id="topSlideChips">
+          <!-- Slide chips will be rendered here -->
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <!-- Zoom Controls -->
+          <div class="zoom-controls">
+            <button class="zoom-btn" onclick="setZoom(0.6)">60%</button>
+            <button class="zoom-btn" onclick="setZoom(0.75)">75%</button>
+            <button class="zoom-btn active" onclick="setZoom(1.0)">100%</button>
+          </div>
+
+          <button class="btn btn-primary btn-sm" onclick="exportSlideImage('png')">
+            <span>📥</span> Tải PNG
+          </button>
+        </div>
+      </div>
+
+      <!-- Canvas viewport -->
+      <div class="preview-viewport" id="previewViewport">
+        <div class="slide-frame-wrapper" id="slideFrameWrapper">
+          <!-- The Infographic Element -->
+          <div class="infographic-canvas" id="infographicCanvas">
+            <div class="ambient-glow-left"></div>
+            
+            <div class="canvas-content-wrapper">
+              <!-- Top Header Badge -->
+              <div class="canvas-header-badge" id="canvasHeaderBadge">
+                CHÍNH SÁCH THUẾ HỘ KINH DOANH • SLIDE 02/08
+              </div>
+
+              <!-- Main Title Area -->
+              <div class="canvas-title-area">
+                <span class="canvas-title-icon" id="canvasTitleIcon">🚫</span>
+                <span class="canvas-title-text" id="canvasTitleText">
+                  XÓA BỎ THUẾ KHOÁN,<br>CHUYỂN SANG TỰ KÊ KHAI
+                </span>
+              </div>
+
+              <!-- Center White Card -->
+              <div class="canvas-main-card">
+                <ul class="canvas-bullets-list" id="canvasBulletsList">
+                  <!-- Bullets injected dynamically -->
+                </ul>
+              </div>
+
+              <!-- Footer Badge -->
+              <div class="canvas-footer-pill" id="canvasFooterPill">
+                <svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+                <span id="canvasFooterPillText">THÔNG TIN VỀ THUẾ • CHÍNH THỨC</span>
+              </div>
+
+              <!-- Optional Watermark -->
+              <div class="canvas-watermark" id="canvasWatermark" style="display: none;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Quick Paste Modal -->
+  <div class="modal-backdrop" id="quickPasteModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <h3>⚡ Nhập hoặc Dán Văn Bản Nhanh</h3>
+          <span class="badge-pill">Tự động nhận diện</span>
+        </div>
+        <button class="btn-icon" onclick="closeQuickPasteModal()" style="font-size: 1.2rem;">✕</button>
+      </div>
+
+      <p style="font-size: 0.8rem; color: #94a3b8; line-height: 1.4;">
+        Dán nội dung bất kỳ vào bên dưới. Hệ thống sẽ tự động tách <strong>Tiêu đề</strong>, <strong>Huy hiệu</strong>, các <strong>Gạch đầu dòng</strong> và tự động <strong>tô đỏ từ khóa quan trọng</strong>. Bạn cũng có thể dán nhiều slide cùng lúc!
+      </p>
+
+      <textarea id="quickPasteTextarea" class="form-textarea" style="height: 220px; font-family: monospace; font-size: 0.82rem;" placeholder="Dán nội dung vào đây... Ví dụ:
+SLIDE 2: XÓA BỎ THUẾ KHOÁN
+Tiêu đề: 🚫 CHÍNH THỨC XÓA BỎ THUẾ KHOÁN, CHUYỂN SANG TỰ KÊ KHAI
+Nội dung:
+Bãi bỏ hoàn toàn hình thức thuế khoán định mức cố định hàng năm.
+Hộ kinh doanh chuyển sang tự khai - tự tính - tự nộp thuế theo doanh thu thực tế.
+Dữ liệu kinh doanh được kiểm soát chặt qua hóa đơn điện tử và dòng tiền ngân hàng.
+Chấm dứt tình trạng &quot;khoán tượng trưng&quot; đối với các cơ sở kinh doanh quy mô lớn."></textarea>
+
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <label style="font-size: 0.78rem; color: #94a3b8; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+          <input type="checkbox" id="autoHighlightKeywordsCheckbox" checked>
+          <span>Tự động nhận diện & tô đỏ từ khóa nổi bật</span>
+        </label>
+
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary" onclick="closeQuickPasteModal()">Hủy</button>
+          <button class="btn btn-primary" onclick="processQuickPaste()">🚀 Phân tích & Tạo ngay</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast" id="toastNotification">
+    <span id="toastIcon">✅</span>
+    <span id="toastMessage">Thông báo</span>
+  </div>
+
+  <!-- Application Logic -->
+  <script>
+    // State management
+    const state = {
+      currentSlideIndex: 0,
+      aspectRatio: '9-16',
+      currentTheme: 'burgundy',
+      fontFamily: "'Be Vietnam Pro', system-ui, sans-serif",
+      zoom: 1.0,
+      slides: [
+        {
+          id: 1,
+          headerTag: "CHÍNH SÁCH THUẾ HỘ KINH DOANH • SLIDE 02/08",
+          titleIcon: "🚫",
+          titleText: "XÓA BỎ THUẾ KHOÁN,\nCHUYỂN SANG TỰ KÊ KHAI",
+          footerTag: "THÔNG TIN VỀ THUẾ • CHÍNH THỨC",
+          watermark: "",
+          bullets: [
+            "Bãi bỏ hoàn toàn hình thức **thuế khoán định mức** cố định hàng năm.",
+            "Hộ kinh doanh chuyển sang **tự khai - tự tính - tự nộp thuế** theo doanh thu thực tế.",
+            "Dữ liệu kinh doanh được kiểm soát chặt qua **hóa đơn điện tử và dòng tiền ngân hàng** .",
+            "Chấm dứt tình trạng \"khoán tượng trưng\" đối với các cơ sở kinh doanh quy mô lớn."
+          ]
+        }
+      ]
+    };
+
+    // Color Theme Presets
+    const themes = {
+      burgundy: {
+        primary: "#8f152b",
+        primaryLight: "#fff0f3",
+        primaryBorder: "rgba(185, 35, 60, 0.35)",
+        cardBg: "#ffffff",
+        textDark: "#2c3038",
+        bgBase: "#fcf9f9",
+        glowTopRight: "rgba(255, 195, 205, 0.45)",
+        glowBottomRight: "rgba(255, 205, 215, 0.4)",
+        glowTopLeft: "rgba(255, 240, 243, 0.3)",
+        footerBg: "linear-gradient(135deg, #99142d 0%, #7d1025 100%)",
+        footerText: "#ffffff"
+      },
+      blue: {
+        primary: "#1d4ed8",
+        primaryLight: "#eff6ff",
+        primaryBorder: "rgba(29, 78, 216, 0.35)",
+        cardBg: "#ffffff",
+        textDark: "#1e293b",
+        bgBase: "#f8fafc",
+        glowTopRight: "rgba(191, 219, 254, 0.5)",
+        glowBottomRight: "rgba(219, 234, 254, 0.45)",
+        glowTopLeft: "rgba(239, 246, 255, 0.4)",
+        footerBg: "linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)",
+        footerText: "#ffffff"
+      },
+      emerald: {
+        primary: "#047857",
+        primaryLight: "#ecfdf5",
+        primaryBorder: "rgba(4, 120, 87, 0.35)",
+        cardBg: "#ffffff",
+        textDark: "#1e293b",
+        bgBase: "#f9fafb",
+        glowTopRight: "rgba(167, 243, 208, 0.45)",
+        glowBottomRight: "rgba(209, 250, 229, 0.4)",
+        glowTopLeft: "rgba(236, 253, 245, 0.4)",
+        footerBg: "linear-gradient(135deg, #047857 0%, #065f46 100%)",
+        footerText: "#ffffff"
+      },
+      amber: {
+        primary: "#c2410c",
+        primaryLight: "#fff7ed",
+        primaryBorder: "rgba(194, 65, 12, 0.35)",
+        cardBg: "#ffffff",
+        textDark: "#292524",
+        bgBase: "#fafaf9",
+        glowTopRight: "rgba(254, 215, 170, 0.5)",
+        glowBottomRight: "rgba(255, 237, 213, 0.45)",
+        glowTopLeft: "rgba(255, 247, 237, 0.4)",
+        footerBg: "linear-gradient(135deg, #c2410c 0%, #9a3412 100%)",
+        footerText: "#ffffff"
+      },
+      purple: {
+        primary: "#6d28d9",
+        primaryLight: "#faf5ff",
+        primaryBorder: "rgba(109, 40, 217, 0.35)",
+        cardBg: "#ffffff",
+        textDark: "#1e1b4b",
+        bgBase: "#faf5ff",
+        glowTopRight: "rgba(233, 213, 255, 0.5)",
+        glowBottomRight: "rgba(243, 232, 255, 0.45)",
+        glowTopLeft: "rgba(250, 245, 255, 0.4)",
+        footerBg: "linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%)",
+        footerText: "#ffffff"
+      },
+      dark: {
+        primary: "#f59e0b",
+        primaryLight: "rgba(245, 158, 11, 0.15)",
+        primaryBorder: "rgba(245, 158, 11, 0.4)",
+        cardBg: "#1f2937",
+        textDark: "#f3f4f6",
+        bgBase: "#111827",
+        glowTopRight: "rgba(245, 158, 11, 0.15)",
+        glowBottomRight: "rgba(180, 83, 9, 0.15)",
+        glowTopLeft: "rgba(55, 65, 81, 0.3)",
+        footerBg: "linear-gradient(135deg, #d97706 0%, #b45309 100%)",
+        footerText: "#ffffff"
+      }
+    };
+
+    // Pre-filled sample presets
+    const presets = {
+      tax_khoan: {
+        headerTag: "CHÍNH SÁCH THUẾ HỘ KINH DOANH • SLIDE 02/08",
+        titleIcon: "🚫",
+        titleText: "XÓA BỎ THUẾ KHOÁN,\nCHUYỂN SANG TỰ KÊ KHAI",
+        footerTag: "THÔNG TIN VỀ THUẾ • CHÍNH THỨC",
+        bullets: [
+          "Bãi bỏ hoàn toàn hình thức **thuế khoán định mức** cố định hàng năm.",
+          "Hộ kinh doanh chuyển sang **tự khai - tự tính - tự nộp thuế** theo doanh thu thực tế.",
+          "Dữ liệu kinh doanh được kiểm soát chặt qua **hóa đơn điện tử và dòng tiền ngân hàng** .",
+          "Chấm dứt tình trạng \"khoán tượng trưng\" đối với các cơ sở kinh doanh quy mô lớn."
+        ]
+      },
+      penalty_tax: {
+        headerTag: "CẢNH BÁO PHÁP LÝ • SLIDE 03/08",
+        titleIcon: "⚠️",
+        titleText: "MỨC PHẠT TRỐN THUẾ\nMỚI NHẤT 2026",
+        footerTag: "NGHỊ ĐỊNH 125/2020/NĐ-CP",
+        bullets: [
+          "Phạt tiền từ **1 đến 3 lần** số tiền thuế trốn đối với hành vi trốn thuế.",
+          "Truy thu toàn bộ số tiền **thuế trốn, nộp chậm và tiền lãi** phát sinh.",
+          "Nếu trốn thuế từ **100 triệu đồng** trở lên có thể bị **truy cứu trách nhiệm hình sự**.",
+          "Đình chỉ kinh doanh và phong tỏa tài khoản ngân hàng đối với trường hợp vi phạm nghiêm trọng."
+        ]
+      },
+      einvoice: {
+        headerTag: "QUY ĐỊNH HÓA ĐƠN • SLIDE 04/08",
+        titleIcon: "🧾",
+        titleText: "HÓA ĐƠN ĐIỆN TỬ\nKHỞI TẠO TỪ MÁY TÍNH TIỀN",
+        footerTag: "LUẬT QUẢN LÝ THUẾ HIỆN HÀNH",
+        bullets: [
+          "Bắt buộc đối với các ngành: **ăn uống, nhà hàng, khách sạn, bán lẻ, siêu thị**.",
+          "Hóa đơn được xuất **ngay khi thanh toán** và kết nối trực tiếp với cơ quan thuế.",
+          "Khách hàng nhận hóa đơn có cơ hội tham gia chương trình **\"Hóa đơn may mắn\"** trúng thưởng.",
+          "Cơ quan thuế xử phạt nặng nếu phát hiện **bán hàng không xuất hóa đơn**."
+        ]
+      },
+      pit_deduction: {
+        headerTag: "THUẾ THU NHẬP CÁ NHÂN • SLIDE 05/08",
+        titleIcon: "💰",
+        titleText: "ĐỀ XUẤT NÂNG MỨC\nGIẢM TRỪ GIA CẢNH",
+        footerTag: "BỘ TÀI CHÍNH • DỰ THẢO LUẬT THUẾ TNCN",
+        bullets: [
+          "Đề xuất tăng mức giảm trừ cho bản thân người nộp thuế từ **11 triệu lên 15 - 18 triệu/tháng**.",
+          "Nâng mức giảm trừ cho mỗi người phụ thuộc từ **4,4 triệu lên 6 - 8 triệu/tháng**.",
+          "Giúp hàng triệu người lao động **giảm áp lực chi phí sinh hoạt** trong giai đoạn giá cả tăng.",
+          "Dự kiến áp dụng chính thức sau khi Quốc hội thông qua lộ trình sửa đổi."
+        ]
+      }
+    };
+
+    // Initialize UI on load
+    document.addEventListener("DOMContentLoaded", () => {
+      renderSlide();
+      renderSlideChips();
+      populateInputsFromState();
+    });
+
+    // Populate inputs from current slide
+    function populateInputsFromState() {
+      const slide = state.slides[state.currentSlideIndex];
+      document.getElementById("headerTagInput").value = slide.headerTag;
+      document.getElementById("titleIconInput").value = slide.titleIcon;
+      document.getElementById("titleTextInput").value = slide.titleText;
+      document.getElementById("footerTagInput").value = slide.footerTag;
+      document.getElementById("watermarkInput").value = slide.watermark || "";
+
+      renderBulletsEditor();
+    }
+
+    // Render bullets in the left editor panel
+    function renderBulletsEditor() {
+      const slide = state.slides[state.currentSlideIndex];
+      const container = document.getElementById("bulletsContainer");
+      container.innerHTML = "";
+
+      slide.bullets.forEach((bulletText, index) => {
+        const row = document.createElement("div");
+        row.className = "bullet-row";
+        row.innerHTML = `
+          <div class="bullet-row-top">
+            <span class="bullet-index"><span>•</span> Ý ${index + 1}</span>
+            <div class="bullet-row-actions">
+              <button class="btn-icon" title="Di chuyển lên" onclick="moveBullet(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.3"' : ''}>▲</button>
+              <button class="btn-icon" title="Di chuyển xuống" onclick="moveBullet(${index}, 1)" ${index === slide.bullets.length - 1 ? 'disabled style="opacity:0.3"' : ''}>▼</button>
+              <button class="btn-icon delete" title="Xóa ý này" onclick="deleteBullet(${index})">🗑️</button>
+            </div>
+          </div>
+          <textarea class="form-textarea" style="min-height: 54px;" oninput="updateBulletText(${index}, this.value)">${escapeHtml(bulletText)}</textarea>
+          <div class="bullet-tools">
+            <span style="font-size: 0.7rem; color: #64748b;">Gợi ý:</span>
+            <button class="btn-tag" onclick="wrapSelectedText(${index})">✨ Đặt **từ khóa**</button>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    // Wrap highlighted words with **...**
+    function wrapSelectedText(bulletIndex) {
+      const textareas = document.querySelectorAll("#bulletsContainer textarea");
+      const ta = textareas[bulletIndex];
+      if (!ta) return;
+
+      const start = ta.selectionStart;
+      const end = ta.selectionEnd;
+      if (start === end) {
+        showToast("Vui lòng bôi đen từ khóa bạn muốn tô đỏ trước!", "warning");
+        return;
+      }
+
+      const val = ta.value;
+      const selected = val.substring(start, end);
+      const replaced = val.substring(0, start) + "**" + selected + "**" + val.substring(end);
+      ta.value = replaced;
+      updateBulletText(bulletIndex, replaced);
+      showToast("Đã tô đỏ từ khóa: " + selected);
+    }
+
+    // Update bullet text
+    function updateBulletText(index, text) {
+      state.slides[state.currentSlideIndex].bullets[index] = text;
+      renderSlide();
+    }
+
+    // Move bullet up/down
+    function moveBullet(index, dir) {
+      const slide = state.slides[state.currentSlideIndex];
+      const newIdx = index + dir;
+      if (newIdx < 0 || newIdx >= slide.bullets.length) return;
+      const temp = slide.bullets[index];
+      slide.bullets[index] = slide.bullets[newIdx];
+      slide.bullets[newIdx] = temp;
+      renderBulletsEditor();
+      renderSlide();
+    }
+
+    // Delete bullet
+    function deleteBullet(index) {
+      const slide = state.slides[state.currentSlideIndex];
+      if (slide.bullets.length <= 1) {
+        showToast("Cần giữ lại ít nhất 1 ý trong slide!", "error");
+        return;
+      }
+      slide.bullets.splice(index, 1);
+      renderBulletsEditor();
+      renderSlide();
+    }
+
+    // Add new bullet
+    function addBulletItem() {
+      const slide = state.slides[state.currentSlideIndex];
+      slide.bullets.push("Nội dung ý mới với **từ khóa quan trọng**.");
+      renderBulletsEditor();
+      renderSlide();
+      // Scroll to bottom of bullets editor
+      const container = document.getElementById("bulletsContainer");
+      container.scrollTop = container.scrollHeight;
+    }
+
+    // Update current slide from inputs
+    function updateCurrentSlide() {
+      const slide = state.slides[state.currentSlideIndex];
+      slide.headerTag = document.getElementById("headerTagInput").value;
+      slide.titleIcon = document.getElementById("titleIconInput").value;
+      slide.titleText = document.getElementById("titleTextInput").value;
+      slide.footerTag = document.getElementById("footerTagInput").value;
+      slide.watermark = document.getElementById("watermarkInput").value;
+
+      renderSlide();
+    }
+
+    // Set emoji/icon
+    function setTitleIcon(emoji) {
+      document.getElementById("titleIconInput").value = emoji;
+      updateCurrentSlide();
+    }
+
+    // Render the visual slide in canvas
+    function renderSlide() {
+      const slide = state.slides[state.currentSlideIndex];
+      if (!slide) return;
+
+      // Header Tag
+      const headerEl = document.getElementById("canvasHeaderBadge");
+      headerEl.textContent = slide.headerTag || "CHÍNH SÁCH THUẾ";
+      headerEl.style.display = slide.headerTag ? "inline-flex" : "none";
+
+      // Title Icon
+      const iconEl = document.getElementById("canvasTitleIcon");
+      iconEl.textContent = slide.titleIcon || "";
+      iconEl.style.display = slide.titleIcon ? "inline-flex" : "none";
+
+      // Title Text (with line breaks)
+      const titleEl = document.getElementById("canvasTitleText");
+      titleEl.innerHTML = formatTitleHtml(slide.titleText);
+
+      // Bullets List
+      const listEl = document.getElementById("canvasBulletsList");
+      listEl.innerHTML = "";
+
+      slide.bullets.forEach((bulletText) => {
+        if (!bulletText.trim()) return;
+        const li = document.createElement("li");
+        li.className = "canvas-bullet-item";
+        li.innerHTML = `
+          <span class="canvas-bullet-dot">•</span>
+          <span class="canvas-bullet-text">${formatMarkdownText(bulletText)}</span>
+        `;
+        listEl.appendChild(li);
+      });
+
+      // Footer Pill
+      const footerEl = document.getElementById("canvasFooterPill");
+      const footerTextEl = document.getElementById("canvasFooterPillText");
+      if (slide.footerTag && slide.footerTag.trim()) {
+        footerTextEl.textContent = slide.footerTag.replace(/^[📖\s]+/, "");
+        footerEl.style.display = "inline-flex";
+      } else {
+        footerEl.style.display = "none";
+      }
+
+      // Watermark
+      const watermarkEl = document.getElementById("canvasWatermark");
+      if (slide.watermark && slide.watermark.trim()) {
+        watermarkEl.textContent = slide.watermark;
+        watermarkEl.style.display = "block";
+      } else {
+        watermarkEl.style.display = "none";
+      }
+
+      // Update slide chip title
+      renderSlideChips();
+    }
+
+    // Format title: handle \n or comma
+    function formatTitleHtml(text) {
+      if (!text) return "";
+      const escaped = escapeHtml(text);
+      return escaped.replace(/\n/g, "<br>");
+    }
+
+    // Markdown parser for bold (**...**) and quotes ("...")
+    function formatMarkdownText(text) {
+      if (!text) return "";
+      let html = escapeHtml(text);
+      // Bold **text** -> <strong>text</strong>
+      html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+      // Bold __text__ -> <strong>text</strong>
+      html = html.replace(/__(.*?)__/g, "<strong>$1</strong>");
+      return html;
+    }
+
+    function escapeHtml(string) {
+      return String(string)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Switch Editor Tab
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+
+      document.querySelector(`[onclick="switchTab('${tabId}')"]`).classList.add("active");
+      document.getElementById(`tab-${tabId}`).classList.add("active");
+
+      if (tabId === 'slides') {
+        renderSlidesListGroup();
+      }
+    }
+
+    // Set Theme
+    function applyTheme(themeKey) {
+      state.currentTheme = themeKey;
+      const theme = themes[themeKey] || themes.burgundy;
+      const root = document.documentElement;
+
+      root.style.setProperty("--primary-color", theme.primary);
+      root.style.setProperty("--primary-light", theme.primaryLight);
+      root.style.setProperty("--primary-border", theme.primaryBorder);
+      root.style.setProperty("--card-bg", theme.cardBg);
+      root.style.setProperty("--text-dark", theme.textDark);
+      root.style.setProperty("--bg-base", theme.bgBase);
+      root.style.setProperty("--glow-top-right", theme.glowTopRight);
+      root.style.setProperty("--glow-bottom-right", theme.glowBottomRight);
+      root.style.setProperty("--glow-top-left", theme.glowTopLeft);
+      root.style.setProperty("--footer-bg", theme.footerBg);
+      root.style.setProperty("--footer-text", theme.footerText);
+
+      document.querySelectorAll(".theme-btn").forEach(btn => btn.classList.remove("active"));
+      event.currentTarget.classList.add("active");
+
+      showToast(`Đã áp dụng chủ đề màu: ${themeKey}`);
+    }
+
+    // Set Aspect Ratio
+    function setAspectRatio(ratio) {
+      state.aspectRatio = ratio;
+      const wrapper = document.getElementById("slideFrameWrapper");
+      wrapper.className = "slide-frame-wrapper ratio-" + ratio;
+
+      document.querySelectorAll(".ratio-btn").forEach(btn => btn.classList.remove("active"));
+      document.querySelector(`[data-ratio="${ratio}"]`).classList.add("active");
+
+      showToast(`Đã đổi sang tỷ lệ khung hình ${ratio}`);
+    }
+
+    // Set Font Family
+    function setFontFamily(font) {
+      state.fontFamily = font;
+      document.documentElement.style.setProperty("--font-family", font);
+      showToast("Đã đổi font chữ thành công!");
+    }
+
+    // Set Zoom
+    function setZoom(factor) {
+      state.zoom = factor;
+      const wrapper = document.getElementById("slideFrameWrapper");
+      wrapper.style.transform = `scale(${factor})`;
+      wrapper.style.transformOrigin = "center center";
+
+      document.querySelectorAll(".zoom-btn").forEach(b => b.classList.remove("active"));
+      event.currentTarget.classList.add("active");
+    }
+
+    // Apply Content Preset
+    function applyContentPreset(key) {
+      const data = presets[key];
+      if (!data) return;
+
+      const slide = state.slides[state.currentSlideIndex];
+      slide.headerTag = data.headerTag;
+      slide.titleIcon = data.titleIcon;
+      slide.titleText = data.titleText;
+      slide.footerTag = data.footerTag;
+      slide.bullets = [...data.bullets];
+
+      populateInputsFromState();
+      renderSlide();
+      showToast("Đã tải mẫu nội dung thành công!");
+    }
+
+    // Render Slide Navigator Chips
+    function renderSlideChips() {
+      const container = document.getElementById("topSlideChips");
+      container.innerHTML = "";
+
+      state.slides.forEach((slide, idx) => {
+        const chip = document.createElement("button");
+        chip.className = `slide-chip ${idx === state.currentSlideIndex ? 'active' : ''}`;
+        chip.textContent = `Slide ${idx + 1}`;
+        chip.onclick = () => selectSlide(idx);
+        container.appendChild(chip);
+      });
+
+      document.getElementById("slideCountBadge").textContent = state.slides.length;
+    }
+
+    // Select slide by index
+    function selectSlide(index) {
+      if (index < 0 || index >= state.slides.length) return;
+      state.currentSlideIndex = index;
+      populateInputsFromState();
+      renderSlide();
+      renderSlideChips();
+    }
+
+    // Add new slide
+    function addNewSlide() {
+      const newNum = state.slides.length + 1;
+      const numStr = newNum < 10 ? `0${newNum}` : newNum;
+      const totalStr = "08";
+
+      const newSlide = {
+        id: Date.now(),
+        headerTag: `CHÍNH SÁCH THUẾ HỘ KINH DOANH • SLIDE ${numStr}/${totalStr}`,
+        titleIcon: "📌",
+        titleText: `TIÊU ĐỀ SLIDE ${newNum},\nNỘI DUNG QUAN TRỌNG`,
+        footerTag: "THÔNG TIN VỀ THUẾ • CHÍNH THỨC",
+        watermark: "",
+        bullets: [
+          "Nội dung ý thứ nhất với **từ khóa quan trọng**.",
+          "Nội dung ý thứ hai với **điểm cần lưu ý**.",
+          "Quy định chi tiết và hướng dẫn áp dụng thực tế."
+        ]
+      };
+
+      state.slides.push(newSlide);
+      state.currentSlideIndex = state.slides.length - 1;
+      populateInputsFromState();
+      renderSlide();
+      renderSlideChips();
+      showToast(`Đã thêm Slide ${newNum}!`);
+    }
+
+    // Duplicate current slide
+    function duplicateCurrentSlide() {
+      const cur = state.slides[state.currentSlideIndex];
+      const copy = JSON.parse(JSON.stringify(cur));
+      copy.id = Date.now();
+      const newIdx = state.currentSlideIndex + 1;
+      state.slides.splice(newIdx, 0, copy);
+      state.currentSlideIndex = newIdx;
+      populateInputsFromState();
+      renderSlide();
+      renderSlideChips();
+      showToast("Đã nhân bản slide thành công!");
+    }
+
+    // Render slides list in Tab 3
+    function renderSlidesListGroup() {
+      const container = document.getElementById("slidesListGroup");
+      container.innerHTML = "";
+
+      state.slides.forEach((slide, index) => {
+        const item = document.createElement("div");
+        item.style.background = index === state.currentSlideIndex ? "#334155" : "#1e293b";
+        item.style.border = index === state.currentSlideIndex ? "1px solid #f43f5e" : "1px solid #334155";
+        item.style.borderRadius = "8px";
+        item.style.padding = "10px 12px";
+        item.style.display = "flex";
+        item.style.alignItems = "center";
+        item.style.justifyContent = "space-between";
+        item.style.cursor = "pointer";
+
+        item.onclick = () => selectSlide(index);
+
+        item.innerHTML = `
+          <div>
+            <div style="font-size: 0.8rem; font-weight: 700; color: #f8fafc;">
+              ${slide.titleIcon} Slide ${index + 1}: ${escapeHtml(slide.titleText.split('\n')[0].substring(0, 30))}...
+            </div>
+            <div style="font-size: 0.7rem; color: #94a3b8;">
+              ${slide.bullets.length} gạch đầu dòng
+            </div>
+          </div>
+          <div style="display: flex; gap: 4px;" onclick="event.stopPropagation()">
+            ${state.slides.length > 1 ? `<button class="btn-icon delete" onclick="deleteSlide(${index})">🗑️</button>` : ''}
+          </div>
+        `;
+
+        container.appendChild(item);
+      });
+    }
+
+    function deleteSlide(index) {
+      if (state.slides.length <= 1) {
+        showToast("Không thể xóa slide duy nhất!", "error");
+        return;
+      }
+      state.slides.splice(index, 1);
+      if (state.currentSlideIndex >= state.slides.length) {
+        state.currentSlideIndex = state.slides.length - 1;
+      }
+      populateInputsFromState();
+      renderSlide();
+      renderSlideChips();
+      renderSlidesListGroup();
+      showToast("Đã xóa slide!");
+    }
+
+    // Open/Close Quick Paste Modal
+    function openQuickPasteModal() {
+      document.getElementById("quickPasteModal").classList.add("open");
+    }
+
+    function closeQuickPasteModal() {
+      document.getElementById("quickPasteModal").classList.remove("open");
+    }
+
+    // Process Quick Paste Text
+    function processQuickPaste() {
+      const rawText = document.getElementById("quickPasteTextarea").value.trim();
+      const autoHighlight = document.getElementById("autoHighlightKeywordsCheckbox").checked;
+
+      if (!rawText) {
+        showToast("Vui lòng dán văn bản vào ô!", "error");
+        return;
+      }
+
+      // Check if text has multiple slides (delimited by "SLIDE" or "---")
+      const slideChunks = splitMultiSlideText(rawText);
+
+      const parsedSlides = slideChunks.map((chunk, idx) => parseSingleSlideChunk(chunk, idx + 1, autoHighlight));
+
+      if (parsedSlides.length > 0) {
+        state.slides = parsedSlides;
+        state.currentSlideIndex = 0;
+        populateInputsFromState();
+        renderSlide();
+        renderSlideChips();
+        closeQuickPasteModal();
+        showToast(`⚡ Đã phân tích thành công ${parsedSlides.length} slide!`);
+      }
+    }
+
+    // Split text containing multiple slides
+    function splitMultiSlideText(text) {
+      // If contains "SLIDE 1", "SLIDE 2" etc.
+      const slidePattern = /(?=(?:^|\n)\s*(?:SLIDE\s*\d+|Slide\s*\d+|TRANG\s*\d+)[:.\s])/i;
+      const parts = text.split(slidePattern).map(p => p.trim()).filter(Boolean);
+      return parts.length > 0 ? parts : [text];
+    }
+
+    // Parse single slide chunk
+    function parseSingleSlideChunk(chunk, slideNumber, autoHighlight) {
+      const lines = chunk.split("\n").map(l => l.trim()).filter(Boolean);
+
+      let headerTag = `CHÍNH SÁCH THUẾ HỘ KINH DOANH • SLIDE 0${slideNumber}/08`;
+      let titleIcon = "🚫";
+      let titleText = "";
+      let footerTag = "THÔNG TIN VỀ THUẾ • CHÍNH THỨC";
+      let bullets = [];
+
+      let isContentSection = false;
+
+      for (let i = 0; i < lines.length; i++) {
+        let line = lines[i];
+
+        // Check if line indicates Slide tag (e.g. "SLIDE 2: XÓA BỎ THUẾ KHOÁN")
+        if (/^SLIDE\s*\d+[:.\s]/i.test(line)) {
+          const match = line.match(/^SLIDE\s*(\d+)[:.\s]*(.*)/i);
+          if (match) {
+            const num = parseInt(match[1]) || slideNumber;
+            const numStr = num < 10 ? `0${num}` : num;
+            headerTag = `CHÍNH SÁCH THUẾ HỘ KINH DOANH • SLIDE ${numStr}/08`;
+          }
+          continue;
+        }
+
+        // Check Title line (e.g. "Tiêu đề: 🚫 CHÍNH THỨC XÓA BỎ THUẾ KHOÁN, CHUYỂN SANG TỰ KÊ KHAI")
+        if (/^(?:Tiêu đề|Title|TIÊU ĐỀ)[:.\s]/i.test(line)) {
+          let rawTitle = line.replace(/^(?:Tiêu đề|Title|TIÊU ĐỀ)[:.\s]*/i, "").trim();
+          // Extract leading emoji if any
+          const emojiMatch = rawTitle.match(/^([\uD800-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27BF]|🚫|⚠️|📢|💡|📌|⚖️|💰|🏢)\s*/);
+          if (emojiMatch) {
+            titleIcon = emojiMatch[1];
+            rawTitle = rawTitle.substring(emojiMatch[0].length).trim();
+          }
+
+          // If comma or long text, break into 2 lines nicely
+          if (rawTitle.includes(",") && !rawTitle.includes("\n")) {
+            const parts = rawTitle.split(",");
+            titleText = parts[0].trim() + ",\n" + parts.slice(1).join(",").trim();
+          } else {
+            titleText = rawTitle;
+          }
+          continue;
+        }
+
+        // Check if starts Content section (e.g. "Nội dung:")
+        if (/^(?:Nội dung|Content|NỘI DUNG)[:.\s]*$/i.test(line)) {
+          isContentSection = true;
+          continue;
+        }
+
+        // Regular bullet line
+        // Clean leading dash/bullet
+        let cleanLine = line.replace(/^[-•*+–—]\s*/, "").replace(/^\d+[\.\)]\s*/, "").trim();
+        if (cleanLine) {
+          if (autoHighlight) {
+            cleanLine = autoHighlightKeywords(cleanLine);
+          }
+          bullets.push(cleanLine);
+        }
+      }
+
+      // Fallback if title was not explicitly labeled
+      if (!titleText && lines.length > 0) {
+        titleText = lines[0].replace(/^SLIDE\s*\d+[:.\s]*/i, "").trim();
+      }
+
+      if (bullets.length === 0) {
+        bullets = ["Nội dung quan trọng cần lưu ý."];
+      }
+
+      return {
+        id: Date.now() + Math.random(),
+        headerTag,
+        titleIcon,
+        titleText: titleText || "TIÊU ĐỀ SLIDE",
+        footerTag,
+        watermark: "",
+        bullets
+      };
+    }
+
+    // Smart keyword detection for Vietnamese business & tax terms
+    function autoHighlightKeywords(text) {
+      // If already has markdown **, leave it alone
+      if (text.includes("**")) return text;
+
+      // Common high-impact tax/law terms to auto-bold
+      const keywords = [
+        "thuế khoán định mức",
+        "thuế khoán",
+        "tự khai - tự tính - tự nộp thuế",
+        "tự khai, tự nộp",
+        "hóa đơn điện tử và dòng tiền ngân hàng",
+        "hóa đơn điện tử",
+        "dòng tiền ngân hàng",
+        "khoán tượng trưng",
+        "truy cứu trách nhiệm hình sự",
+        "máy tính tiền",
+        "doanh thu thực tế",
+        "giảm trừ gia cảnh",
+        "trốn thuế",
+        "xử phạt vi phạm",
+        "bắt buộc"
+      ];
+
+      let res = text;
+      keywords.forEach(kw => {
+        const regex = new RegExp(`(${kw})`, "gi");
+        if (regex.test(res)) {
+          res = res.replace(regex, "**$1**");
+        }
+      });
+
+      return res;
+    }
+
+    // High resolution Image Exporter (PNG / JPG)
+    async function exportSlideImage(format = 'png') {
+      showToast("⏳ Đang kết xuất ảnh chất lượng cao...", "info");
+
+      const canvasEl = document.getElementById("infographicCanvas");
+      if (!canvasEl) return;
+
+      // Determine dimensions based on ratio
+      let scale = 2; // 2x for Retina / Full HD crispness (540x960 * 2 = 1080x1920)
+
+      try {
+        const renderedCanvas = await html2canvas(canvasEl, {
+          scale: scale,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: null,
+          logging: false
+        });
+
+        const mime = format === 'jpg' ? 'image/jpeg' : 'image/png';
+        const dataUrl = renderedCanvas.toDataURL(mime, 0.95);
+
+        // Download trigger
+        const link = document.createElement("a");
+        const slideNum = state.currentSlideIndex + 1;
+        link.download = `Slide_${slideNum}_Infographic.${format}`;
+        link.href = dataUrl;
+        link.click();
+
+        showToast("🎉 Tải ảnh thành công! Độ phân giải 1080p sắc nét.");
+      } catch (err) {
+        console.error(err);
+        showToast("Lỗi kết xuất ảnh: " + err.message, "error");
+      }
+    }
+
+    // Copy Image to Clipboard
+    async function copyImageToClipboard() {
+      showToast("⏳ Đang sao chép ảnh vào bộ nhớ tạm...", "info");
+
+      const canvasEl = document.getElementById("infographicCanvas");
+      try {
+        const renderedCanvas = await html2canvas(canvasEl, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: null,
+          logging: false
+        });
+
+        renderedCanvas.toBlob(async (blob) => {
+          if (!blob) {
+            showToast("Không tạo được ảnh!", "error");
+            return;
+          }
+          try {
+            await navigator.clipboard.write([
+              new ClipboardItem({ 'image/png': blob })
+            ]);
+            showToast("📋 Đã sao chép ảnh! Bạn có thể dán ngay vào Zalo / Photoshop / Messenger!");
+          } catch (clipErr) {
+            console.warn("Clipboard API failed, fallback to download", clipErr);
+            exportSlideImage('png');
+          }
+        }, 'image/png');
+      } catch (err) {
+        console.error(err);
+        showToast("Không sao chép được ảnh: " + err.message, "error");
+      }
+    }
+
+    // Export all slides into a ZIP file
+    async function exportAllSlidesZip() {
+      if (typeof JSZip === "undefined") {
+        showToast("Thư viện JSZip chưa sẵn sàng!", "error");
+        return;
+      }
+
+      showToast(`⏳ Đang tạo trọn bộ ${state.slides.length} slides...`, "info");
+
+      const zip = new JSZip();
+      const originalSlideIndex = state.currentSlideIndex;
+
+      try {
+        for (let i = 0; i < state.slides.length; i++) {
+          selectSlide(i);
+          // Wait for DOM to repaint
+          await new Promise(r => setTimeout(r, 120));
+
+          const canvasEl = document.getElementById("infographicCanvas");
+          const renderedCanvas = await html2canvas(canvasEl, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: null,
+            logging: false
+          });
+
+          const dataUrl = renderedCanvas.toDataURL("image/png");
+          const base64Data = dataUrl.replace(/^data:image\/png;base64,/, "");
+          const numStr = (i + 1) < 10 ? `0${i + 1}` : (i + 1);
+          zip.file(`Slide_${numStr}.png`, base64Data, { base64: true });
+        }
+
+        // Restore original selection
+        selectSlide(originalSlideIndex);
+
+        const content = await zip.generateAsync({ type: "blob" });
+        const link = document.createElement("a");
+        link.download = `Tron_Bo_${state.slides.length}_Slides_Infographic.zip`;
+        link.href = URL.createObjectURL(content);
+        link.click();
+
+        showToast(`🎉 Đã tải trọn bộ ${state.slides.length} slides thành file ZIP!`);
+      } catch (err) {
+        console.error(err);
+        showToast("Lỗi khi nén ZIP: " + err.message, "error");
+      }
+    }
+
+    // Toast notification helper
+    let toastTimeout;
+    function showToast(message, type = "success") {
+      const toast = document.getElementById("toastNotification");
+      const icon = document.getElementById("toastIcon");
+      const msg = document.getElementById("toastMessage");
+
+      icon.textContent = type === "error" ? "❌" : (type === "warning" ? "⚠️" : (type === "info" ? "⏳" : "✅"));
+      msg.textContent = message;
+
+      toast.className = `toast show ${type === 'error' ? 'error' : ''}`;
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3500);
+    }
+  </script>
+</body>
+</html>

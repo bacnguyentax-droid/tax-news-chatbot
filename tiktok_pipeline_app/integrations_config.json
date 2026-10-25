@@ -1,0 +1,38 @@
+{
+  "telegram": {
+    "bot_token": "8348691966:AAGcQS3NFcPxTtOphDEn4prU9tHnYdBsHaU",
+    "chat_id": "8929374740",
+    "bot_name": "@BoomNam_Bot",
+    "is_connected": true,
+    "last_tested": "2026-10-24T13:49:47.964525"
+  },
+  "heygen": {
+    "api_key": "sk_V2_hgu_kecxkPMbl4S_0TUIOyWnihR8N7UWs38WZUSJaCq5EFkP",
+    "avatar_id": "HCMTax",
+    "voice_id": "",
+    "is_connected": true,
+    "last_tested": "2026-10-24T13:49:49.058674",
+    "user_name": "HCMTAX HCM",
+    "user_email": "bacnguyentax@gmail.com"
+  },
+  "elevenlabs": {
+    "api_key": "sk_030ed6cd73598e6aafb1053c6e68de29993d74cd4fe4259c",
+    "voice_id": "Mr B New",
+    "model_id": "eleven_multilingual_v2",
+    "is_connected": true,
+    "last_tested": "2026-10-24T13:49:50.375880"
+  },
+  "tiktok": {
+    "access_token": "",
+    "username": "@thong_tin_ve_thue",
+    "client_key": "awg8wrdqd51lrcfx",
+    "client_secret": "aujSZ5kwoO3SoFWkDLAQur4e0HBfylwP",
+    "public_base_url": "https://rev-briefs-utils-reform.trycloudflare.com",
+    "privacy_level": "PUBLIC_TO_EVERYONE",
+    "display_name": "@thong_tin_ve_thue",
+    "open_id": "",
+    "avatar_url": "",
+    "is_connected": true,
+    "last_tested": "2026-10-25T13:00:14.043006"
+  }
+}
