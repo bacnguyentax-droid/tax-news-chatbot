@@ -3545,7 +3545,7 @@
                                 <i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i>Đồng bộ Google Calendar & Google Tasks
                             </span>
                             <span class="text-[11px] text-slate-500 font-mono hidden sm:inline">
-                                <i class="fa-regular fa-calendar-days text-sky-600 mr-1"></i>Tuần: <b>{{ calendarStats.week_range || '19/10/2026 - 25/10/2026' }}</b>
+                                <i class="fa-regular fa-calendar-days text-sky-600 mr-1"></i>Tuần: <b>{{ calendarStats.week_range || currentWeekRangeText }}</b>
                             </span>
                         </div>
                         <!-- Bộ chuyển đổi chế độ xem Tổng thể (Trong ngày / Trong tuần) -->
@@ -3646,8 +3646,8 @@
                         <div class="px-4 py-2 bg-sky-100/50 border-b border-sky-200/60 text-xs text-sky-900 flex items-center justify-between">
                             <span class="font-medium flex items-center gap-1.5">
                                 <i class="fa-regular fa-clock text-sky-700"></i>
-                                <span v-if="calendarViewFilter === 'today'">Lịch hôm nay (Chủ Nhật, 25/10/2026): <b>{{ filteredCalendarEvents.length }} sự kiện</b></span>
-                                <span v-else-if="calendarViewFilter === 'week'">Lịch trong tuần (19/10 - 25/10/2026): <b>{{ filteredCalendarEvents.length }} sự kiện</b></span>
+                                <span v-if="calendarViewFilter === 'today'">Lịch hôm nay ({{ todayDateFormatted }}): <b>{{ filteredCalendarEvents.length }} sự kiện</b></span>
+                                <span v-else-if="calendarViewFilter === 'week'">Lịch trong tuần ({{ calendarStats.week_range || currentWeekRangeText }}): <b>{{ filteredCalendarEvents.length }} sự kiện</b></span>
                                 <span v-else>Toàn bộ sự kiện Google Calendar: <b>{{ filteredCalendarEvents.length }} sự kiện</b></span>
                             </span>
                             <span class="text-[10px] font-mono text-sky-800 bg-sky-200/70 px-2 py-0.5 rounded">
@@ -3794,7 +3794,7 @@
                         <div class="px-4 py-2 bg-emerald-100/50 border-b border-emerald-200/60 text-xs text-emerald-900 flex items-center justify-between">
                             <span class="font-medium flex items-center gap-1.5">
                                 <i class="fa-regular fa-calendar-check text-emerald-700"></i>
-                                <span v-if="tasksViewFilter === 'today'">Công việc hôm nay (Chủ Nhật, 25/10/2026): <b>{{ filteredTasks.length }} nhiệm vụ</b></span>
+                                <span v-if="tasksViewFilter === 'today'">Công việc hôm nay ({{ todayDateFormatted }}): <b>{{ filteredTasks.length }} nhiệm vụ</b></span>
                                 <span v-else-if="tasksViewFilter === 'week'">Tổng hợp công việc trong tuần: <b>{{ filteredTasks.length }} nhiệm vụ</b> ({{ tasksStats.completed_count }} đã hoàn thành)</span>
                                 <span v-else-if="tasksViewFilter === 'completed'">Các công việc đã hoàn thành trong tuần: <b>{{ filteredTasks.length }} nhiệm vụ</b></span>
                                 <span v-else-if="tasksViewFilter === 'nodate'">Các công việc chưa đặt ngày hạn cụ thể: <b>{{ filteredTasks.length }} nhiệm vụ</b></span>

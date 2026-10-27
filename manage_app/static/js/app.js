@@ -4441,18 +4441,53 @@ Nguyen Van A`;
         const calendarViewFilter = ref('today'); // 'today' | 'week' | 'all'
         const tasksViewFilter = ref('today');    // 'today' | 'week' | 'completed' | 'all'
         const calendarStats = ref({
-            today_count: 4,
-            week_count: 15,
-            total_count: 17,
-            week_range: '19/10/2026 - 25/10/2026'
+            today_count: 0,
+            week_count: 0,
+            total_count: 0,
+            week_range: '',
+            today_date: ''
         });
         const tasksStats = ref({
-            today_count: 1,
-            week_count: 1,
+            today_count: 0,
+            week_count: 0,
             completed_count: 0,
-            nodate_count: 24,
-            total_count: 25,
-            week_range: '19/10/2026 - 25/10/2026'
+            nodate_count: 0,
+            total_count: 0,
+            week_range: '',
+            today_date: ''
+        });
+        const todayDateFormatted = computed(() => {
+            if (calendarStats.value && calendarStats.value.today_date) {
+                return calendarStats.value.today_date;
+            }
+            if (tasksStats.value && tasksStats.value.today_date) {
+                return tasksStats.value.today_date;
+            }
+            const now = new Date();
+            const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+            const dayName = days[now.getDay()];
+            const d = String(now.getDate()).padStart(2, '0');
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const y = now.getFullYear();
+            return `${dayName}, ${d}/${m}/${y}`;
+        });
+        const currentWeekRangeText = computed(() => {
+            if (calendarStats.value && calendarStats.value.week_range) {
+                return calendarStats.value.week_range;
+            }
+            if (tasksStats.value && tasksStats.value.week_range) {
+                return tasksStats.value.week_range;
+            }
+            const now = new Date();
+            const currentDay = now.getDay();
+            const diffToMonday = (currentDay === 0 ? -6 : 1 - currentDay);
+            const monday = new Date(now);
+            monday.setDate(now.getDate() + diffToMonday);
+            const sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
+
+            const fmt = (dt) => `${String(dt.getDate()).padStart(2, '0')}/${String(dt.getMonth() + 1).padStart(2, '0')}/${dt.getFullYear()}`;
+            return `${fmt(monday)} - ${fmt(sunday)}`;
         });
         const todayCalendarEvents = ref([]);
         const weekCalendarEvents = ref([]);
@@ -4512,7 +4547,8 @@ Nguyen Van A`;
                     weekCalendarEvents.value = calData.week_events || [];
                     if (calData.stats) {
                         calendarStats.value = Object.assign({}, calendarStats.value, calData.stats, {
-                            week_range: calData.week_range || calendarStats.value.week_range
+                            week_range: calData.week_range || calendarStats.value.week_range,
+                            today_date: calData.today_date || calendarStats.value.today_date
                         });
                     }
                 }
@@ -4523,7 +4559,8 @@ Nguyen Van A`;
                     completedGoogleTasks.value = taskData.completed_tasks || [];
                     if (taskData.stats) {
                         tasksStats.value = Object.assign({}, tasksStats.value, taskData.stats, {
-                            week_range: taskData.week_range || tasksStats.value.week_range
+                            week_range: taskData.week_range || tasksStats.value.week_range,
+                            today_date: taskData.today_date || tasksStats.value.today_date
                         });
                     }
                 }
@@ -4835,6 +4872,8 @@ Nguyen Van A`;
             completedGoogleTasks,
             filteredCalendarEvents,
             filteredTasks,
+            todayDateFormatted,
+            currentWeekRangeText,
             setCalendarFilter,
             setTasksFilter,
             setGlobalScheduleFilter,

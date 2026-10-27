@@ -516,9 +516,10 @@ class ChiefSecretaryService:
                 events = build_default_weekly_calendar()
             data["calendar_events"] = events
             cls._save_data(data)
-        today_str = datetime.date.today().strftime("%Y-%m-%d")
-        today_fmt = datetime.date.today().strftime("%d/%m/%Y")
-        monday = datetime.date.today() - datetime.timedelta(days=datetime.date.today().weekday())
+        today = datetime.date.today()
+        today_str = today.strftime("%Y-%m-%d")
+        today_fmt = today.strftime("%d/%m/%Y")
+        monday = today - datetime.timedelta(days=today.weekday())
         sunday = monday + datetime.timedelta(days=6)
         monday_str = monday.strftime("%Y-%m-%d")
         sunday_str = sunday.strftime("%Y-%m-%d")
@@ -578,6 +579,7 @@ class ChiefSecretaryService:
                 "total_count": len(events)
             },
             "source": "Google Calendar (bacnguyentax@gmail.com)",
+            "today_date": f"{_get_vn_day_name(today)}, {today.strftime('%d/%m/%Y')}",
             "week_range": f"{monday.strftime('%d/%m/%Y')} - {sunday.strftime('%d/%m/%Y')}"
         }
     @classmethod
@@ -631,8 +633,9 @@ class ChiefSecretaryService:
             tasks = build_default_weekly_tasks()
             data["tasks"] = tasks
             cls._save_data(data)
-        today_str = datetime.date.today().strftime("%Y-%m-%d")
-        monday = datetime.date.today() - datetime.timedelta(days=datetime.date.today().weekday())
+        today = datetime.date.today()
+        today_str = today.strftime("%Y-%m-%d")
+        monday = today - datetime.timedelta(days=today.weekday())
         sunday = monday + datetime.timedelta(days=6)
         monday_str = monday.strftime("%Y-%m-%d")
         sunday_str = sunday.strftime("%Y-%m-%d")
@@ -714,6 +717,7 @@ class ChiefSecretaryService:
                 "total_count": len(tasks)
             },
             "source": "Google Tasks (bacnguyentax@gmail.com)",
+            "today_date": f"{_get_vn_day_name(today)}, {today.strftime('%d/%m/%Y')}",
             "week_range": f"{monday.strftime('%d/%m/%Y')} - {sunday.strftime('%d/%m/%Y')}"
         }
     @classmethod

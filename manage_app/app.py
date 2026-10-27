@@ -1791,6 +1791,7 @@ def get_chief_calendar_api():
         "stats": res["stats"],
         "filter_range": res["filter_range"],
         "source": res["source"],
+        "today_date": res.get("today_date"),
         "week_range": res["week_range"]
     })
 @app.route("/api/chief-secretary/calendar", methods=["POST"])
@@ -1819,6 +1820,7 @@ def get_chief_tasks_api():
         "stats": res["stats"],
         "filter_range": res["filter_range"],
         "source": res["source"],
+        "today_date": res.get("today_date"),
         "week_range": res["week_range"]
     })
 @app.route("/api/chief-secretary/tasks", methods=["POST"])
