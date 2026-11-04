@@ -5177,6 +5177,7 @@ Nguyen Van A`;
             toggleSelectDoc,
             applyBatchFolder,
             applyBatchNotebook,
+            getFolderName,
             getNotebookName,
             downloadBatchZip,
             uploadSelectedToDrive,
