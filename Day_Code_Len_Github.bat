@@ -6,6 +6,8 @@ echo =======================================================================
 echo    DANG DONG BO TOAN BO CODE MOI LEN GITHUB
 echo =======================================================================
 echo.
+git config user.name >nul 2>&1 || git config user.name "bacnguyentax-droid"
+git config user.email >nul 2>&1 || git config user.email "bacnguyentax-droid@users.noreply.github.com"
 git add .
 git commit -m "Dong bo ma nguon ngay %date% luc %time%"
 git push origin main

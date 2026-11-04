@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <!-- Nền Sapphire Hoàng Gia sang trọng -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0a2540"/>
+      <stop offset="50%" stop-color="#003b73"/>
+      <stop offset="100%" stop-color="#001e3d"/>
+    </linearGradient>
+
+    <!-- Viền Vàng Kim & Lam Ngọc -->
+    <linearGradient id="borderGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="35%" stop-color="#f59e0b"/>
+      <stop offset="70%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#fde68a"/>
+    </linearGradient>
+
+    <!-- Ánh Kim Vàng Hoàng Gia cho Khiên & Ngôi Sao AI -->
+    <linearGradient id="goldGrad" x1="12" y1="10" x2="52" y2="54" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fffbeb"/>
+      <stop offset="30%" stop-color="#fcd34d"/>
+      <stop offset="70%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+
+    <!-- Luồng Trí Tuệ Nhân Tạo Cyan-Sky -->
+    <linearGradient id="cyanGrad" x1="16" y1="14" x2="48" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#e0f2fe"/>
+      <stop offset="50%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+
+    <!-- Hiệu ứng phát sáng trung tâm -->
+    <radialGradient id="coreGlow" cx="32" cy="32" r="22" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.45"/>
+      <stop offset="60%" stop-color="#f59e0b" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#001e3d" stop-opacity="0"/>
+    </radialGradient>
+
+    <filter id="dropShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000814" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- Khối nền bo góc chuẩn App Icon -->
+  <rect x="2" y="2" width="60" height="60" rx="15" fill="url(#bgGrad)" stroke="url(#borderGrad)" stroke-width="2.2"/>
+
+  <!-- Vòng hào quang nội tâm -->
+  <circle cx="32" cy="32" r="23" fill="url(#coreGlow)"/>
+  <circle cx="32" cy="32" r="22" stroke="url(#cyanGrad)" stroke-opacity="0.25" stroke-width="1" stroke-dasharray="3 3"/>
+
+  <!-- Khiên Điều Hành (Executive Shield) kết hợp Mạch Neural -->
+  <path d="M32 10 L49 17.5 V31.5 C49 43.2 41.6 51.4 32 55 C22.4 51.4 15 43.2 15 31.5 V17.5 L32 10 Z"
+        fill="#002b54" fill-opacity="0.65"
+        stroke="url(#goldGrad)" stroke-width="2.2" stroke-linejoin="round" filter="url(#dropShadow)"/>
+
+  <!-- Đường viền lục giác/mạch trí tuệ bên trong khiên -->
+  <path d="M32 15 L44 20.5 V31 C44 39.8 38.7 46.2 32 49.2 C25.3 46.2 20 39.8 20 31 V20.5 L32 15 Z"
+        stroke="url(#cyanGrad)" stroke-width="1.3" stroke-opacity="0.7" stroke-linejoin="round"/>
+
+  <!-- Các đường kết nối Neural Network đối xứng -->
+  <g stroke="url(#cyanGrad)" stroke-width="1.5" stroke-linecap="round" opacity="0.9">
+    <line x1="32" y1="16" x2="32" y2="23"/>
+    <line x1="22" y1="24" x2="27" y2="28"/>
+    <line x1="42" y1="24" x2="37" y2="28"/>
+    <line x1="22" y1="37" x2="27" y2="34"/>
+    <line x1="42" y1="37" x2="37" y2="34"/>
+    <line x1="32" y1="40" x2="32" y2="46"/>
+  </g>
+
+  <!-- Các nút Neural (Nodes) -->
+  <circle cx="32" cy="16" r="2.2" fill="#fde68a"/>
+  <circle cx="22" cy="24" r="2" fill="#38bdf8"/>
+  <circle cx="42" cy="24" r="2" fill="#38bdf8"/>
+  <circle cx="22" cy="37" r="2" fill="#38bdf8"/>
+  <circle cx="42" cy="37" r="2" fill="#38bdf8"/>
+  <circle cx="32" cy="46" r="2.2" fill="#fde68a"/>
+
+  <!-- Ngôi sao 4 cánh AI trung tâm (AI Spark Core) -->
+  <path d="M32 20 C33.4 26.8 35.2 28.6 42 30 C35.2 31.4 33.4 33.2 32 40 C30.6 33.2 28.8 31.4 22 30 C28.8 28.6 30.6 26.8 32 20 Z"
+        fill="url(#goldGrad)" filter="url(#dropShadow)"/>
+
+  <!-- Tâm điểm sáng trắng-ngọc -->
+  <circle cx="32" cy="30" r="2.6" fill="#ffffff"/>
+</svg>
