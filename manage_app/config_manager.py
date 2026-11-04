@@ -86,6 +86,7 @@ import os
 import json
 import uuid
 import re
+from datetime import datetime
 from typing import Dict, Any, List, Optional, Tuple
 
 CONFIG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
@@ -1135,10 +1136,14 @@ class ConfigManager:
         found = False
         for idx, item in enumerate(secretaries):
             if item.get("id") == sec_id:
-                secretaries[idx] = sec_data
+                # Cập nhật các trường mới nhưng vẫn giữ nguyên metadata sẵn có (avatar_icon, badge_color, created_at, latest_report, last_run)
+                item.update(sec_data)
+                sec_data = item
                 found = True
                 break
         if not found:
+            if "created_at" not in sec_data:
+                sec_data["created_at"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             secretaries.append(sec_data)
             
         config["ai_secretaries"] = secretaries

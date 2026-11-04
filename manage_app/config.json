@@ -454,11 +454,14 @@
       "character": "Thạch Sanh",
       "appearance": "Dũng sĩ vạm vỡ, áo nâu thắt đai vàng, đeo rìu chiến dũng mãnh sau lưng, mắt sáng kiên nghị",
       "role": "Thư ký Tổng hợp Tin tức & Cảnh báo Rủi ro Pháp lý",
-      "instruction": "Hằng ngày tìm kiếm các tin tức và quy định pháp luật mới nhất về thuế, hóa đơn điện tử, quản trị rủi ro doanh nghiệp trên Internet. Tổng hợp các điểm mới, thời hạn thi hành và cảnh báo các rủi ro pháp lý cần tránh.",
+      "instruction": "Chính xác: Điểm tên đúng văn bản pháp luật, số Nghị định/Thông tư (nếu có).\nTrích nguồn: Luôn kèm theo đường dẫn (link) tới bài viết gốc.",
       "scheduled_time": "08:00",
       "created_at": "24/10/2026 08:00:00",
       "avatar_icon": "fa-shield-halved",
-      "badge_color": "emerald"
+      "badge_color": "emerald",
+      "search_time_range": "1_week",
+      "search_from_date": "",
+      "search_to_date": ""
     },
     {
       "id": "sec_mai_an_tiem",

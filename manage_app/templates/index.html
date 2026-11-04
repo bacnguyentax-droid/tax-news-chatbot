@@ -6843,7 +6843,7 @@
                             @change="onFairyTaleCharacterChange"
                             class="w-full text-xs border border-slate-300 rounded-lg p-2.5 bg-white font-medium focus:ring-1 focus:ring-amber-500 focus:outline-none">
                             <option v-for="c in fairyTaleCharacters" :key="c.name" :value="c.name">
-                                {{ c.avatar }} {{ c.title }} — {{ c.desc }}
+                                {{ c.avatar }} {{ c.title }} — {{ c.desc || c.description }}
                             </option>
                         </select>
                         <p class="text-[11px] text-slate-500 mt-1">
@@ -7295,7 +7295,7 @@
     <script src="/static/js/three.min.js"></script>
     <script src="/static/js/doraemon_office.js?v=30.0"></script>
     <!-- Script Vue App -->
-    <script src="/static/js/app.js?v=11.0"></script>
+    <script src="/static/js/app.js?v=12.0"></script>
     
 </body>
 </html>

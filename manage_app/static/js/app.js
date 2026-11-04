@@ -3504,6 +3504,18 @@ Nguyen Van A`;
                 });
                 const data = await res.json();
                 if (data.status === 'success' || data.success) {
+                    const targetId = (data.secretary && data.secretary.id) || secretaryForm.value.id;
+                    if (data.secretaries && Array.isArray(data.secretaries)) {
+                        secretaries.value = data.secretaries;
+                    }
+                    showSecretaryModal.value = false;
+
+                    if (targetId) {
+                        selectSecretaryView(targetId);
+                    }
+                    
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+
                     Swal.fire({
                         icon: 'success',
                         title: 'Đã lưu thành công!',
@@ -3511,8 +3523,8 @@ Nguyen Van A`;
                         timer: 1600,
                         showConfirmButton: false
                     });
-                    showSecretaryModal.value = false;
-                    await loadSecretaries();
+                    
+                    loadSecretaries();
                 } else {
                     Swal.fire({ icon: 'error', title: 'Không thể lưu', text: data.message || 'Lỗi không xác định' });
                 }

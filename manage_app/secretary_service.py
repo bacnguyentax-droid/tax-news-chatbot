@@ -1665,7 +1665,11 @@ YÊU CẦU QUAN TRỌNG KHI LẬP BÁO CÁO:
 
         }
 
-        ConfigManager.save_secretary(sec)
+        # Tải lại bản ghi thư ký mới nhất từ cấu hình trước khi lưu kết quả báo cáo
+        current_sec = ConfigManager.get_secretary_by_id(secretary_id) or sec
+        current_sec["last_run"] = sec.get("last_run", now_str)
+        current_sec["latest_report"] = sec.get("latest_report")
+        ConfigManager.save_secretary(current_sec)
 
 
 
