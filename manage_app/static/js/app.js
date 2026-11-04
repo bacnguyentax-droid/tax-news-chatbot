@@ -2828,7 +2828,7 @@ Nguyen Van A`;
         };
         const isAssistantActive = (asstId) => {
             return activeAssistantId.value === asstId && 
-                (activeMenu.value === 'asst_' + asstId || activeMenu.value.startsWith('asst_') || activeMenu.value === 'ai_assistant_chat');
+                (activeMenu.value === asstId || activeMenu.value === 'asst_' + asstId || activeMenu.value.startsWith('asst_') || activeMenu.value === 'ai_assistant_chat');
         };
         const activeAssistantDriveFolderNames = computed(() => {
             const asst = activeAssistant.value;
@@ -3062,18 +3062,27 @@ Nguyen Van A`;
                 });
                 const data = await res.json();
                 if (data.status === 'success') {
+                    const targetId = (data.assistant && data.assistant.id) || assistantForm.value.id;
+                    if (data.assistants && Array.isArray(data.assistants)) {
+                        aiAssistants.value = data.assistants;
+                    }
+                    assistantModalOpen.value = false;
+                    
+                    if (targetId) {
+                        selectAssistantForChat(targetId);
+                    }
+                    
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+
                     Swal.fire({
                         icon: 'success',
                         title: 'Đã lưu trợ lý!',
                         timer: 1500,
                         showConfirmButton: false
                     });
-                    const createdId = (data.assistant && data.assistant.id) || assistantForm.value.id;
-                    assistantModalOpen.value = false;
-                    await loadAssistants();
-                    if (createdId) {
-                        selectAssistantForChat(createdId);
-                    }
+
+                    // Đồng bộ ngầm bổ sung
+                    loadAssistants();
                 } else {
                     Swal.fire({ icon: 'error', title: 'Không thể lưu', text: data.message || 'Lỗi không xác định' });
                 }
@@ -3118,7 +3127,8 @@ Nguyen Van A`;
         };
         const selectAssistantForChat = (asstId) => {
             activeAssistantId.value = asstId;
-            activeMenu.value = 'asst_' + asstId;
+            activeMenu.value = asstId.startsWith('asst_') ? asstId : ('asst_' + asstId);
+            menuGroupsOpen.value.ai_assistants = true;
             const asst = aiAssistants.value.find(a => a.id === asstId);
             if (asst) {
                 sessionConfig.value = {
