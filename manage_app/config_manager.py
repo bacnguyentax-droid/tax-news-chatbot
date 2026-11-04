@@ -477,6 +477,15 @@ DEFAULT_NOTEBOOKS: List[Dict[str, Any]] = [
         "folder_name": "Thông tin cá nhân",
         "description": "Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân người nộp thuế",
         "is_default": False
+    },
+    {
+        "id": "nb_tax_vi_tri_viec_lam",
+        "name": "Tax-Vị trí việc làm",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax-Vị trí việc làm",
+        "drive_folder_id": "1umwCgSyYGORf1EZ39urwmQDUZWViftdY",
+        "description": "Sổ ghi chú và tài liệu vị trí việc làm ngành Thuế",
+        "is_default": False
     }
 ]
 
@@ -1261,10 +1270,7 @@ class ConfigManager:
         Tìm hoặc tự động khởi tạo một Notebook trong hệ thống có tên trùng với tên thư mục Google Drive được chọn.
         """
         clean_name = ConfigManager.clean_drive_folder_name(folder_name)
-        config = ConfigManager.load_config()
-        notebooks = config.get("notebooks")
-        if not notebooks or not isinstance(notebooks, list):
-            notebooks = [nb.copy() for nb in DEFAULT_NOTEBOOKS]
+        notebooks = ConfigManager.get_notebooks()
 
         target_lower = clean_name.lower().strip()
         matched_nb = None
@@ -1288,8 +1294,7 @@ class ConfigManager:
                 "is_default": False
             }
             notebooks.insert(0, matched_nb)
-            config["notebooks"] = notebooks
-            ConfigManager.save_config(config)
+            ConfigManager.save_notebooks(notebooks)
 
         return matched_nb
 

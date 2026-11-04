@@ -1,0 +1,66 @@
+{
+  "secretary_id": "sec_mai_an_tiem",
+  "secretary_name": "Thư ký Mai An Tiêm",
+  "character": "Mai An Tiêm",
+  "role": "Thư ký Tin tức AI",
+  "search_time_range": "1_week",
+  "time_desc": "trong vòng 7 ngày qua (1 tuần trước đến nay)",
+  "created_at": "05/11/2026 05:33:53",
+  "filename": "sec_mai_an_tiem__Thư ký Mai An Tiêm - 20261105_053353.docx",
+  "display_filename": "Thư ký Mai An Tiêm - 20261105_053353.docx",
+  "download_url": "/api/secretaries/sec_mai_an_tiem/download-report/sec_mai_an_tiem__Thư ký Mai An Tiêm - 20261105_053353.docx",
+  "content_markdown": "Chào bạn, tôi là Thư ký Mai An Tiêm - Thư ký Tin tức AI. Dưới đây là bản tin cập nhật toàn cảnh Trí tuệ nhân tạo (AI) trên toàn cầu trong 7 ngày qua (tính đến ngày 05/11/2026), được tổng hợp theo đúng tiêu chuẩn và định dạng yêu cầu.\n\n---\n\n### **BẢN TIN TIN TỨC AI TOÀN CẦU (05/11/2026)**\n\n#### **Tiêu điểm**\n* **OpenAI công bố nghiên cứu toán học phức tạp:** Mô hình mới của OpenAI vừa đề xuất một bước tiến và giải pháp tiềm năng cho bài toán Navier–Stokes – một trong những bài toán toán học hóc búa nhất thế giới liên quan đến chuyển động của chất lưu, đánh dấu bước tiến của AI trong việc giải quyết các bài toán khoa học cơ bản. *(Chi tiết tại [OpenAI Research](https://openai.com/))*\n* **Sức ép về hạ tầng AI và phản ứng từ cộng đồng:** Sự bùng nổ về nhu cầu xây dựng hạ tầng trung tâm dữ liệu phục vụ AI đang vấp phải làn sóng phản ứng mạnh mẽ từ cộng đồng tại nhiều khu vực từ New York đến San Francisco, dẫn đến hàng loạt lệnh hoãn và quy định mới đối với các dự án phần cứng AI. *(Chi tiết tại [TechCrunch](https://m.techcrunch.com/))*\n\n#### **Điểm tin các nền tảng**\n* **OpenAI (ChatGPT):** Cập nhật các tài liệu nghiên cứu mới nhất, trong đó nổi bật là hướng tiếp cận giải quyết bài toán Navier–Stokes thông qua mô hình AI chuyên dụng. *(Tham khảo thêm tại [OpenAI Research & Deployment](https://openai.com/) và trang giới thiệu [ChatGPT](https://openai.com/index/chatgpt/))*\n* **Hệ sinh thái công nghệ toàn cầu:** Các nguồn tin tổng hợp quốc tế ghi nhận sự gia tăng mạnh mẽ trong việc ứng dụng các mô hình AI tạo sinh, đồng thời siết chặt các vấn đề về tuân thủ pháp lý và tác động môi trường của các trung tâm dữ liệu quy mô lớn. *(Tham khảo tại [TechCrunch AI News](https://techcrunch.com/category/artificial-intelligence/) và [AI Trending](https://aitrending.app/))*\n\n---\n*Bản tin được tổng hợp và thực hiện tự động bởi Thư ký Mai An Tiêm.*",
+  "web_sources": [
+    {
+      "title": "OpenAI| Research & Deployment",
+      "uri": "https://openai.com/"
+    },
+    {
+      "title": "Introducing ChatGPT -OpenAI",
+      "uri": "https://openai.com/index/chatgpt/"
+    },
+    {
+      "title": "OpenAIPlatform",
+      "uri": "https://platform.openai.com/onboarding"
+    },
+    {
+      "title": "ChatGPT -OpenAI",
+      "uri": "https://www.bing.com/ck/a?!&&p=8cd271cbb40c92e6a8a3b744fe30dda44c95549239b784ea0fd6a1274047ec05JmltdHM9MTc5Mzc1MDQwMA&ptn=3&ver=2&hsh=4&fclid=207eb3bf-69dd-685c-317c-abb868ac69e3&u=a1aHR0cHM6Ly9wbGF0Zm9ybS5vcGVuYWkuY29tL29uYm9hcmRpbmc_YXBwPWNoYXQ&ntb=1"
+    },
+    {
+      "title": "OpenAI-Wikipedia",
+      "uri": "https://en.wikipedia.org/wiki/OpenAI"
+    },
+    {
+      "title": "AI News & Artificial Intelligence | TechCrunch",
+      "uri": "https://techcrunch.com/category/artificial-intelligence/"
+    },
+    {
+      "title": "AI - TechCrunch",
+      "uri": "https://techcrunch.com/tag/ai/"
+    },
+    {
+      "title": "TechCrunch | Startup and Technology News",
+      "uri": "https://m.techcrunch.com/"
+    },
+    {
+      "title": "AI Trending — Global AI News, Updated Every 2 Hours",
+      "uri": "https://aitrending.app/"
+    },
+    {
+      "title": "AI News - TechCrunch, The Verge, DeepMind, Hugging Face & More ...",
+      "uri": "https://www.aitoolcrunch.com/for-developers/news/"
+    },
+    {
+      "title": "Tổng hợp Tin tức AI - Trí tuệ nhân tạo mới nhất | VnExpress",
+      "uri": "https://vnexpress.net/khoa-hoc-cong-nghe/ai"
+    },
+    {
+      "title": "Công nghệ AI - Tin tức về trí tuệ nhân tạo mới nhất | Znews.vn",
+      "uri": "https://tech.zingnews.vn/artificial-intelligence.html"
+    }
+  ],
+  "alt_file_path": "F:\\Luyen_cong\\AntiGravity\\Chat_bot_Gemini\\____Manage App____\\Thư ký tin tức\\Thư ký Mai An Tiêm - 20261105_053353.docx",
+  "drive_file_id": "",
+  "drive_web_link": ""
+}

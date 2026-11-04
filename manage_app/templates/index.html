@@ -2110,7 +2110,7 @@
                                 <select 
                                     v-model="selectedFolderForBatch"
                                     class="bg-[#f8f9fa] border border-[#b9d2ec] text-slate-800 text-xs rounded px-2 py-0.5 max-w-[170px] truncate focus:outline-none">
-                                    <option v-for="f in folders" :key="f.id" :value="f.id">{{ f.name }}</option>
+                                    <option v-for="f in folders" :key="f.id" :value="f.id">{{ f.raw_name || f.clean_name || f.name }}</option>
                                 </select>
                                 <button 
                                     type="button" 
@@ -2342,12 +2342,14 @@
                                                 v-model="doc.selected_folder_id"
                                                 class="w-full bg-white border border-[#b9d2ec] text-slate-800 text-xs rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#004b93]">
                                                 <option v-for="f in folders" :key="f.id" :value="f.id">
-                                                    {{ f.name }}
+                                                    {{ f.raw_name || f.clean_name || f.name }}
                                                 </option>
                                             </select>
-                                            <span class="text-[10px] text-slate-500 block truncate">
-                                                Nơi lưu: {{ folders.find(f => f.id === doc.selected_folder_id)?.name || 'Mặc định' }}
-                                            </span>
+                                            <div class="flex items-center justify-between text-[10px] text-slate-500">
+                                                <span class="truncate" :title="getFolderName(doc.selected_folder_id)">
+                                                    <i class="fa-brands fa-google-drive text-[#005baa] mr-1 text-[9px]"></i>Nơi lưu: {{ getFolderName(doc.selected_folder_id) }}
+                                                </span>
+                                            </div>
                                         </div>
                                     </td>
                                     <!-- CỘT KẾ CUỐI: NOTEBOOK (LIỆT KÊ TẤT CẢ CÁC NOTEBOOK TRONG NOTEBOOKLM) -->
@@ -7295,7 +7297,7 @@
     <script src="/static/js/three.min.js"></script>
     <script src="/static/js/doraemon_office.js?v=30.0"></script>
     <!-- Script Vue App -->
-    <script src="/static/js/app.js?v=14.0"></script>
+    <script src="/static/js/app.js?v=16.0"></script>
     
 </body>
 </html>

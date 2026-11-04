@@ -1,5 +1,5 @@
 {
-  "last_fields": "thuế, hộ kinh doanh, thu nhập cá nhân, doanh nghiệp, tổ chức, giá trị gia tăng, thu nhập doanh nghiệp, giao dịch liên kết, hóa đơn điện tử",
+  "last_fields": "thuế",
   "date_filter": {
     "preset": "1_week",
     "from_date": "",
@@ -25,6 +25,15 @@
         "folder_name": "Tax_Nghiệp vụ thuế",
         "description": "Kho tri thức chính sách và nghiệp vụ thuế toàn ngành (Mặc định)",
         "is_default": true
+      },
+      {
+        "id": "nb_tax_vi_tri_viec_lam",
+        "name": "Tax-Vị trí việc làm",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax-Vị trí việc làm",
+        "drive_folder_id": "1umwCgSyYGORf1EZ39urwmQDUZWViftdY",
+        "description": "Sổ ghi chú và tài liệu vị trí việc làm ngành Thuế",
+        "is_default": false
       },
       {
         "id": "nb_python",
@@ -450,7 +459,7 @@
   "ai_secretaries": [
     {
       "id": "sec_thach_sanh",
-      "name": "Thư ký Thạch Sanh",
+      "name": "Thư ký Tin tức Thuế",
       "character": "Thạch Sanh",
       "appearance": "Dũng sĩ vạm vỡ, áo nâu thắt đai vàng, đeo rìu chiến dũng mãnh sau lưng, mắt sáng kiên nghị",
       "role": "Thư ký Tổng hợp Tin tức về Thuế",
@@ -462,7 +471,7 @@
     },
     {
       "id": "sec_mai_an_tiem",
-      "name": "Thư ký Mai An Tiêm",
+      "name": "Thư ký Tin tức về AI",
       "character": "Mai An Tiêm",
       "appearance": "Tự lực cánh sinh kiên định, áo xanh lục tươi sáng, đầu đội quả dưa hấu sọc đỏ xanh tươi mát",
       "role": "Thư ký Tin tức về AI",
@@ -587,6 +596,21 @@
   ],
   "ai_assistants": [
     {
+      "id": "asst_mw2phfcq",
+      "name": "Trợ lý chính sách CNTT",
+      "nickname": "Doraemon",
+      "description": "Chuyên phụ trách về các quy định, chính sách CNTT của ngành Thuế",
+      "system_prompt": "Bạn là Trợ lý chuyên môn cao ngành Thuế. Hãy giải đáp chính xác, khách quan, trích dẫn rõ các văn bản quy phạm pháp luật và căn cứ thực tế.",
+      "drive_folder_ids": [
+        "178QONvrFSUvq2huXdFfvhVg6gNJacRvs",
+        "1wcZoDvWXKoci6r5IjfUgIXBBh4jLfQbK"
+      ],
+      "filter_tax_only": true,
+      "enable_web_search": false,
+      "model": "gemini-3.5-flash-lite",
+      "temperature": 0.2
+    },
+    {
       "id": "asst_tax_corp",
       "name": "Trợ lý Chính sách Thuế",
       "nickname": "Mini-Dora",
@@ -605,18 +629,14 @@
       "name": "Trợ lý Quản Lý Rủi Ro & Kiểm Soát HĐĐT",
       "nickname": "Suneo",
       "description": "Phân tích rủi ro hóa đơn điện tử, chuỗi cảnh báo KTH, bộ chỉ số tiêu chí TPR và quy trình xử lý người nộp thuế rủi ro cao.",
+      "system_prompt": "Bạn là Trợ lý AI chuyên gia về Quản lý rủi ro và Kiểm soát hóa đơn điện tử ngành Thuế. Hãy phân tích sắc bén, chỉ ra các nguy cơ rủi ro và giải pháp xử lý theo quy định.",
       "drive_folder_ids": [
-        "1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK"
-      ],
-      "drive_folder_names": [
-        "Tax_Nghiệp vụ thuế"
+        "10FLzrPxQqY6WGmKvtr0Bt4KX2PJtSIvs"
       ],
       "filter_tax_only": true,
       "enable_web_search": false,
-      "system_prompt": "Bạn là Trợ lý AI chuyên gia về Quản lý rủi ro và Kiểm soát hóa đơn điện tử ngành Thuế. Hãy phân tích sắc bén, chỉ ra các nguy cơ rủi ro và giải pháp xử lý theo quy định.",
       "model": "gemini-3.5-flash-lite",
-      "avatar_icon": "fa-shield-halved",
-      "badge_color": "rose"
+      "temperature": 0.2
     }
   ],
   "entertainment_songs": [

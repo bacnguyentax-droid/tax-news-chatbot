@@ -215,8 +215,10 @@ class DriveService:
                 "folders": []
             }
 
-    def list_folders(self) -> List[Dict[str, Any]]:
+    def list_folders(self, force_refresh: bool = False) -> List[Dict[str, Any]]:
         """Lấy danh sách các thư mục phù hợp trên Google Drive, CHỈ hiển thị các thư mục có chứa ký tự 'Tax' trong tên"""
+        if self.folders_cache and not force_refresh:
+            return self.folders_cache
         if not self.service:
             if not self._init_connection():
                 return [{
@@ -226,7 +228,7 @@ class DriveService:
                 }]
 
         try:
-            # Query lấy các thư mục gốc trong My Drive với phân trang đầy đủ
+            # Query lấy CHỈ các thư mục có từ 'Tax' nằm ở Thư mục gốc của Google Drive ('root')
             query = "'root' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false"
             root_folders = []
             page_token = None
@@ -246,17 +248,19 @@ class DriveService:
 
             tax_primary = None
             tax_folders = []
-            other_folders = []
 
             for f in root_folders:
                 raw_name = f.get("name", "").strip()
                 if not is_valid_drive_folder(raw_name):
                     continue
 
+                # Chỉ lấy tất cả thư mục có từ Tax nằm ở thư mục gốc của Google Drive
+                if "tax" not in raw_name.lower():
+                    continue
+
                 folder_id = f.get("id")
                 web_link = f.get("webViewLink", f"https://drive.google.com/drive/folders/{folder_id}")
                 clean_name = raw_name.lstrip('-_ ')
-                is_tax = "tax" in raw_name.lower()
 
                 item = {
                     "id": folder_id,
@@ -264,24 +268,20 @@ class DriveService:
                     "raw_name": raw_name,
                     "clean_name": clean_name,
                     "webViewLink": web_link,
-                    "is_tax": is_tax
+                    "is_tax": True
                 }
 
                 # Nhận diện thư mục mặc định: Tax_Nghiệp vụ thuế
                 if "nghiệp vụ thuế" in raw_name.lower() or raw_name.lower() == "tax_nghiệp vụ thuế":
                     item["name"] = f"📁 Tax_Nghiệp vụ thuế ⭐ [Mặc định]"
-                    item["is_tax"] = True
                     tax_primary = item
-                elif is_tax:
-                    tax_folders.append(item)
                 else:
-                    other_folders.append(item)
+                    tax_folders.append(item)
 
-            # Sắp xếp theo tên
+            # Sắp xếp theo bảng chữ cái
             tax_folders.sort(key=lambda x: x["clean_name"].lower())
-            other_folders.sort(key=lambda x: x["clean_name"].lower())
 
-            # Xây dựng danh sách hiển thị chuẩn: ưu tiên các thư mục Tax lên đầu, tiếp theo là các thư mục khác
+            # Xây dựng danh sách hiển thị: Tax_Nghiệp vụ thuế mặc định lên đầu, tiếp theo là toàn bộ thư mục Tax ở gốc
             formatted_folders = []
             if tax_primary:
                 formatted_folders.append(tax_primary)
@@ -294,19 +294,6 @@ class DriveService:
                     pass
 
             formatted_folders.extend(tax_folders)
-            formatted_folders.extend(other_folders)
-
-            # Đảm bảo thư mục "____Automation Video____\Văn thư" luôn có sẵn trong danh sách
-            van_thu_id = "16Ua7ZfjOl2klPOEMH5QxDtvUSQ9A-FTr"
-            if not any(f.get("id") == van_thu_id for f in formatted_folders):
-                formatted_folders.insert(1 if len(formatted_folders) > 1 else 0, {
-                    "id": van_thu_id,
-                    "name": "📁 ____Automation Video____\\Văn thư",
-                    "raw_name": "____Automation Video____\\Văn thư",
-                    "clean_name": "Automation Video Văn thư",
-                    "webViewLink": "https://drive.google.com/drive/folders/16Ua7ZfjOl2klPOEMH5QxDtvUSQ9A-FTr",
-                    "is_tax": True
-                })
 
             # Dự phòng nếu không có thư mục nào
             if not formatted_folders:

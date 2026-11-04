@@ -102,6 +102,7 @@ def get_config():
     is_connected = drive_service.is_connected
     user_info = drive_service.user_info if is_connected else None
     sources = ConfigManager.get_sources()
+    drive_folders = drive_service.list_folders() if is_connected else []
     
     return jsonify({
         "success": True,
@@ -109,8 +110,9 @@ def get_config():
         "date_filter": config.get("date_filter", {}),
         "drive_connected": is_connected,
         "drive_user": user_info,
-        "default_folder_id": config.get("google_drive", {}).get("default_folder_id", "root"),
-        "default_folder_name": config.get("google_drive", {}).get("default_folder_name", "📁 My Drive (Thư mục gốc)"),
+        "default_folder_id": config.get("google_drive", {}).get("default_folder_id", "1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK"),
+        "default_folder_name": config.get("google_drive", {}).get("default_folder_name", "📁 Tax_Nghiệp vụ thuế"),
+        "folders": drive_folders,
         "client_id": config.get("google_drive", {}).get("client_id", ""),
         "sources": sources,
         "notebooks": ConfigManager.get_notebooks(),
@@ -154,7 +156,8 @@ def test_drive_connection():
 @app.route("/api/drive/folders", methods=["GET"])
 def get_drive_folders():
     """Lấy danh sách các thư mục có trên Google Drive"""
-    folders = drive_service.list_folders()
+    force = request.args.get("refresh") == "1"
+    folders = drive_service.list_folders(force_refresh=force)
     return jsonify({"success": True, "folders": folders})
 @app.route("/api/drive/create-folder", methods=["POST"])
 def create_drive_folder():

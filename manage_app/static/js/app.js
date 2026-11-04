@@ -89,22 +89,44 @@ createApp({
         const allDriveFolders = ref([]);
         const filterTaxOnly = ref(localStorage.getItem('filterTaxOnly') !== 'false');
         const allNotebooks = ref([]);
+        const folders = ref([
+            { id: '1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK', name: 'Tax_Nghiệp vụ thuế', raw_name: 'Tax_Nghiệp vụ thuế', clean_name: 'Tax_Nghiệp vụ thuế', is_tax: true }
+        ]);
+        const getFolderName = (id) => {
+            const f = folders.value.find(item => item.id === id);
+            return f ? (f.raw_name || f.clean_name || f.name) : 'Tax_Nghiệp vụ thuế';
+        };
         const updateTaxFilteredLists = () => {
             if (filterTaxOnly.value) {
-                folders.value = allDriveFolders.value.filter(f => f.is_tax || (f.name && f.name.toLowerCase().includes('tax')) || (f.raw_name && f.raw_name.toLowerCase().includes('tax')));
-                notebooks.value = allNotebooks.value.filter(n => n.is_tax || (n.name && n.name.toLowerCase().includes('tax')));
+                if (allDriveFolders.value && allDriveFolders.value.length > 0) {
+                    folders.value = allDriveFolders.value.filter(f => f.is_tax || (f.name && f.name.toLowerCase().includes('tax')) || (f.raw_name && f.raw_name.toLowerCase().includes('tax')));
+                }
+                if (allNotebooks.value && allNotebooks.value.length > 0) {
+                    notebooks.value = allNotebooks.value.filter(n => n.is_tax || (n.name && n.name.toLowerCase().includes('tax')));
+                }
             } else {
-                folders.value = [...allDriveFolders.value];
-                notebooks.value = [...allNotebooks.value];
+                if (allDriveFolders.value && allDriveFolders.value.length > 0) {
+                    folders.value = [...allDriveFolders.value];
+                }
+                if (allNotebooks.value && allNotebooks.value.length > 0) {
+                    notebooks.value = [...allNotebooks.value];
+                }
+            }
+            if (folders.value.length > 0) {
+                const currentMatch = folders.value.find(f => f.id === defaultFolderId.value);
+                if (!currentMatch) {
+                    const taxDefault = folders.value.find(f => (f.raw_name && f.raw_name.includes('Nghiệp vụ thuế')) || (f.name && f.name.includes('Nghiệp vụ thuế')));
+                    if (taxDefault) {
+                        defaultFolderId.value = taxDefault.id;
+                        defaultFolderName.value = taxDefault.raw_name || taxDefault.clean_name || taxDefault.name;
+                    }
+                }
             }
         };
         const handleTaxFilterToggle = () => {
             localStorage.setItem('filterTaxOnly', filterTaxOnly.value ? 'true' : 'false');
             updateTaxFilteredLists();
         };
-        const folders = ref([
-            { id: '1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK', name: '📁 Tax_Nghiệp vụ thuế ⭐ [Mặc định]' }
-        ]);
         const defaultFolderId = ref('1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK');
         const defaultFolderName = ref('📁 Tax_Nghiệp vụ thuế');
         const isTestingConnection = ref(false);
@@ -188,9 +210,13 @@ createApp({
                     if (data.last_fields) {
                         fieldsInput.value = data.last_fields;
                     }
+                    if (data.folders && data.folders.length > 0) {
+                        allDriveFolders.value = data.folders;
+                        updateTaxFilteredLists();
+                    }
                     if (data.default_folder_id) {
                         defaultFolderId.value = data.default_folder_id;
-                        defaultFolderName.value = data.default_folder_name || '📁 My Drive (Thư mục gốc)';
+                        defaultFolderName.value = data.default_folder_name || 'Tax_Nghiệp vụ thuế';
                         selectedFolderForBatch.value = data.default_folder_id;
                     }
                     if (data.sources) {
@@ -300,15 +326,23 @@ createApp({
                 });
                 const data = await res.json();
                 if (data.success) {
-                    documents.value = data.documents.map(d => ({
-                        ...d,
-                        selected_folder_id: d.selected_folder_id || defaultFolderId.value || 'root',
-                        selected_notebook_id: d.selected_notebook_id || selectedNotebookForBatch.value || defaultNotebookId.value || 'nb_tax_default',
-                        upload_status: 'idle',
-                        notebook_status: 'idle',
-                        is_downloaded: false,
-                        drive_link: ''
-                    }));
+                    documents.value = data.documents.map(d => {
+                        const targetFid = (d.selected_folder_id && folders.value.some(f => f.id === d.selected_folder_id))
+                            ? d.selected_folder_id
+                            : (defaultFolderId.value || '1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK');
+                        const targetNbid = (d.selected_notebook_id && notebooks.value.some(n => n.id === d.selected_notebook_id))
+                            ? d.selected_notebook_id
+                            : (selectedNotebookForBatch.value || defaultNotebookId.value || 'nb_tax_nghiep_vu_thue');
+                        return {
+                            ...d,
+                            selected_folder_id: targetFid,
+                            selected_notebook_id: targetNbid,
+                            upload_status: 'idle',
+                            notebook_status: 'idle',
+                            is_downloaded: false,
+                            drive_link: ''
+                        };
+                    });
                     selectedDocIds.value = [];
                     showToast(`Quét hoàn tất: Tìm thấy ${data.total} văn bản từ các website nguồn đã chọn.`, 'success');
                 } else {
@@ -626,14 +660,21 @@ createApp({
                 if (data.success && data.folders && data.folders.length > 0) {
                     allDriveFolders.value = data.folders;
                     updateTaxFilteredLists();
+                    if (documents.value && documents.value.length > 0) {
+                        documents.value.forEach(doc => {
+                            if (!doc.selected_folder_id || !folders.value.some(f => f.id === doc.selected_folder_id)) {
+                                doc.selected_folder_id = defaultFolderId.value || '1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK';
+                            }
+                        });
+                    }
                     const matched = folders.value.find(f => f.id === defaultFolderId.value);
                     if (matched) {
-                        defaultFolderName.value = matched.name;
+                        defaultFolderName.value = matched.raw_name || matched.clean_name || matched.name;
                     } else if (folders.value.length > 0) {
                         const taxDefault = folders.value.find(f => f.raw_name === 'Tax_Nghiệp vụ thuế' || (f.name && f.name.includes('Tax_Nghiệp vụ thuế')));
                         if (taxDefault) {
                             defaultFolderId.value = taxDefault.id;
-                            defaultFolderName.value = taxDefault.name;
+                            defaultFolderName.value = taxDefault.raw_name || taxDefault.clean_name || taxDefault.name;
                             selectedFolderForBatch.value = taxDefault.id;
                         }
                     }
@@ -907,7 +948,7 @@ createApp({
                 });
                 const data = await res.json();
                 if (data.success) {
-                    notebooks.value = data.notebooks || [];
+                    await loadNotebooks();
                     newNotebookName.value = '';
                     newNotebookDesc.value = '';
                     showToast(data.message || 'Đã thêm notebook mới thành công!', 'success');
@@ -944,10 +985,7 @@ createApp({
                 });
                 const data = await res.json();
                 if (data.success) {
-                    notebooks.value = data.notebooks || [];
-                    if (data.default_notebook_id) {
-                        defaultNotebookId.value = data.default_notebook_id;
-                    }
+                    await loadNotebooks();
                     showToast(data.message || 'Đã xóa notebook khỏi danh mục.', 'success');
                 } else {
                     showToast(data.message || 'Lỗi khi xóa notebook', 'error');
@@ -965,10 +1003,7 @@ createApp({
                 });
                 const data = await res.json();
                 if (data.success) {
-                    notebooks.value = data.notebooks || [];
-                    defaultNotebookId.value = notebookId;
-                    selectedNotebookForBatch.value = notebookId;
-                    batchUploadedNotebookId.value = notebookId;
+                    await loadNotebooks();
                     showToast('Đã đặt làm Notebook mặc định thành công!', 'success');
                 } else {
                     showToast(data.message || 'Lỗi đặt mặc định', 'error');
@@ -1083,9 +1118,7 @@ createApp({
                 });
                 const data = await res.json();
                 if (data.success) {
-                    if (data.notebooks) {
-                        notebooks.value = data.notebooks;
-                    }
+                    await loadNotebooks();
                     showToast(data.message, 'success');
                 } else {
                     showToast(data.message || 'Lỗi đồng bộ sổ ghi chú', 'error');
@@ -1112,8 +1145,7 @@ createApp({
                 const res = await fetch('/api/notebooklm/reset-defaults', { method: 'POST' });
                 const data = await res.json();
                 if (data.success) {
-                    notebooks.value = data.notebooks;
-                    defaultNotebookId.value = data.default_notebook_id;
+                    await loadNotebooks();
                     showToast(data.message, 'success');
                 } else {
                     showToast(data.message || 'Lỗi khi đồng bộ notebook', 'error');
