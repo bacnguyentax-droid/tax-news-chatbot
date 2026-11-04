@@ -3062,17 +3062,11 @@ Nguyen Van A`;
                 });
                 const data = await res.json();
                 if (data.status === 'success') {
-                    const targetId = (data.assistant && data.assistant.id) || assistantForm.value.id;
                     if (data.assistants && Array.isArray(data.assistants)) {
                         aiAssistants.value = data.assistants;
                     }
+                    // Tuyệt đối không mở giao diện trợ lý lên, chỉ đóng modal và giữ nguyên giao diện hiện tại
                     assistantModalOpen.value = false;
-                    
-                    if (targetId) {
-                        selectAssistantForChat(targetId);
-                    }
-                    
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
 
                     Swal.fire({
                         icon: 'success',
@@ -3504,17 +3498,11 @@ Nguyen Van A`;
                 });
                 const data = await res.json();
                 if (data.status === 'success' || data.success) {
-                    const targetId = (data.secretary && data.secretary.id) || secretaryForm.value.id;
                     if (data.secretaries && Array.isArray(data.secretaries)) {
                         secretaries.value = data.secretaries;
                     }
+                    // Tuyệt đối không mở giao diện thư ký lên, chỉ đóng modal và giữ nguyên giao diện hiện tại
                     showSecretaryModal.value = false;
-
-                    if (targetId) {
-                        selectSecretaryView(targetId);
-                    }
-                    
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
 
                     Swal.fire({
                         icon: 'success',
