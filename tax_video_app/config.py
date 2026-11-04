@@ -3,8 +3,12 @@ import os
 # YouTube Data API Key v3 mặc định
 DEFAULT_YOUTUBE_API_KEY = "AIzaSyDiC2ugIDBd_pyNFsfJgO87cvADaD14r3c"
 
-# Đường dẫn thư mục lưu trữ mặc định
-DEFAULT_OUTPUT_DIR = r"D:\Data_Video"
+# Đường dẫn thư mục lưu trữ mặc định (Tự động thích ứng máy bàn có ổ D hoặc laptop chỉ có ổ C)
+if os.path.exists("D:\\"):
+    DEFAULT_OUTPUT_DIR = r"D:\Data_Video"
+else:
+    DEFAULT_OUTPUT_DIR = os.path.join(os.path.expanduser("~"), "Data_Video")
+
 DEFAULT_EXCEL_PATH = os.path.join(DEFAULT_OUTPUT_DIR, "Danh_Sach_Video_Thue.xlsx")
 
 import sys

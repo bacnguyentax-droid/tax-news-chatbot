@@ -447,20 +447,6 @@
       }
     ]
   },
-  "entertainment_songs": [
-    {
-      "id": "song_1",
-      "title": "E là không thể",
-      "youtube_url": "https://www.youtube.com/watch?v=3S6R-nOA2eY",
-      "youtube_id": "3S6R-nOA2eY"
-    },
-    {
-      "id": "song_2",
-      "title": "Dĩ Vãng Nhạt Nhòa",
-      "youtube_url": "https://www.youtube.com/watch?v=aahqBEJJigI",
-      "youtube_id": "aahqBEJJigI"
-    }
-  ],
   "ai_secretaries": [
     {
       "id": "sec_thach_sanh",
@@ -489,76 +475,116 @@
   ],
   "drafted_documents": [
     {
-      "title": "Thông báo kết luận thanh tra thuế 2026",
-      "template_preset": "thong_bao",
-      "doc_type": "THÔNG BÁO",
-      "agency_parent": "",
-      "agency_name": "THUẾ TP.HỒ CHÍ MINH",
-      "doc_number": "105/TB-CTHCM",
-      "location": "Tp. Hồ Chí Minh",
-      "signer_role": "CỤC TRƯỞNG",
-      "signer_name": "Nguyễn Hoa Bắc",
-      "purpose": "",
-      "subject": "Thông báo kết luận thanh tra thuế 2026",
-      "header_ratio": 40,
-      "recipients": [
-        "Lưu: VT."
-      ],
-      "legal_bases": [],
-      "body_paragraphs": [
-        "Nội dung văn bản hành chính sẽ hiển thị trực quan tại đây sau khi bạn hoàn tất thiết lập ban đầu và bấm \"Tạo nội dung\"."
-      ],
-      "id": "draft_feab052e"
-    },
-    {
-      "title": "Thông báo kết luận thanh tra thuế 2026",
-      "template_preset": "thong_bao",
-      "doc_type": "THÔNG BÁO",
-      "agency_parent": "",
-      "agency_name": "THUẾ TP.HỒ CHÍ MINH",
-      "doc_number": "105/TB-CTHCM",
-      "location": "Tp. Hồ Chí Minh",
-      "signer_role": "CỤC TRƯỞNG",
-      "signer_name": "Nguyễn Hoa Bắc",
-      "purpose": "",
-      "subject": "Thông báo kết luận thanh tra thuế 2026",
-      "header_ratio": 40,
-      "recipients": [
-        "Lưu: VT."
-      ],
-      "legal_bases": [],
-      "body_paragraphs": [
-        "Nội dung văn bản hành chính sẽ hiển thị trực quan tại đây sau khi bạn hoàn tất thiết lập ban đầu và bấm \"Tạo nội dung\"."
-      ],
-      "id": "draft_376760f1"
-    },
-    {
-      "title": "Công văn hướng dẫn quyết toán thuế TNDN năm 2026",
-      "template_preset": "thong_bao",
-      "doc_type": "CÔNG VĂN",
+      "title": "Về việc phân tích các chức năng ứng dụng hỗ trợ công tác kiểm tra và cử nhân sự ",
+      "template_preset": "to_trinh",
+      "doc_type": "TỜ TRÌNH",
       "agency_parent": "THUẾ THÀNH PHỐ HỒ CHÍ MINH",
       "agency_name": "PHÒNG QTDL & QLRR",
-      "doc_number": "99/CV-CTHCM",
+      "doc_number": "01/TTr-DLRR",
       "location": "Tp. Hồ Chí Minh",
-      "signer_role": "CỤC TRƯỞNG",
+      "signer_role": "TRƯỞNG PHÒNG",
       "signer_name": "Nguyễn Hoa Bắc",
-      "purpose": "",
-      "subject": "Công văn hướng dẫn quyết toán thuế TNDN năm 2026",
+      "purpose": "Về việc phân tích các chức năng ứng dụng hỗ trợ công tác kiểm tra và cử nhân sự tham gia phân tích.",
       "header_ratio": 40,
       "recipients": [
         "Lưu: VT."
       ],
-      "legal_bases": [],
-      "body_paragraphs": [
-        "Nội dung văn bản hành chính sẽ hiển thị trực quan tại đây sau khi bạn hoàn tất thiết lập ban đầu và bấm \"Tạo nội dung\"."
+      "legal_bases": [
+        "Căn cứ Luật Quản lý thuế ngày 13 tháng 6 năm 2019;",
+        "Căn cứ Nghị định số 126/2020/NĐ-CP ngày 19 tháng 10 năm 2020 của Chính phủ quy định chi tiết một số điều của Luật Quản lý thuế;",
+        "Căn cứ Nghị định số 87/2017/NĐ-CP ngày 26 tháng 7 năm 2017 của Chính phủ quy định chức năng, nhiệm vụ, quyền hạn và cơ cấu tổ chức của Bộ Tài chính;",
+        "Căn cứ Thông tư số 31/2021/TT-BTC ngày 17 tháng 5 năm 2021 của Bộ Tài chính quy định về áp dụng quản lý rủi ro trong quản lý thuế."
       ],
-      "id": "draft_65f96d2a"
+      "body_paragraphs": [
+        "Kính gửi: Cục trưởng Cục Thuế thành phố Hồ Chí Minh.",
+        "Thực hiện nhiệm vụ được giao về quản lý dữ liệu và quản lý rủi ro trong công tác quản lý thuế, Phòng QTDL & QLRR nhận thấy việc phân tích chuyên sâu các chức năng của ứng dụng công nghệ thông tin hỗ trợ công tác kiểm tra là hết sức cần thiết. Điều này nhằm tối ưu hóa hiệu quả hoạt động kiểm tra, đảm bảo tuân thủ các nguyên tắc quản lý rủi ro đã được quy định tại Thông tư số 31/2021/TT-BTC, đặc biệt là nguyên tắc về việc thu thập, xử lý, quản lý thông tin tập trung tại Tổng cục Thuế thông qua ứng dụng công nghệ thông tin và việc áp dụng các biện pháp nghiệp vụ quản lý thuế tương ứng với mức độ rủi ro.",
+        "Việc phân tích các chức năng ứng dụng sẽ giúp đánh giá mức độ đáp ứng của hệ thống hiện tại đối với các yêu cầu nghiệp vụ mới, phát hiện các điểm cần cải tiến, bổ sung để nâng cao khả năng phân tích, đánh giá tuân thủ pháp luật thuế và phân loại mức độ rủi ro người nộp thuế một cách chính xác và kịp thời. Qua đó, góp phần quan trọng vào việc phòng chống, phát hiện và xử lý kịp thời các hành vi vi phạm pháp luật thuế, nâng cao hiệu lực, hiệu quả công tác quản lý thuế của Cục Thuế thành phố Hồ Chí Minh.",
+        "Để đảm bảo chất lượng và tính chuyên sâu của quá trình phân tích, Phòng QTDL & QLRR kính đề nghị Cục trưởng xem xét, chấp thuận chủ trương phân tích các chức năng ứng dụng hỗ trợ công tác kiểm tra và cho phép Phòng cử các nhân sự có năng lực, kinh nghiệm chuyên môn phù hợp tham gia trực tiếp vào quá trình phân tích này.",
+        "Kính mong Cục trưởng xem xét, quyết định./."
+      ],
+      "id": "draft_0e3e78e9"
+    },
+    {
+      "id": "draft_qlrr_quy4",
+      "title": "Công văn đôn đốc công tác QLRR, rà soát NNT rủi ro cao và nâng cao chất lượng dữ liệu Quý IV",
+      "doc_type": "CÔNG VĂN",
+      "agency_parent": "CỤC THUẾ TP. HỒ CHÍ MINH",
+      "agency_name": "PHÒNG QUẢN TRỊ DỮ LIỆU VÀ QUẢN LÝ RỦI RO",
+      "unit_code": "CT-QLRR",
+      "doc_number": "   /CT-QLRR",
+      "republic_title": "CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM",
+      "motto": "Độc lập - Tự do - Hạnh phúc",
+      "location": "TP. Hồ Chí Minh",
+      "date_formatted": "ngày     tháng 10 năm 2026",
+      "subject": "V/v đôn đốc triển khai công tác quản lý rủi ro, rà soát NNT rủi ro cao và nâng cao chất lượng dữ liệu Quý IV",
+      "template_preset": "cong_van",
+      "header_ratio": 45,
+      "purpose": "Đôn đốc các Phòng và Chi cục Thuế tập trung rà soát 100% NNT có dấu hiệu rủi ro cao về HĐĐT, vận hành ứng dụng KTH, đối chiếu dữ liệu tờ khai thuế và chuẩn hóa CSDL trong Quý IV năm 2026.",
+      "recipients": [
+        "- Trưởng các Phòng thuộc Cục Thuế TP. Hồ Chí Minh",
+        "- Chi cục trưởng Chi cục Thuế các quận, huyện và khu vực",
+        "- Ban Quản lý tuân thủ - TCT (để b/c)",
+        "- Cục trưởng (để b/c)",
+        "- Các Phó Cục trưởng (để p/h)",
+        "- Phòng KTNB, Phòng KK&KTT (để p/h)",
+        "- Lưu: VT, QLRR (3b)."
+      ],
+      "signer_role": "KT. CỤC TRƯỞNG\nPHÓ CỤC TRƯỞNG",
+      "signer_name": "Nguyễn Văn A",
+      "legal_bases": [
+        "Căn cứ Quyết định số 1264/QĐ-CT và Bộ 9 chỉ số tiêu chí kiểm soát hóa đơn (TPR);",
+        "Căn cứ Công văn số 4728/CT-QLTT và Công văn số 5890/CT-QLTT về triển khai ứng dụng KTH;",
+        "Căn cứ kết quả rà soát, phân tích rủi ro trong 9 tháng đầu năm 2026 của Cục Thuế TP. Hồ Chí Minh."
+      ],
+      "body_paragraphs": [
+        "Kính gửi: Trưởng các Phòng thuộc Cục Thuế TP. Hồ Chí Minh; Chi cục trưởng Chi cục Thuế các quận, huyện và khu vực.",
+        "Thực hiện chỉ đạo của Tổng cục Thuế về việc đẩy mạnh công tác quản lý rủi ro (QLRR), kiểm soát hóa đơn điện tử (HĐĐT) và nâng cao chất lượng dữ liệu ngành Thuế; căn cứ kết quả triển khai công tác rà soát, phân tích rủi ro trong 9 tháng đầu năm 2026, Cục Thuế TP. Hồ Chí Minh đôn đốc và chỉ đạo Trưởng các Phòng, Chi cục trưởng Chi cục Thuế các quận, huyện, khu vực tập trung triển khai các nhiệm vụ trọng tâm mảng Quản lý rủi ro trong Quý IV năm 2026 như sau:",
+        "I. ĐÁNH GIÁ CHUNG VỀ TÌNH HÌNH THỰC HIỆN CÔNG TÁC QUẢN LÝ RỦI RO",
+        "Trong thời gian qua, các đơn vị thuộc và trực thuộc Cục Thuế đã tích cực khai thác các ứng dụng CNTT ngành Thuế (như Hệ thống HĐĐT tập trung, Ứng dụng Quản lý rủi ro TPR, Ứng dụng phân tích chuỗi rủi ro KTH, Phân hệ đối chiếu HĐĐT và Tờ khai thuế) để kịp thời phát hiện, xử lý các trường hợp Người nộp thuế (NNT) có dấu hiệu rủi ro cao về thuế và hóa đơn.",
+        "Tuy nhiên, qua công tác giám sát và tổng hợp báo cáo cho thấy tại một số đơn vị vẫn còn tình trạng xử lý danh sách cảnh báo chậm so với tiến độ quy định; chưa đôn đốc triệt để NNT giải trình đúng hạn 03 ngày làm việc; việc cập nhật danh sách loại trừ chuỗi KTH chưa kịp thời; công tác thu thập, làm sạch dữ liệu NNT và người đại diện theo pháp luật (NĐPL) chưa đạt độ đồng bộ cao. Để khắc phục các hạn chế trên và hoàn thành thắng lợi nhiệm vụ Quý IV, Cục Thuế yêu cầu Thủ trưởng các đơn vị trực tiếp chỉ đạo thực hiện các nhiệm vụ chuyên môn cốt lõi.",
+        "II. TRỌNG TÂM ĐÔN ĐỐC TRIỂN KHAI CÁC NHÓM NHIỆM VỤ CỐT LÕI",
+        "1. Tập trung rà soát, xử lý danh sách Người nộp thuế có dấu hiệu rủi ro cao về hóa đơn điện tử:\n- Khẩn trương phân công công chức rà soát 100% NNT thuộc danh sách cảnh báo rủi ro cao theo Bộ chỉ số tiêu chí tại Quyết định số 1264/QĐ-CT và Bộ 9 chỉ số tiêu chí kiểm soát hóa đơn (TPR).\n- Thực hiện nghiêm túc Quy trình 7 bước xử lý NNT rủi ro cao về HĐĐT. Ban hành ngay Thông báo yêu cầu giải trình, bổ sung thông tin tài liệu (Mẫu 01/TB-BSTT-NNT) và Thông báo chuyển hình thức sử dụng HĐĐT có mã theo từng lần phát sinh (Mẫu 01/TB-SDPS) theo quy định.",
+        "2. Triển khai hiệu quả Ứng dụng phân tích chuỗi rủi ro hoàn thuế GTGT (KTH) và rà soát danh sách loại trừ:\n- Khai thác triệt để Ứng dụng KTH theo hướng dẫn tại Công văn số 4728/CT-QLTT và Công văn số 5890/CT-QLTT.\n- Thực hiện nghiêm túc việc rà soát danh sách loại trừ trên ứng dụng KTH theo chỉ đạo tại Công văn số 4129/CT-QLTT. Đảm bảo loại trừ chính xác các doanh nghiệp thực tế có hoạt động sản xuất kinh doanh hợp pháp, không để ảnh hưởng đến hoạt động hoàn thuế GTGT của doanh nghiệp tuân thủ tốt.",
+        "3. Đẩy mạnh đối chiếu, xử lý dứt điểm chênh lệch dữ liệu HĐĐT và Tờ khai thuế:\n- Khai thác phân hệ nâng cấp ứng dụng HĐĐT đối chiếu dữ liệu HĐĐT và Tờ khai thuế theo Công văn số 1917/CT-QLTT, Công văn số 1918/CT-QLTT và Công văn số 5911/CT-QLTT.\n- Đối chiếu chi tiết chênh lệch thuế GTGT, TNDN giữa HĐĐT phát sinh và Tờ khai thuế kê khai trong kỳ. Yêu cầu NNT giải trình hoặc kê khai bổ sung, điều chỉnh kịp thời, chống thất thu ngân sách nhà nước.",
+        "4. Xây dựng CSDL đa chiều, Bộ tiêu chí đặc thù và các ứng dụng CNTT hỗ trợ Quý IV:\n- Tập trung toàn lực thu thập, làm sạch dữ liệu NNT, dữ liệu đa chiều NĐPL và thông tin cảnh báo vi phạm từ các nguồn cơ quan Thuế, Hải quan, Ngân hàng, Công an.\n- Xây dựng Bộ tiêu chí rủi ro đặc thù của Cục Thuế TP. Hồ Chí Minh và tiêu chí hóa theo từng đơn vị Thuế quản lý trực tiếp.\n- Đưa vào vận hành Ứng dụng tra cứu thông tin NĐPL, NNT và Ứng dụng thu thập thông tin vi phạm phục vụ công tác thanh tra, kiểm tra và quản lý thuế."
+      ]
+    },
+    {
+      "id": "draft_thong_bao_giai_trinh",
+      "title": "Thông báo Yêu cầu giải trình, bổ sung thông tin tài liệu về hóa đơn điện tử (Mẫu 01/TB-BSTT-NNT)",
+      "doc_type": "THÔNG BÁO",
+      "agency_parent": "TỔNG CỤC THUẾ",
+      "agency_name": "CỤC THUẾ TP. HỒ CHÍ MINH",
+      "unit_code": "CT-KTT",
+      "doc_number": "128/TB-CTHCM",
+      "republic_title": "CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM",
+      "motto": "Độc lập - Tự do - Hạnh phúc",
+      "location": "TP. Hồ Chí Minh",
+      "date_formatted": "ngày 24 tháng 10 năm 2026",
+      "subject": "Về việc yêu cầu giải trình, bổ sung thông tin tài liệu liên quan đến hóa đơn điện tử có dấu hiệu rủi ro cao",
+      "template_preset": "thong_bao",
+      "header_ratio": 45,
+      "purpose": "Yêu cầu Người nộp thuế giải trình và cung cấp tài liệu chứng minh tính hợp pháp của các hóa đơn điện tử đầu vào/đầu ra phát sinh trong kỳ theo đúng thời hạn 03 ngày làm việc.",
+      "recipients": [
+        "- Công ty TNHH Thương mại Dịch vụ ABC (MST: 0312345678);",
+        "- Phòng Thanh tra - Kiểm tra thuế số 1;",
+        "- Phòng Quản trị dữ liệu và Quản lý rủi ro (để phối hợp);",
+        "- Lưu: VT, KTT (2b)."
+      ],
+      "signer_role": "TRƯỞNG PHÒNG",
+      "signer_name": "Trần Văn B",
+      "legal_bases": [
+        "Căn cứ Luật Quản lý thuế số 38/2019/QH14 ngày 13 tháng 6 năm 2019;",
+        "Căn cứ Nghị định số 123/2020/NĐ-CP ngày 19 tháng 10 năm 2020 của Chính phủ quy định về hóa đơn, chứng từ;",
+        "Căn cứ kết quả đối chiếu dữ liệu rủi ro trên Hệ thống HĐĐT tập trung của ngành Thuế."
+      ],
+      "body_paragraphs": [
+        "Cục Thuế TP. Hồ Chí Minh thông báo và yêu cầu Công ty TNHH Thương mại Dịch vụ ABC (Mã số thuế: 0312345678) thực hiện giải trình và cung cấp tài liệu chứng minh nguồn gốc hàng hóa, tính hợp pháp của các số hóa đơn điện tử có dấu hiệu chênh lệch lớn giữa đầu vào và đầu ra trong kỳ kê khai thuế Quý III/2026.",
+        "Trong thời hạn 03 ngày làm việc kể từ ngày nhận được Thông báo này, yêu cầu Người đại diện theo pháp luật của Công ty gửi văn bản giải trình bằng phương thức điện tử qua Cổng dịch vụ công của cơ quan Thuế.",
+        "Quá thời hạn nêu trên nếu Công ty không gửi văn bản giải trình hoặc giải trình không chứng minh được tính hợp pháp của giao dịch, Cơ quan Thuế sẽ áp dụng các biện pháp quản lý theo quy định, bao gồm việc chuyển hình thức sử dụng HĐĐT có mã theo từng lần phát sinh hoặc ngừng sử dụng HĐĐT và phối hợp với cơ quan có thẩm quyền xử lý nghiêm theo quy định của pháp luật."
+      ]
     }
   ],
-  "gemini": {
-    "admin_doc_drive_folder_id": "16Ua7ZfjOl2klPOEMH5QxDtvUSQ9A-FTr",
-    "admin_doc_drive_folder_name": "____Automation Video____\\\\Văn thư"
-  },
   "ai_assistants": [
     {
       "id": "asst_tax_corp",
@@ -614,5 +640,50 @@
       "avatar_icon": "fa-file-signature",
       "badge_color": "amber"
     }
-  ]
+  ],
+  "entertainment_songs": [
+    {
+      "id": "song_2",
+      "title": "Dĩ Vãng Nhạt Nhòa",
+      "youtube_url": "https://www.youtube.com/watch?v=aahqBEJJigI",
+      "youtube_id": "aahqBEJJigI"
+    },
+    {
+      "title": "Ai rồi cũng sẽ khác",
+      "youtube_url": "https://www.youtube.com/watch?v=MJu_cgM6tMs",
+      "youtube_id": "MJu_cgM6tMs",
+      "id": "song_f53af910"
+    }
+  ],
+  "composer_default_params": {
+    "template_preset": "to_trinh",
+    "doc_format": "Hành chính (NĐ 30/2020/NĐ-CP)",
+    "doc_type": "TỜ TRÌNH",
+    "agency_parent": "THUẾ THÀNH PHỐ HỒ CHÍ MINH",
+    "agency_code": "DLRR",
+    "agency_name": "PHÒNG QTDL & QLRR",
+    "is_joint_doc": false,
+    "location": "Tp. Hồ Chí Minh",
+    "doc_date": "2026-10-28",
+    "doc_number_seq": "01",
+    "doc_number": "01/TTr-DLRR",
+    "header_ratio": 40,
+    "recipients": [
+      "Lưu: VT."
+    ],
+    "signer_role": "TRƯỞNG PHÒNG",
+    "signer_name": "Nguyễn Hoa Bắc",
+    "purpose": "Về việc phân tích các chức năng ứng dụng hỗ trợ công tác kiểm tra và cử nhân sự tham gia phân tích.",
+    "target_audience": "",
+    "legal_bases": "",
+    "structure_req": ""
+  },
+  "telegram": {
+    "bot_token": "8348691966:AAGcQS3NFcPxTtOphDEn4prU9tHnYdBsHaU",
+    "chat_id": "8929374740",
+    "enabled": true,
+    "bot_username": "BoomNam_Bot",
+    "bot_name": "Automation Video",
+    "last_tested": "04/11/2026 04:35"
+  }
 }

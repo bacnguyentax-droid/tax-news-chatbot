@@ -495,6 +495,33 @@ class ChiefSecretaryService:
         data["config"] = curr
         cls._save_data(data)
         return {"status": "success", "success": True, "message": "Đã lưu cấu hình Tổng Thư Ký thành công.", "config": curr}
+    _last_sync_timestamp: float = 0.0
+
+    @classmethod
+    def _auto_sync_if_needed(cls, force: bool = False) -> None:
+        """Tự động đồng bộ Google Calendar và Google Tasks nếu quá 3 phút hoặc khi chưa có cache"""
+        if not GoogleAuthService:
+            return
+        now_ts = time.time()
+        if not force and (now_ts - cls._last_sync_timestamp < 180):
+            return
+
+        try:
+            live_cal = GoogleAuthService.fetch_live_calendar_events()
+            live_tasks = GoogleAuthService.fetch_live_tasks()
+            if (live_cal is not None) or (live_tasks is not None):
+                data = cls._load_data()
+                if live_cal is not None:
+                    data["calendar_events"] = live_cal
+                if live_tasks is not None:
+                    data["tasks"] = live_tasks
+                data["last_synced_at"] = datetime.datetime.now().strftime("%H:%M:%S - %d/%m/%Y")
+                cls._save_data(data)
+                cls._last_sync_timestamp = now_ts
+                print(f"[ChiefSecretaryService] Tự động đồng bộ Google thành công: {len(data.get('calendar_events', []))} lịch, {len(data.get('tasks', []))} việc.")
+        except Exception as e:
+            print(f"[ChiefSecretaryService] Lỗi auto-sync Google: {e}")
+
     # =========================================================================
     # 2. GOOGLE CALENDAR & GOOGLE TASKS
     # =========================================================================
@@ -504,6 +531,7 @@ class ChiefSecretaryService:
         Lấy danh sách lịch làm việc Google Calendar:
         - filter_range: 'today' (Trong ngày), 'week' (Trong tuần), 'all' (Tất cả)
         """
+        cls._auto_sync_if_needed()
         data = cls._load_data()
         events = data.get("calendar_events", [])
         # Nếu chưa có events hoặc đang chứa dữ liệu mock cũ (cal_sun_3/cal_sun_4), tự động đồng bộ từ Google Calendar
@@ -523,6 +551,8 @@ class ChiefSecretaryService:
         sunday = monday + datetime.timedelta(days=6)
         monday_str = monday.strftime("%Y-%m-%d")
         sunday_str = sunday.strftime("%Y-%m-%d")
+        now_dt = datetime.datetime.now()
+
         # Cập nhật dynamic badges và flags cho các sự kiện
         today_events = []
         week_events = []
@@ -540,11 +570,18 @@ class ChiefSecretaryService:
             is_this_week = (monday_str <= ev_date <= sunday_str)
             ev["is_today"] = is_today
             ev["is_this_week"] = is_this_week
+            time_status = cls._get_event_time_status(ev, now_dt)
+            ev["time_status"] = time_status
             try:
                 dt_obj = datetime.datetime.strptime(ev_date, "%Y-%m-%d").date()
                 ev["day_name"] = _get_vn_day_name(dt_obj)
                 if is_today:
-                    ev["day_badge"] = "HÔM NAY"
+                    if time_status == "ongoing":
+                        ev["day_badge"] = "ĐANG DIỄN RA"
+                    elif time_status == "past":
+                        ev["day_badge"] = "ĐÃ QUA"
+                    else:
+                        ev["day_badge"] = "HÔM NAY"
                     ev["formatted_date"] = f"Hôm nay ({dt_obj.strftime('%d/%m/%Y')})"
                 elif dt_obj == (datetime.date.today() + datetime.timedelta(days=1)):
                     ev["day_badge"] = "NGÀY MAI"
@@ -627,10 +664,15 @@ class ChiefSecretaryService:
         Lấy danh sách công việc Google Tasks:
         - filter_range: 'today' (Trong ngày), 'week' (Trong tuần), 'completed' (Đã xong), 'all' (Tất cả)
         """
+        cls._auto_sync_if_needed()
         data = cls._load_data()
         tasks = data.get("tasks", [])
         if not tasks:
-            tasks = build_default_weekly_tasks()
+            live_tasks = GoogleAuthService.fetch_live_tasks() if GoogleAuthService else None
+            if live_tasks and len(live_tasks) > 0:
+                tasks = live_tasks
+            else:
+                tasks = build_default_weekly_tasks()
             data["tasks"] = tasks
             cls._save_data(data)
         today = datetime.date.today()
@@ -645,6 +687,7 @@ class ChiefSecretaryService:
         no_due_date_tasks = []
         for t in tasks:
             t_due = t.get("due_date", "")
+
             if t_due == "today":
                 t_due = today_str
                 t["due_date"] = today_str
@@ -652,10 +695,12 @@ class ChiefSecretaryService:
                 t_str = (datetime.date.today() + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
                 t_due = t_str
                 t["due_date"] = t_str
-            # QUAN TRỌNG: Chỉ coi là hôm nay khi CÓ due_date VÀ due_date đúng bằng hôm nay!
-            # Nếu không có ngày hạn cụ thể, KHÔNG đưa vào hôm nay!
+
+            # Việc hôm nay: CHỈ tính những việc được thiết lập lịch trong hôm nay (due_date == today_str)
+            # Không tính theo tên danh sách "Việc hôm nay" hay "Việc tối nay"
             is_today = bool(t_due and str(t_due).strip() == today_str)
             is_this_week = bool(t_due and (monday_str <= str(t_due).strip() <= sunday_str))
+
             t["is_today"] = is_today
             t["is_this_week"] = is_this_week
             if t_due and str(t_due).strip():
@@ -679,11 +724,12 @@ class ChiefSecretaryService:
                     t["status_badge"] = "CÔNG VIỆC"
                     t["formatted_due_date"] = str(t_due)
             else:
-                # Công việc không đề ngày cụ thể
+                # Công việc không đặt hạn ngày cụ thể
                 t["day_name"] = "Chưa đặt hạn"
                 t["status_badge"] = "CHƯA ĐẶT HẠN"
                 t["formatted_due_date"] = "Chưa đặt ngày hạn"
                 no_due_date_tasks.append(t)
+
             if not t.get("source"):
                 t["source"] = "Google Tasks (bacnguyentax@gmail.com)"
             if is_today:
@@ -860,10 +906,15 @@ class ChiefSecretaryService:
         return {"status": "success", "success": True, "message": "Đã bỏ qua thông báo.", "notifications": notifs}
 
     @classmethod
-    def _is_event_upcoming(cls, ev: Dict[str, Any], now_dt: Optional[datetime.datetime] = None) -> bool:
-        """Kiểm tra lịch làm việc có phải là 'chưa diễn ra' (thời điểm bắt đầu > thời điểm hiện tại) hay không"""
+    def _get_event_time_status(cls, ev: Dict[str, Any], now_dt: Optional[datetime.datetime] = None) -> str:
+        """
+        Xác định trạng thái thời gian của lịch sự kiện:
+        - 'upcoming': Sắp tới (chưa diễn ra)
+        - 'ongoing': Đang diễn ra
+        - 'past': Đã kết thúc
+        """
         if not isinstance(ev, dict):
-            return False
+            return "past"
         now_dt = now_dt or datetime.datetime.now()
         today_str = now_dt.strftime("%Y-%m-%d")
         tomorrow_str = (now_dt.date() + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
@@ -876,25 +927,50 @@ class ChiefSecretaryService:
 
         if ev_date:
             if ev_date < today_str:
-                return False
+                return "past"
             if ev_date > today_str:
-                return True
+                return "upcoming"
 
-        # Sự kiện diễn ra trong ngày hôm nay: kiểm tra giờ bắt đầu (start_time) so với giờ hiện tại
+        # Cùng ngày hôm nay: xét start_time và end_time
         start_time = str(ev.get("start_time") or "").strip()
         if not start_time and ev.get("time"):
             start_time = str(ev.get("time")).split("-")[0].strip()
 
-        if start_time:
-            try:
-                parts = start_time.split(":")
-                ev_h = int(parts[0])
-                ev_m = int(parts[1]) if len(parts) > 1 else 0
-                return (ev_h, ev_m) > (now_dt.hour, now_dt.minute)
-            except Exception:
-                return True
+        end_time = str(ev.get("end_time") or "").strip()
+        if not end_time and ev.get("time") and "-" in str(ev.get("time")):
+            end_time = str(ev.get("time")).split("-")[1].strip()
 
-        return True
+        if not start_time:
+            # Sự kiện cả ngày hôm nay -> coi là đang diễn ra
+            return "ongoing"
+
+        try:
+            sp = start_time.split(":")
+            sh, sm = int(sp[0]), int(sp[1]) if len(sp) > 1 else 0
+            start_min = sh * 60 + sm
+            now_min = now_dt.hour * 60 + now_dt.minute
+
+            if end_time:
+                ep = end_time.split(":")
+                eh, em = int(ep[0]), int(ep[1]) if len(ep) > 1 else 0
+                end_min = eh * 60 + em
+            else:
+                end_min = start_min + 60  # mặc định 60 phút nếu không có end_time
+
+            if now_min < start_min:
+                return "upcoming"
+            elif start_min <= now_min <= end_min:
+                return "ongoing"
+            else:
+                return "past"
+        except Exception:
+            return "upcoming"
+
+    @classmethod
+    def _is_event_upcoming(cls, ev: Dict[str, Any], now_dt: Optional[datetime.datetime] = None) -> bool:
+        """Kiểm tra lịch làm việc có phải là 'chưa kết thúc' (đang diễn ra hoặc sắp tới) hay không"""
+        status = cls._get_event_time_status(ev, now_dt)
+        return status in ("upcoming", "ongoing")
 
     @classmethod
     def generate_briefing(
@@ -905,9 +981,10 @@ class ChiefSecretaryService:
     ) -> Dict[str, Any]:
         """
         Tạo nội dung câu nói của Thư ký nhắc việc Cô Tấm:
-        - Chỉ báo cáo đối với những lịch làm việc nào CHƯA DIỄN RA.
-        - Chỉ báo cáo đối với những công việc nào TRONG PHẠM VI THIẾT LẬP mà CHƯA HOÀN THÀNH.
+        - Báo cáo chính xác tình trạng Lịch làm việc (đang diễn ra, sắp tới, đã qua).
+        - Báo cáo chính xác các Công việc chưa hoàn thành (kể cả việc hôm nay chưa đặt hạn ngày).
         """
+        cls._auto_sync_if_needed()
         cfg = cls.get_config()
         intro = cfg.get("intro_phrase") or cfg.get("opening_phrase") or "Dạ, em xin báo cáo Sếp Bắc"
         outro = cfg.get("outro_phrase") or cfg.get("closing_phrase") or "Em báo cáo hết ạ"
@@ -937,7 +1014,7 @@ class ChiefSecretaryService:
             if eff_task_range == "completed":
                 eff_task_range = "today"
 
-        # 1. Chọn tập sự kiện theo phạm vi rồi lọc CHỈ LỊCH CHƯA DIỄN RA
+        # 1. Chọn tập sự kiện theo phạm vi
         if eff_cal_range == "week":
             scoped_events = week_events
             cal_scope_label = "trong tuần này"
@@ -948,9 +1025,12 @@ class ChiefSecretaryService:
             scoped_events = today_events
             cal_scope_label = "hôm nay"
 
-        upcoming_events = [ev for ev in scoped_events if cls._is_event_upcoming(ev, now_dt)]
+        ongoing_events = [ev for ev in scoped_events if cls._get_event_time_status(ev, now_dt) == "ongoing"]
+        upcoming_events = [ev for ev in scoped_events if cls._get_event_time_status(ev, now_dt) == "upcoming"]
+        past_events = [ev for ev in scoped_events if cls._get_event_time_status(ev, now_dt) == "past"]
+        active_events = ongoing_events + upcoming_events
 
-        # 2. Chọn tập công việc theo đúng phạm vi thiết lập rồi lọc CHỈ CÔNG VIỆC CHƯA HOÀN THÀNH
+        # 2. Chọn tập công việc theo phạm vi
         if eff_task_range == "week":
             scoped_tasks = week_tasks
             task_scope_label = "trong tuần"
@@ -965,6 +1045,7 @@ class ChiefSecretaryService:
             task_scope_label = "trong ngày hôm nay"
 
         pending_tasks = [t for t in scoped_tasks if isinstance(t, dict) and not t.get("completed", False)]
+        completed_scoped = [t for t in scoped_tasks if isinstance(t, dict) and t.get("completed", False)]
 
         def _format_event_desc(ev: Dict[str, Any], include_date: bool = False) -> str:
             st = ev.get("start_time") or ev.get("time")
@@ -979,29 +1060,38 @@ class ChiefSecretaryService:
             time_prefix = f"lúc {dt} " if dt else ""
             return f"{time_prefix}{t.get('title', 'công việc')}".strip()
 
-        # TRƯỜNG HỢP 1: BÁO CÁO LỊCH LÀM VIỆC (Chỉ báo cáo lịch chưa diễn ra)
+        # TRƯỜNG HỢP 1: BÁO CÁO LỊCH LÀM VIỆC
         if briefing_type in ("calendar", "calendar_only", "cal"):
             include_date = (eff_cal_range != "today")
-            if upcoming_events:
-                ev_descs = [_format_event_desc(ev, include_date=include_date) for ev in upcoming_events[:8]]
-                raw_body = f"{cal_scope_label} sếp có {len(upcoming_events)} lịch làm việc chưa diễn ra trên Google Calendar: {'; '.join(ev_descs)}"
+            if active_events:
+                ev_descs = []
+                if ongoing_events:
+                    ev_descs.append("đang diễn ra: " + "; ".join([_format_event_desc(ev, include_date) for ev in ongoing_events]))
+                if upcoming_events:
+                    ev_descs.append("sắp tới: " + "; ".join([_format_event_desc(ev, include_date) for ev in upcoming_events[:6]]))
+                raw_body = f"{cal_scope_label} sếp có {len(active_events)} lịch làm việc: {'; '.join(ev_descs)}"
+            elif past_events:
+                p_titles = [ev.get("title", "lịch") for ev in past_events[:3]]
+                raw_body = f"{cal_scope_label} sếp có {len(past_events)} lịch làm việc ({', '.join(p_titles)}) nhưng đều đã kết thúc, hiện không còn lịch nào tiếp theo"
             else:
-                raw_body = f"{cal_scope_label} sếp không còn lịch làm việc nào chưa diễn ra trên Google Calendar"
+                raw_body = f"{cal_scope_label} sếp không có lịch làm việc nào được xếp trên Google Calendar"
             full_speech = f"{intro}, {raw_body}. {outro}."
-            title = f"Báo cáo lịch làm việc chưa diễn ra ({len(upcoming_events)} lịch)"
+            title = f"Báo cáo lịch làm việc ({len(active_events)} lịch hoạt động)"
 
-        # TRƯỜNG HỢP 2: BÁO CÁO CÔNG VIỆC (Chỉ báo cáo công việc trong phạm vi thiết lập mà chưa hoàn thành)
+        # TRƯỜNG HỢP 2: BÁO CÁO CÔNG VIỆC
         elif briefing_type in ("tasks", "task_only", "tasks_only", "task"):
             if pending_tasks:
                 task_descs = [_format_task_desc(t) for t in pending_tasks[:8]]
                 more_str = f" và {len(pending_tasks) - 8} công việc khác" if len(pending_tasks) > 8 else ""
                 raw_body = f"trong phạm vi {task_scope_label}, sếp có {len(pending_tasks)} công việc chưa hoàn thành cần xử lý: {'; '.join(task_descs)}{more_str}"
+            elif completed_scoped:
+                raw_body = f"trong phạm vi {task_scope_label}, sếp đã hoàn thành toàn bộ {len(completed_scoped)} công việc, không còn việc nào tồn đọng"
             else:
-                raw_body = f"trong phạm vi {task_scope_label}, sếp không có công việc nào chưa hoàn thành trên Google Tasks"
+                raw_body = f"trong phạm vi {task_scope_label}, sếp không có công việc nào trong danh sách Google Tasks"
             full_speech = f"{intro}, {raw_body}. {outro}."
-            title = f"Báo cáo công việc chưa hoàn thành - {task_scope_label} ({len(pending_tasks)} việc)"
+            title = f"Báo cáo công việc - {task_scope_label} ({len(pending_tasks)} việc cần làm)"
 
-        # TRƯỜNG HỢP 3: BÁO CÁO TẤT CẢ / BUỔI SÁNG (Tôn trọng thiết lập remind_calendar & remind_tasks)
+        # TRƯỜNG HỢP 3: BÁO CÁO TẤT CẢ / BUỔI SÁNG
         elif briefing_type in ("all", "morning", "full"):
             remind_cal = cfg.get("remind_calendar", True)
             remind_tasks = cfg.get("remind_tasks", True)
@@ -1011,25 +1101,37 @@ class ChiefSecretaryService:
             summary_bits = []
 
             if remind_cal:
-                if upcoming_events:
-                    summary_bits.append(f"có {len(upcoming_events)} lịch làm việc chưa diễn ra ({cal_scope_label})")
+                if ongoing_events and upcoming_events:
+                    summary_bits.append(f"có {len(ongoing_events)} lịch đang diễn ra và {len(upcoming_events)} lịch sắp tới ({cal_scope_label})")
+                elif ongoing_events:
+                    summary_bits.append(f"có {len(ongoing_events)} lịch đang diễn ra ({cal_scope_label})")
+                elif upcoming_events:
+                    summary_bits.append(f"có {len(upcoming_events)} lịch làm việc sắp tới ({cal_scope_label})")
+                elif past_events:
+                    summary_bits.append(f"có {len(past_events)} lịch ({cal_scope_label}) nhưng tất cả đều đã kết thúc")
                 else:
-                    summary_bits.append(f"không còn lịch làm việc nào chưa diễn ra ({cal_scope_label})")
+                    summary_bits.append(f"không có lịch làm việc nào ({cal_scope_label})")
 
             if remind_tasks:
                 if pending_tasks:
                     summary_bits.append(f"có {len(pending_tasks)} công việc chưa hoàn thành ({task_scope_label})")
+                elif completed_scoped:
+                    summary_bits.append(f"đã hoàn thành tất cả {len(completed_scoped)} công việc ({task_scope_label})")
                 else:
-                    summary_bits.append(f"không có công việc nào chưa hoàn thành ({task_scope_label})")
+                    summary_bits.append(f"không có công việc nào ({task_scope_label})")
 
             if summary_bits:
                 content_parts.append("hiện tại sếp " + " và ".join(summary_bits))
             else:
                 content_parts.append("hiện tại sếp đang tắt chế độ nhắc lịch và công việc trong cấu hình")
 
-            if remind_cal and upcoming_events:
-                ev_descs = [_format_event_desc(ev, include_date=include_date) for ev in upcoming_events[:6]]
-                content_parts.append(". Về lịch trình chưa diễn ra: " + "; ".join(ev_descs))
+            if remind_cal:
+                if ongoing_events:
+                    ong_descs = [_format_event_desc(ev, include_date=include_date) for ev in ongoing_events]
+                    content_parts.append(". Lịch đang diễn ra: " + "; ".join(ong_descs))
+                if upcoming_events:
+                    up_descs = [_format_event_desc(ev, include_date=include_date) for ev in upcoming_events[:5]]
+                    content_parts.append(". Lịch sắp tới: " + "; ".join(up_descs))
 
             if remind_tasks and pending_tasks:
                 task_descs = [_format_task_desc(t) for t in pending_tasks[:6]]
@@ -1038,10 +1140,10 @@ class ChiefSecretaryService:
 
             raw_body = "".join(content_parts)
             full_speech = f"{intro}, {raw_body}. {outro}."
-            title = f"Báo cáo lịch chưa diễn ra ({len(upcoming_events)}) & việc chưa xong ({len(pending_tasks)})"
+            title = f"Báo cáo lịch ({len(active_events)}) & việc cần làm ({len(pending_tasks)})"
 
         elif briefing_type == "evening":
-            # 21:00 tối: Nhắc lịch chưa diễn ra và công việc chưa hoàn thành của ngày hôm sau
+            # 21:00 tối: Nhắc lịch chưa diễn ra và công việc của ngày hôm sau
             tomorrow_events = [
                 e for e in all_events
                 if isinstance(e, dict) and (e.get("date") in ("tomorrow", tomorrow_str)) and cls._is_event_upcoming(e, now_dt)
@@ -1052,7 +1154,7 @@ class ChiefSecretaryService:
             ]
 
             content_parts = []
-            content_parts.append(f"ngày mai sếp có {len(tomorrow_events)} lịch làm việc chưa diễn ra và {len(tomorrow_tasks)} công việc chưa hoàn thành cần chuẩn bị")
+            content_parts.append(f"ngày mai sếp có {len(tomorrow_events)} lịch làm việc và {len(tomorrow_tasks)} công việc cần chuẩn bị")
 
             if tomorrow_events:
                 ev_descs = []
@@ -1070,8 +1172,8 @@ class ChiefSecretaryService:
             title = f"Báo cáo kế hoạch ngày mai ({cfg.get('evening_reminder_time', '21:00')})"
 
         else:  # urgent / trước 30 phút
-            if upcoming_events:
-                next_ev = upcoming_events[0]
+            if active_events:
+                next_ev = active_events[0]
                 st = next_ev.get("start_time") or next_ev.get("time") or ""
                 loc = f" tại {next_ev.get('location')}" if next_ev.get("location") else ""
                 raw_body = f"sắp đến giờ diễn ra lịch {next_ev.get('title', 'họp')}{loc} lúc {st}. Kính mời sếp chuẩn bị tài liệu"
@@ -1086,7 +1188,9 @@ class ChiefSecretaryService:
             "cal_range": eff_cal_range,
             "task_range": eff_task_range,
             "upcoming_events_count": len(upcoming_events),
-            "today_events_count": len(upcoming_events),
+            "today_events_count": len(scoped_events),
+            "active_events_count": len(active_events),
+            "ongoing_events_count": len(ongoing_events),
             "pending_tasks_count": len(pending_tasks),
             "intro": intro,
             "body": raw_body,

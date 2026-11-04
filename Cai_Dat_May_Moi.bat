@@ -33,12 +33,25 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 echo.
+echo 3. Kiem tra FFmpeg (Phuc vu cat ghep, chinh am luong va xuat video 9:16)...
+ffmpeg -version >nul 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo [CANH BAO] May tinh chua cai dat FFmpeg!
+    echo Goi y: Mo PowerShell (Admin) va go lenh sau de cai tu dong:
+    echo        winget install Gyan.FFmpeg
+    echo Hoac tai tai https://www.gyan.dev/ffmpeg/builds/ va them vao PATH.
+) else (
+    echo [OK] Da tim thay FFmpeg san sang tren may.
+)
+
+echo.
 echo =======================================================================
 echo    DA HOAN TAT CAI DAT TAT CA THU VIEN THANH CONG!
 echo.
 echo    De khoi chay cac ung dung:
-echo    - Chay TikTok Studio: Click file [Chay_TikTok_Studio.bat] (Cong 5150)
-echo    - Chay Manage App   : Click file [Chay_Manage_App.bat]   (Cong 5100)
+echo    - Chay Tax Video Web App : Click file [Chay_Web_App.bat]        (Cong 5050)
+echo    - Chay TikTok Studio     : Click file [Chay_TikTok_Studio.bat]  (Cong 5150)
+echo    - Chay Manage App        : Click file [Chay_Manage_App.bat]    (Cong 5100)
 echo =======================================================================
 echo.
 pause

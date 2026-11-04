@@ -1936,4 +1936,9 @@ if __name__ == "__main__":
     print(f"🚀 MANAGE APP - HỆ THỐNG QUÉT & TẢI VĂN BẢN GOOGLE DRIVE")
     print(f"🌐 Truy cập ứng dụng tại: http://localhost:{port}")
     print(f"=========================================================\n")
+    # Tự động đồng bộ Google Calendar & Tasks ngầm khi khởi động server
+    try:
+        threading.Thread(target=ChiefSecretaryService.sync_google, daemon=True).start()
+    except Exception as _e_sync:
+        print(f"[InitSync] {_e_sync}")
     app.run(host="0.0.0.0", port=port, debug=False)
