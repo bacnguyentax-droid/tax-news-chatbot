@@ -520,17 +520,18 @@ DEFAULT_CONFIG: Dict[str, Any] = {
 DEFAULT_AI_ASSISTANTS: List[Dict[str, Any]] = [
     {
         "id": "asst_tax_corp",
-        "name": "Trợ lý Pháp chế & Thuế Doanh Nghiệp",
-        "nickname": "Doraemon",
-        "description": "Chuyên gia giải đáp chính sách thuế TNDN, GTGT, HĐĐT, giao dịch liên kết và chế độ kế toán thuế doanh nghiệp.",
+        "name": "Trợ lý Chính sách Thuế",
+        "nickname": "Mini-Dora",
+        "description": "Chuyên gia giải đáp về chính sách thuế.",
         "drive_folder_ids": ["1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK"],
         "drive_folder_names": ["Tax_Nghiệp vụ thuế"],
         "filter_tax_only": True,
-        "enable_web_search": False,
+        "enable_web_search": True,
         "system_prompt": "Bạn là Trợ lý AI cao cấp chuyên về Pháp chế và Chính sách Thuế Doanh nghiệp Việt Nam. Hãy trả lời chuẩn xác, văn phong chuyên nghiệp, dẫn chiếu đầy đủ Luật, Nghị định, Thông tư và căn cứ vào các tài liệu tham khảo trong Google Drive.",
         "model": "gemini-3.5-flash-lite",
-        "avatar_icon": "fa-briefcase",
-        "badge_color": "emerald"
+        "temperature": 0.2,
+        "avatar_icon": "fa-robot",
+        "badge_color": "sky"
     },
     {
         "id": "asst_tax_risk",
@@ -543,22 +544,9 @@ DEFAULT_AI_ASSISTANTS: List[Dict[str, Any]] = [
         "enable_web_search": False,
         "system_prompt": "Bạn là Trợ lý AI chuyên gia về Quản lý rủi ro và Kiểm soát hóa đơn điện tử ngành Thuế. Hãy phân tích sắc bén, chỉ ra các nguy cơ rủi ro và giải pháp xử lý theo quy định.",
         "model": "gemini-3.5-flash-lite",
+        "temperature": 0.2,
         "avatar_icon": "fa-shield-halved",
         "badge_color": "rose"
-    },
-    {
-        "id": "asst_nd30_standard",
-        "name": "Trợ lý Thể Thức & Soạn Thảo Văn Bản NĐ 30",
-        "nickname": "Shizuka",
-        "description": "Thẩm định thể thức, bố cục, phông chữ, cỡ chữ, căn lề và phong cách soạn thảo văn bản hành chính theo chuẩn Nghị định 30/2020/NĐ-CP.",
-        "drive_folder_ids": ["1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK"],
-        "drive_folder_names": ["Tax_Nghiệp vụ thuế"],
-        "filter_tax_only": False,
-        "enable_web_search": False,
-        "system_prompt": "Bạn là Chuyên gia Soạn thảo và Thẩm định Thể thức Văn bản Hành chính chuẩn Nghị định 30/2020/NĐ-CP của Chính phủ Việt Nam.",
-        "model": "gemini-3.5-flash-lite",
-        "avatar_icon": "fa-file-signature",
-        "badge_color": "amber"
     }
 ]
 
@@ -1065,7 +1053,9 @@ class ConfigManager:
         found = False
         for idx, item in enumerate(assistants):
             if item.get("id") == asst_id:
-                assistants[idx] = asst_data
+                # Cập nhật các trường mới mà vẫn bảo toàn metadata sẵn có (avatar_icon, badge_color, drive_folder_names, ...)
+                item.update(asst_data)
+                asst_data = item
                 found = True
                 break
         if not found:

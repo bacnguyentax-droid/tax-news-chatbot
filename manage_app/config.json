@@ -453,12 +453,9 @@
       "name": "Thư ký Thạch Sanh",
       "character": "Thạch Sanh",
       "appearance": "Dũng sĩ vạm vỡ, áo nâu thắt đai vàng, đeo rìu chiến dũng mãnh sau lưng, mắt sáng kiên nghị",
-      "role": "Thư ký Tổng hợp Tin tức & Cảnh báo Rủi ro Pháp lý",
-      "instruction": "Chính xác: Điểm tên đúng văn bản pháp luật, số Nghị định/Thông tư (nếu có).\nTrích nguồn: Luôn kèm theo đường dẫn (link) tới bài viết gốc.",
+      "role": "Thư ký Tổng hợp Tin tức về Thuế",
+      "instruction": "\"Đóng vai trò là một chuyên gia tư vấn thuế và biên tập viên tin tức tài chính. Hãy tìm kiếm trên internet và các nền tảng mạng xã hội để tổng hợp các tin tức, cập nhật chính sách pháp luật về thuế, và các thông báo mới nhất từ cơ quan thuế trong 24 giờ qua.\n\nYêu cầu phân loại và trình bày nội dung:\nHãy chắt lọc thông tin và chia thành 3 nhóm đối tượng cụ thể sau:\n\nNhóm Cá nhân: Các tin tức về Thuế thu nhập cá nhân (TNCN), quy định hoàn thuế, thay đổi mức giảm trừ gia cảnh, hướng dẫn quyết toán thuế, v.v.\n\nNhóm Hộ kinh doanh: Các quy định về thuế khoán, kê khai thuế GTGT, hóa đơn điện tử khởi tạo từ máy tính tiền, hướng dẫn đăng ký kinh doanh, v.v.\n\nNhóm Tổ chức, Doanh nghiệp: Cập nhật về Thuế thu nhập doanh nghiệp (TNDN), các nghị định giảm/gia hạn thời gian nộp thuế, ưu đãi đầu tư, quy định hải quan, hoặc các lưu ý về thanh tra/kiểm tra thuế.\n\nTiêu chuẩn đầu ra:\n\nSúc tích: Dùng gạch đầu dòng để tóm tắt các điểm thay đổi hoặc lưu ý cốt lõi nhất.\n\nChính xác: Điểm tên đúng văn bản pháp luật, số Nghị định/Thông tư (nếu có).\n\nTrích nguồn: Luôn kèm theo đường dẫn (link) tới bài viết gốc hoặc cổng thông tin điện tử uy tín để tôi tiện tra cứu.\"",
       "scheduled_time": "08:00",
-      "created_at": "24/10/2026 08:00:00",
-      "avatar_icon": "fa-shield-halved",
-      "badge_color": "emerald",
       "search_time_range": "1_week",
       "search_from_date": "",
       "search_to_date": ""
@@ -468,12 +465,12 @@
       "name": "Thư ký Mai An Tiêm",
       "character": "Mai An Tiêm",
       "appearance": "Tự lực cánh sinh kiên định, áo xanh lục tươi sáng, đầu đội quả dưa hấu sọc đỏ xanh tươi mát",
-      "role": "Thư ký Tin tức Kinh tế Nông nghiệp, Ngoại thương & Khởi nghiệp",
-      "instruction": "Tìm kiếm và phân tích các tin tức thị trường kinh tế vĩ mô, tình hình xuất nhập khẩu, chính sách ưu đãi đầu tư, nông nghiệp công nghệ cao và các cơ hội kinh doanh mới tại Việt Nam.",
+      "role": "Thư ký Tin tức về AI",
+      "instruction": "\"Đóng vai trò là một biên tập viên tin tức công nghệ. Hãy tìm kiếm và tổng hợp các sự kiện, tin tức mới nhất trong 24 giờ qua về Trí tuệ nhân tạo (AI) trên toàn cầu.\n\nNội dung cần tập trung:\n\nCập nhật nền tảng: Các mô hình mới, tính năng mới, hoặc thông báo quan trọng từ các công ty AI hàng đầu như ChatGPT (OpenAI), Gemini (Google), Claude (Anthropic), DeepSeek, Copilot (Microsoft), và Llama (Meta).\n\nXu hướng & Đột phá: Các ứng dụng thực tế nổi bật, đột phá trong nghiên cứu hoặc tin tức về đầu tư, pháp lý liên quan đến AI.\n\nYêu cầu trình bày (dưới dạng bản tin ngắn gọn):\n\nTiêu điểm: 1-2 tin tức quan trọng nhất ngày.\n\nĐiểm tin các nền tảng: Gạch đầu dòng các cập nhật (chỉ nêu nền tảng có tin mới).\n\nPhong cách: Súc tích, đi thẳng vào trọng tâm, có kèm liên kết bài viết gốc để tiện tham khảo.\"",
       "scheduled_time": "08:30",
-      "created_at": "24/10/2026 08:30:00",
-      "avatar_icon": "fa-seedling",
-      "badge_color": "teal"
+      "search_time_range": "1_week",
+      "search_from_date": "",
+      "search_to_date": ""
     }
   ],
   "drafted_documents": [
@@ -591,21 +588,17 @@
   "ai_assistants": [
     {
       "id": "asst_tax_corp",
-      "name": "Trợ lý Pháp chế & Thuế Doanh Nghiệp",
-      "nickname": "Doraemon",
-      "description": "Chuyên gia giải đáp chính sách thuế TNDN, GTGT, HĐĐT, giao dịch liên kết và chế độ kế toán thuế doanh nghiệp.",
+      "name": "Trợ lý Chính sách Thuế",
+      "nickname": "Mini-Dora",
+      "description": "Chuyên gia giải đáp về chính sách thuế chuyên sâu.",
+      "system_prompt": "Bạn là Trợ lý AI cao cấp chuyên về Pháp chế và Chính sách Thuế Doanh nghiệp Việt Nam.",
       "drive_folder_ids": [
         "1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK"
       ],
-      "drive_folder_names": [
-        "Tax_Nghiệp vụ thuế"
-      ],
       "filter_tax_only": true,
-      "enable_web_search": false,
-      "system_prompt": "Bạn là Trợ lý AI cao cấp chuyên về Pháp chế và Chính sách Thuế Doanh nghiệp Việt Nam. Hãy trả lời chuẩn xác, văn phong chuyên nghiệp, dẫn chiếu đầy đủ Luật, Nghị định, Thông tư và căn cứ vào các tài liệu tham khảo trong Google Drive.",
+      "enable_web_search": true,
       "model": "gemini-3.5-flash-lite",
-      "avatar_icon": "fa-briefcase",
-      "badge_color": "emerald"
+      "temperature": 0.2
     },
     {
       "id": "asst_tax_risk",
@@ -624,24 +617,6 @@
       "model": "gemini-3.5-flash-lite",
       "avatar_icon": "fa-shield-halved",
       "badge_color": "rose"
-    },
-    {
-      "id": "asst_nd30_standard",
-      "name": "Trợ lý Thể Thức & Soạn Thảo Văn Bản NĐ 30",
-      "nickname": "Shizuka",
-      "description": "Thẩm định thể thức, bố cục, phông chữ, cỡ chữ, căn lề và phong cách soạn thảo văn bản hành chính theo chuẩn Nghị định 30/2020/NĐ-CP.",
-      "drive_folder_ids": [
-        "1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK"
-      ],
-      "drive_folder_names": [
-        "Tax_Nghiệp vụ thuế"
-      ],
-      "filter_tax_only": false,
-      "enable_web_search": false,
-      "system_prompt": "Bạn là Chuyên gia Soạn thảo và Thẩm định Thể thức Văn bản Hành chính chuẩn Nghị định 30/2020/NĐ-CP của Chính phủ Việt Nam.",
-      "model": "gemini-3.5-flash-lite",
-      "avatar_icon": "fa-file-signature",
-      "badge_color": "amber"
     }
   ],
   "entertainment_songs": [
