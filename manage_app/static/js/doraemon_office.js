@@ -563,7 +563,7 @@
 
             this.birthdayAudio = new Audio('/static/audio/phan_dinh_tung_birthday.mp3');
 
-            this.birthdayAudio.preload = 'auto';
+            this.birthdayAudio.preload = 'none';
 
             this.birthdayAudio.addEventListener('ended', () => {
 
@@ -4378,13 +4378,13 @@
 
 
 
-            this.audioPlayer.play();
+            if (this.audioPlayer) { this.audioPlayer.updateUI(); }
 
             const startAudioOnFirstInteraction = () => {
 
-                if (this.audioPlayer && !this.audioPlayer.isPlaying) {
+                if (false && this.audioPlayer && !this.audioPlayer.isPlaying) {
 
-                    this.audioPlayer.play();
+                    if (this.audioPlayer) { this.audioPlayer.updateUI(); }
 
                 }
 
@@ -4396,11 +4396,11 @@
 
             };
 
-            window.addEventListener('click', startAudioOnFirstInteraction, { once: true });
+            // Mặc định không tự phát nhạc khi click chuột lần đầu
 
-            window.addEventListener('mousemove', startAudioOnFirstInteraction, { once: true });
+            // Mặc định không tự phát nhạc khi di chuột lần đầu
 
-            window.addEventListener('keydown', startAudioOnFirstInteraction, { once: true });
+            // Mặc định không tự phát nhạc khi nhấn phím lần đầu
 
         }
 
@@ -14182,7 +14182,7 @@
 
             if (this.wasBgmPlayingBeforeVideo && this.audioPlayer) {
 
-                this.audioPlayer.play();
+                if (this.audioPlayer) { this.audioPlayer.updateUI(); }
 
             }
 

@@ -114,50 +114,80 @@ class NotebookLMAutoService:
 
     @staticmethod
     async def _async_sync_notebooks() -> Dict[str, Any]:
-        """Lấy danh sách Notebook thật từ tài khoản Google NotebookLM và đồng bộ vào config.json"""
+        """Lấy danh sách Notebook thật từ tài khoản Google NotebookLM và đồng bộ chính xác 100% vào config.json"""
         from notebooklm import NotebookLMClient
+        from drive_service import vn_abc_sort_key
         try:
             async with NotebookLMClient.from_storage() as client:
                 google_notebooks = await client.notebooks.list()
                 
-                # Đọc danh sách hiện tại từ config
+                # Đọc danh sách hiện tại từ config để giữ lại id nội bộ / cờ mặc định nếu trùng
                 current_nbs = ConfigManager.get_notebooks()
+                by_gid = {c.get("google_notebook_id"): c for c in current_nbs if isinstance(c, dict) and c.get("google_notebook_id")}
+                by_name = {c.get("name", "").strip().lower(): c for c in current_nbs if isinstance(c, dict) and c.get("name")}
                 
+                synced_nbs = []
                 matched_count = 0
+                seen_gids = set()
+                
                 for g_nb in google_notebooks:
-                    g_title = g_nb.title.strip()
+                    g_title = (g_nb.title or "").strip()
                     g_id = g_nb.id
+                    if not g_title or g_id in seen_gids:
+                        continue
+                    seen_gids.add(g_id)
                     
-                    found = False
-                    for c_nb in current_nbs:
-                        if c_nb.get("name", "").strip().lower() == g_title.lower():
-                            c_nb["google_notebook_id"] = g_id
-                            c_nb["sources_count"] = getattr(g_nb, "sources_count", 0)
-                            c_nb["url"] = f"https://notebooklm.google.com/notebook/{g_id}"
-                            found = True
-                            matched_count += 1
-                            break
-                    
-                    # Nếu trên Google có notebook mà local chưa có, thêm mới
-                    if not found:
-                        new_item = {
+                    existing = by_gid.get(g_id) or by_name.get(g_title.lower())
+                    sources_cnt = getattr(g_nb, "sources_count", 0)
+                    if existing:
+                        matched_count += 1
+                        item = {
+                            **existing,
+                            "name": g_title,
+                            "google_notebook_id": g_id,
+                            "sources_count": sources_cnt,
+                            "url": f"https://notebooklm.google.com/notebook/{g_id}",
+                            "folder_name": g_title,
+                            "is_tax": g_title.strip('-_ ').lower().startswith("tax")
+                        }
+                    else:
+                        item = {
                             "id": f"nb_{g_id[:8]}",
                             "name": g_title,
                             "google_notebook_id": g_id,
+                            "sources_count": sources_cnt,
                             "url": f"https://notebooklm.google.com/notebook/{g_id}",
                             "folder_name": g_title,
-                            "description": f"Đồng bộ từ Google NotebookLM ({getattr(g_nb, 'sources_count', 0)} nguồn)",
-                            "is_default": False
+                            "description": f"Đồng bộ từ Google NotebookLM ({sources_cnt} nguồn)",
+                            "is_default": False,
+                            "is_tax": g_title.strip('-_ ').lower().startswith("tax")
                         }
-                        current_nbs.append(new_item)
+                    synced_nbs.append(item)
 
-                ConfigManager.save_notebooks(current_nbs)
+                if synced_nbs:
+                    # Đảm bảo Tax_Nghiệp vụ thuế (hoặc 1 sổ đầu tiên) là mặc định
+                    has_default = any(nb.get("is_default") for nb in synced_nbs)
+                    if not has_default:
+                        for nb in synced_nbs:
+                            if nb.get("name", "").strip().lower() == "tax_nghiệp vụ thuế":
+                                nb["is_default"] = True
+                                has_default = True
+                                break
+                        if not has_default:
+                            synced_nbs[0]["is_default"] = True
+
+                    # Sắp xếp toàn bộ sổ ghi chú theo đúng thứ tự bảng chữ cái tiếng Việt (ABC)
+                    synced_nbs.sort(key=lambda x: vn_abc_sort_key(x.get("name", "")))
+                    ConfigManager.save_notebooks(synced_nbs)
+                else:
+                    synced_nbs = current_nbs
+
                 return {
                     "success": True,
                     "total_google": len(google_notebooks),
                     "matched": matched_count,
-                    "notebooks": current_nbs,
-                    "message": f"Đã đồng bộ thành công {len(google_notebooks)} sổ ghi chú từ Google NotebookLM!"
+                    "notebooks": synced_nbs,
+                    "message": f"Đã đồng bộ thành công {len(synced_nbs)} sổ ghi chú thực tế từ Google NotebookLM!"
                 }
         except Exception as e:
             return {

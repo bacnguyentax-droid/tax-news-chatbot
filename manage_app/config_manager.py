@@ -486,6 +486,33 @@ DEFAULT_NOTEBOOKS: List[Dict[str, Any]] = [
         "drive_folder_id": "1umwCgSyYGORf1EZ39urwmQDUZWViftdY",
         "description": "Sổ ghi chú và tài liệu vị trí việc làm ngành Thuế",
         "is_default": False
+    },
+    {
+        "id": "nb_tax_du_thao_nvt",
+        "name": "Tax_dự thảo NVT",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax_dự thảo NVT",
+        "drive_folder_id": "1ih1BMqm-159fY49vSZ6kBsxTfniLOLRh",
+        "description": "Sổ ghi chú tổng hợp các dự thảo văn bản và nghiệp vụ thuế (Tax_dự thảo NVT)",
+        "is_default": False
+    },
+    {
+        "id": "nb_tax_kinh_nghiem_quan_ly",
+        "name": "Tax_Kinh_nghiệm_công tác quản lý",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax_Kinh_nghiệm_công tác quản lý",
+        "drive_folder_id": "1miBVYAipYkcgzKa4hPvxRETqUbJCVcbq",
+        "description": "Kinh nghiệm thực tiễn công tác chỉ đạo và quản lý thuế",
+        "is_default": False
+    },
+    {
+        "id": "nb_tax_qlrr_nghiep_vu",
+        "name": "Tax_QLRR_Nghiệp vụ",
+        "url": "https://notebooklm.google.com/",
+        "folder_name": "Tax_QLRR_Nghiệp vụ",
+        "drive_folder_id": "10FLzrPxQqY6WGmKvtr0Bt4KX2PJtSIvs",
+        "description": "Nghiệp vụ Quản lý rủi ro chuyên sâu ngành Thuế",
+        "is_default": False
     }
 ]
 
@@ -761,11 +788,11 @@ class ConfigManager:
 
     @staticmethod
     def get_notebooks() -> List[Dict[str, Any]]:
-        """Lấy danh sách các notebook trong NotebookLM"""
+        """Lấy danh sách các notebook trong NotebookLM (giữ nguyên danh sách thực tế đã đồng bộ)"""
         config = ConfigManager.load_config()
         notebooks = config.get("notebooklm", {}).get("notebooks")
         if not notebooks or not isinstance(notebooks, list):
-            notebooks = DEFAULT_NOTEBOOKS.copy()
+            notebooks = [nb.copy() for nb in DEFAULT_NOTEBOOKS]
             ConfigManager.save_notebooks(notebooks)
         return notebooks
 

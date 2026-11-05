@@ -8,7 +8,22 @@ createApp({
         const urlMenu = urlParams.get('menu') || window.location.hash.replace('#', '');
         const validMenus = ['office', 'admin_checker', 'admin_composer', 'scanner', 'uploader', 'policy_settings', 'general_settings', 'ai_assistants_settings', 'ai_assistant_chat', 'secretaries_settings', 'music_settings', 'chief_secretary_reminders', 'chief_secretary_kpi', 'chief_secretary_settings'];
         const activeMenu = ref((validMenus.includes(urlMenu) || urlMenu.startsWith('asst_')) ? urlMenu : 'office');
-        const isSidebarCollapsed = ref(false);
+        const isSidebarCollapsed = ref(localStorage.getItem('hb_sidebar_collapsed') === 'true');
+        const toggleSidebarCollapse = () => {
+            isSidebarCollapsed.value = !isSidebarCollapsed.value;
+            try { localStorage.setItem('hb_sidebar_collapsed', String(isSidebarCollapsed.value)); } catch (e) {}
+            setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 260);
+        };
+        const isFooterStatusOpen = ref(localStorage.getItem('hb_sidebar_footer_open') !== 'false');
+        const toggleFooterStatus = () => {
+            isFooterStatusOpen.value = !isFooterStatusOpen.value;
+            try { localStorage.setItem('hb_sidebar_footer_open', String(isFooterStatusOpen.value)); } catch (e) {}
+        };
+        let savedGroups = null;
+        try {
+            const raw = localStorage.getItem('hb_menu_groups_open');
+            if (raw) savedGroups = JSON.parse(raw);
+        } catch (e) {}
         // Mở / Đóng các nhóm menu cấp 1 (expand / collapse)
         const menuGroupsOpen = ref({
             admin_docs: true,
@@ -20,8 +35,28 @@ createApp({
         });
         const toggleMenuGroup = (groupKey) => {
             if (menuGroupsOpen.value[groupKey] !== undefined) {
-                menuGroupsOpen.value[groupKey] = !menuGroupsOpen.value[groupKey];
+                if (isSidebarCollapsed.value) {
+                    isSidebarCollapsed.value = false;
+                    try { localStorage.setItem('hb_sidebar_collapsed', 'false'); } catch (e) {}
+                    menuGroupsOpen.value[groupKey] = true;
+                } else {
+                    menuGroupsOpen.value[groupKey] = !menuGroupsOpen.value[groupKey];
+                }
+                try { localStorage.setItem('hb_menu_groups_open', JSON.stringify(menuGroupsOpen.value)); } catch (e) {}
             }
+        };
+        if (savedGroups && typeof savedGroups === 'object') {
+            Object.keys(menuGroupsOpen.value).forEach(k => {
+                if (typeof savedGroups[k] === 'boolean') menuGroupsOpen.value[k] = savedGroups[k];
+            });
+        }
+        const areAllGroupsExpanded = computed(() => Object.values(menuGroupsOpen.value).every(Boolean));
+        const toggleAllMenuGroups = () => {
+            const targetState = !areAllGroupsExpanded.value;
+            Object.keys(menuGroupsOpen.value).forEach(k => {
+                menuGroupsOpen.value[k] = targetState;
+            });
+            try { localStorage.setItem('hb_menu_groups_open', JSON.stringify(menuGroupsOpen.value)); } catch (e) {}
         };
         const activeTab = computed({
             get: () => activeMenu.value,
@@ -92,9 +127,23 @@ createApp({
         const folders = ref([
             { id: '1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK', name: 'Tax_Nghiệp vụ thuế', raw_name: 'Tax_Nghiệp vụ thuế', clean_name: 'Tax_Nghiệp vụ thuế', is_tax: true }
         ]);
+        const cleanDisplayFolderName = (str) => {
+            return String(str || '')
+                .replace(/^[📁\s]+/u, '')
+                .replace(/\s*⭐\s*\[Mặc định\]\s*$/i, '')
+                .replace(/^[\-_\s]+|[\-_\s]+$/g, '')
+                .trim();
+        };
+        const sortVietnameseABC = (aStr, bStr) => {
+            const cleanA = cleanDisplayFolderName(aStr).replace(/[\-_\s]+/g, ' ').trim();
+            const cleanB = cleanDisplayFolderName(bStr).replace(/[\-_\s]+/g, ' ').trim();
+            const baseCmp = cleanA.localeCompare(cleanB, 'vi', { sensitivity: 'base', numeric: true });
+            if (baseCmp !== 0) return baseCmp;
+            return cleanA.localeCompare(cleanB, 'vi', { sensitivity: 'variant', numeric: true });
+        };
         const getFolderName = (id) => {
             const f = folders.value.find(item => item.id === id);
-            return f ? (f.raw_name || f.clean_name || f.name) : 'Tax_Nghiệp vụ thuế';
+            return f ? (f.clean_name || f.raw_name || f.name) : 'Tax_Nghiệp vụ thuế';
         };
         const updateTaxFilteredLists = () => {
             if (filterTaxOnly.value) {
@@ -102,7 +151,7 @@ createApp({
                     folders.value = allDriveFolders.value.filter(f => f.is_tax || (f.name && f.name.toLowerCase().includes('tax')) || (f.raw_name && f.raw_name.toLowerCase().includes('tax')));
                 }
                 if (allNotebooks.value && allNotebooks.value.length > 0) {
-                    notebooks.value = allNotebooks.value.filter(n => n.is_tax || (n.name && n.name.toLowerCase().includes('tax')));
+                    notebooks.value = allNotebooks.value.filter(n => n.is_tax !== undefined ? n.is_tax : (n.name && cleanDisplayFolderName(n.name).toLowerCase().startsWith('tax')));
                 }
             } else {
                 if (allDriveFolders.value && allDriveFolders.value.length > 0) {
@@ -112,13 +161,23 @@ createApp({
                     notebooks.value = [...allNotebooks.value];
                 }
             }
+            if (folders.value && folders.value.length > 0) {
+                folders.value = [...folders.value].sort((a, b) =>
+                    sortVietnameseABC(a.clean_name || a.raw_name || a.name, b.clean_name || b.raw_name || b.name)
+                );
+            }
+            if (notebooks.value && notebooks.value.length > 0) {
+                notebooks.value = [...notebooks.value].sort((a, b) =>
+                    sortVietnameseABC(a.name, b.name)
+                );
+            }
             if (folders.value.length > 0) {
                 const currentMatch = folders.value.find(f => f.id === defaultFolderId.value);
                 if (!currentMatch) {
                     const taxDefault = folders.value.find(f => (f.raw_name && f.raw_name.includes('Nghiệp vụ thuế')) || (f.name && f.name.includes('Nghiệp vụ thuế')));
                     if (taxDefault) {
                         defaultFolderId.value = taxDefault.id;
-                        defaultFolderName.value = taxDefault.raw_name || taxDefault.clean_name || taxDefault.name;
+                        defaultFolderName.value = taxDefault.clean_name || taxDefault.raw_name || taxDefault.name;
                     }
                 }
             }
@@ -223,7 +282,8 @@ createApp({
                         sources.value = data.sources;
                     }
                     if (data.notebooks) {
-                        notebooks.value = data.notebooks;
+                        allNotebooks.value = data.notebooks;
+                        updateTaxFilteredLists();
                     }
                     if (data.default_notebook_id) {
                         defaultNotebookId.value = data.default_notebook_id;
@@ -239,13 +299,13 @@ createApp({
             } catch (e) {
                 console.error('Lỗi nạp config:', e);
             }
-            // 3. Nạp danh sách thư mục Google Drive sạch
+            // 3. Nạp danh sách thư mục Google Drive & NotebookLM từ cache trước để hiển thị tức thì
             loadDriveFolders();
-            // 4. Nạp danh mục website nguồn
             loadSources();
-            // 5. Nạp danh mục NotebookLM
             loadNotebooks();
             checkNotebookLMAutoStatus();
+            // 4. Tự động đồng bộ thời gian thực cả Google Drive và Google NotebookLM ngay khi truy cập website
+            refreshDriveAndNotebooks(true);
             // Lưu ý: Mặc định mở lên không thực hiện dò quét tự động
         };
         // Tự động lưu giá trị Lĩnh vực nhập sau cùng
@@ -280,7 +340,7 @@ createApp({
         };
         const isTagSelected = (tag) => {
             if (!fieldsInput.value) return false;
-            return fieldsInput.value.toLowerCase().includes(tag.toLowerCase());
+            return fieldsInput.value.split(',').some(s => s.trim().toLowerCase() === tag.toLowerCase());
         };
         // Thiết lập bộ lọc ngày nhanh chuẩn: Hôm nay, 1 tuần qua, 2 tuần qua, 30 ngày qua, năm hiện hành, tất cả văn bản
         const applyDatePreset = (preset) => {
@@ -379,6 +439,7 @@ createApp({
         // Danh sách nguồn website xuất hiện trong kết quả
         const uniqueSources = computed(() => {
             const set = new Set();
+            (sources.value || []).forEach(s => { if (s && s.domain && s.enabled !== false) set.add(s.domain); });
             documents.value.forEach(d => { if (d.source) set.add(d.source); });
             return Array.from(set);
         });
@@ -1109,22 +1170,65 @@ createApp({
                 isTriggeringLogin.value = false;
             }
         };
-        const syncGoogleNotebooks = async () => {
-            isSyncingGoogleNotebooks.value = true;
+        const isRefreshingDriveAndNotebooks = ref(false);
+        const refreshDriveAndNotebooks = async (silent = false) => {
+            if (isRefreshingDriveAndNotebooks.value) return;
+            isRefreshingDriveAndNotebooks.value = true;
             try {
-                const res = await fetch('/api/notebooklm/auto/sync-notebooks', {
+                const res = await fetch('/api/sync-drive-notebooklm', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' }
                 });
                 const data = await res.json();
                 if (data.success) {
-                    await loadNotebooks();
-                    showToast(data.message, 'success');
-                } else {
-                    showToast(data.message || 'Lỗi đồng bộ sổ ghi chú', 'error');
+                    if (data.folders && data.folders.length > 0) {
+                        allDriveFolders.value = data.folders;
+                    }
+                    if (data.notebooks && data.notebooks.length > 0) {
+                        allNotebooks.value = data.notebooks;
+                    }
+                    updateTaxFilteredLists();
+                    if (data.default_folder_id) {
+                        defaultFolderId.value = data.default_folder_id;
+                    }
+                    if (data.default_notebook_id) {
+                        defaultNotebookId.value = data.default_notebook_id;
+                        if (!notebooks.value.some(n => n.id === selectedNotebookForBatch.value)) {
+                            selectedNotebookForBatch.value = data.default_notebook_id;
+                        }
+                        if (!notebooks.value.some(n => n.id === batchUploadedNotebookId.value)) {
+                            batchUploadedNotebookId.value = data.default_notebook_id;
+                        }
+                    }
+                    if (documents.value && documents.value.length > 0) {
+                        documents.value.forEach(doc => {
+                            if (!doc.selected_folder_id || !folders.value.some(f => f.id === doc.selected_folder_id)) {
+                                doc.selected_folder_id = defaultFolderId.value;
+                            }
+                            if (!doc.selected_notebook_id || !notebooks.value.some(n => n.id === doc.selected_notebook_id)) {
+                                doc.selected_notebook_id = defaultNotebookId.value;
+                            }
+                        });
+                    }
+                    if (!silent) {
+                        showToast(data.message || 'Đã làm mới danh sách thư mục Google Drive và NotebookLM!', 'success');
+                    }
+                } else if (!silent) {
+                    showToast(data.message || 'Lỗi khi làm mới danh sách', 'warning');
                 }
             } catch (e) {
-                showToast('Lỗi kết nối khi đồng bộ sổ ghi chú: ' + e.message, 'error');
+                console.error('Lỗi đồng bộ Drive & NotebookLM:', e);
+                if (!silent) {
+                    showToast('Lỗi kết nối khi làm mới danh sách: ' + e.message, 'error');
+                }
+            } finally {
+                isRefreshingDriveAndNotebooks.value = false;
+            }
+        };
+        const syncGoogleNotebooks = async () => {
+            isSyncingGoogleNotebooks.value = true;
+            try {
+                await refreshDriveAndNotebooks(false);
             } finally {
                 isSyncingGoogleNotebooks.value = false;
             }
@@ -5006,6 +5110,11 @@ Nguyen Van A`;
             activeTab,
             isSidebarCollapsed,
             menuGroupsOpen,
+            toggleSidebarCollapse,
+            isFooterStatusOpen,
+            toggleFooterStatus,
+            areAllGroupsExpanded,
+            toggleAllMenuGroups,
             toggleMenuGroup,
             getAssistantFolderNames,
             getDoraemonCharacterName,
@@ -5287,6 +5396,8 @@ Nguyen Van A`;
             handleTaxFilterToggle,
             allDriveFolders,
             allNotebooks,
+            isRefreshingDriveAndNotebooks,
+            refreshDriveAndNotebooks,
             getSourceBadgeClass,
             getSourceArticleUrl
         };

@@ -51,7 +51,7 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- Custom CSS Phong cách dichvucong.gdt.gov.vn -->
-    <link rel="stylesheet" href="/static/css/style.css?v=5.0">
+    <link rel="stylesheet" href="/static/css/style.css?v=6.0">
 </head>
 <body class="bg-[#f0f4f8] text-[#1e293b] min-h-screen flex flex-col font-sans antialiased selection:bg-[#004b93] selection:text-white">
 {% raw %}
@@ -234,10 +234,31 @@
         <div class="flex-1 w-full max-w-[99%] 2xl:max-w-[1920px] mx-auto py-3 px-2 sm:px-4 flex flex-col lg:flex-row gap-4">
             
             <!-- ==================== MENU BÊN TRÁI (LEFT SIDEBAR NAVIGATION) ==================== -->
-            <aside class="w-full lg:w-72 shrink-0 space-y-3">
+            <aside :class="isSidebarCollapsed ? 'w-full lg:w-16 sidebar-collapsed' : 'w-full lg:w-72'" class="shrink-0 space-y-3 transition-all duration-300 ease-in-out">
                 <div class="gdt-card p-3 bg-gradient-to-b from-[#002e5b] to-[#003b73] text-white border border-[#004b93] shadow-md rounded-xl">
 
-                    <div class="pb-2 mb-1 border-b border-sky-400/20">
+                    <!-- Thanh điều khiển Thu gọn / Mở rộng không gian Menu -->
+                    <div class="flex items-center justify-between gap-1 pb-2 mb-2 border-b border-sky-400/20">
+                        <button
+                            v-if="!isSidebarCollapsed"
+                            type="button"
+                            @click="toggleAllMenuGroups()"
+                            class="flex items-center gap-1.5 px-2 py-1 rounded-md bg-white/10 hover:bg-white/20 text-sky-200 hover:text-white text-[10px] font-semibold transition border border-white/10"
+                            :title="areAllGroupsExpanded ? 'Thu gọn tất cả các nhóm chức năng' : 'Mở rộng tất cả các nhóm chức năng'">
+                            <i class="fa-solid" :class="areAllGroupsExpanded ? 'fa-compress text-amber-300' : 'fa-expand text-cyan-300'"></i>
+                            <span>{{ areAllGroupsExpanded ? 'Thu gọn nhóm' : 'Mở rộng nhóm' }}</span>
+                        </button>
+                        <button
+                            type="button"
+                            @click="toggleSidebarCollapse()"
+                            :class="isSidebarCollapsed ? 'w-full justify-center py-1.5' : 'px-2 py-1 ml-auto'"
+                            class="hidden lg:flex items-center gap-1 rounded-md bg-sky-500/20 hover:bg-sky-500/35 text-sky-100 hover:text-white text-[10px] font-bold transition border border-sky-400/30"
+                            :title="isSidebarCollapsed ? 'Mở rộng thanh Menu bên trái' : 'Thu gọn thanh Menu thành dải biểu tượng để tiết kiệm không gian'">
+                            <i class="fa-solid" :class="isSidebarCollapsed ? 'fa-angles-right text-amber-300 text-xs' : 'fa-angles-left text-amber-300'"></i>
+                            <span v-if="!isSidebarCollapsed">Thu gọn</span>
+                        </button>
+                    </div>
+                    <div class="pb-2 mb-1 border-b border-sky-400/20" title="Văn phòng AI (HB MIND)">
                         <button 
                             type="button" 
                             @click="activeMenu = 'office'"
@@ -255,7 +276,7 @@
                         <!-- 1. VĂN BẢN HÀNH CHÍNH (NĐ 30/2020/NĐ-CP) -->
                         <div>
                             <div 
-                                @click="toggleMenuGroup('admin_docs')" 
+                                @click="toggleMenuGroup('admin_docs')" title="Văn bản hành chính (Thu gọn / Mở rộng)"
                                 class="sidebar-category-header flex items-center justify-between text-sky-200 cursor-pointer select-none hover:text-white transition">
                                 <span class="flex items-center gap-1.5 font-bold">
                                     <i class="fa-solid fa-stamp text-[10px] text-amber-400"></i>
@@ -267,7 +288,7 @@
                             <div v-show="menuGroupsOpen.admin_docs" class="sidebar-submenu-container">
                                 <button 
                                     type="button" 
-                                    @click="activeMenu = 'admin_checker'"
+                                    @click="activeMenu = 'admin_checker'" title="Kiểm tra thể thức và sửa lỗi"
                                     :class="activeMenu === 'admin_checker' ? 'sidebar-nav-item active' : 'sidebar-nav-item'"
                                     class="w-full text-left">
                                     <i class="fa-solid fa-file-circle-check text-amber-400 w-5 text-center"></i>
@@ -275,7 +296,7 @@
                                 </button>
                                 <button 
                                     type="button" 
-                                    @click="activeMenu = 'admin_composer'"
+                                    @click="activeMenu = 'admin_composer'" title="Soạn thảo văn bản (3 Bước)"
                                     :class="activeMenu === 'admin_composer' ? 'sidebar-nav-item active' : 'sidebar-nav-item'"
                                     class="w-full text-left">
                                     <i class="fa-solid fa-pen-to-square text-emerald-400 w-5 text-center"></i>
@@ -284,7 +305,7 @@
                                 </button>
                                 <button 
                                     type="button" 
-                                    @click="openAdminDocConfigMenu()"
+                                    @click="openAdminDocConfigMenu()" title="Cấu hình Văn bản hành chính"
                                     :class="activeMenu === 'admin_config' ? 'sidebar-nav-item active' : 'sidebar-nav-item'"
                                     class="w-full text-left">
                                     <i class="fa-solid fa-gears text-sky-400 w-5 text-center"></i>
@@ -295,7 +316,7 @@
                         <!-- 2. CẬP NHẬT CHÍNH SÁCH -->
                         <div>
                             <div 
-                                @click="toggleMenuGroup('policy_docs')" 
+                                @click="toggleMenuGroup('policy_docs')" title="Cập nhật chính sách (Thu gọn / Mở rộng)"
                                 class="sidebar-category-header flex items-center justify-between text-sky-200 cursor-pointer select-none hover:text-white transition">
                                 <span class="flex items-center gap-1.5 font-bold">
                                     <i class="fa-solid fa-layer-group text-[10px] text-sky-400"></i>
@@ -307,7 +328,7 @@
                             <div v-show="menuGroupsOpen.policy_docs" class="sidebar-submenu-container">
                                 <button 
                                     type="button" 
-                                    @click="activeMenu = 'scanner'"
+                                    @click="activeMenu = 'scanner'" title="Quét và tải văn bản"
                                     :class="activeMenu === 'scanner' ? 'sidebar-nav-item active' : 'sidebar-nav-item'"
                                     class="w-full text-left">
                                     <i class="fa-solid fa-magnifying-glass-arrow-right text-sky-400 w-5 text-center"></i>
@@ -318,7 +339,7 @@
                                 </button>
                                 <button 
                                     type="button" 
-                                    @click="activeMenu = 'uploader'"
+                                    @click="activeMenu = 'uploader'" title="Upload và lưu văn bản"
                                     :class="activeMenu === 'uploader' ? 'sidebar-nav-item active' : 'sidebar-nav-item'"
                                     class="w-full text-left">
                                     <i class="fa-solid fa-cloud-arrow-up text-teal-400 w-5 text-center"></i>
@@ -329,7 +350,7 @@
                                 </button>
                                 <button 
                                     type="button" 
-                                    @click="activeMenu = 'policy_settings'"
+                                    @click="activeMenu = 'policy_settings'" title="Thiết lập cấu hình Cập nhật chính sách"
                                     :class="activeMenu === 'policy_settings' ? 'sidebar-nav-item active' : 'sidebar-nav-item'"
                                     class="w-full text-left">
                                     <i class="fa-solid fa-folder-tree text-indigo-400 w-5 text-center"></i>
@@ -341,7 +362,7 @@
                         <!-- 3. TRỢ LÝ AI -->
                         <div>
                             <div 
-                                @click="toggleMenuGroup('ai_assistants')" 
+                                @click="toggleMenuGroup('ai_assistants')" title="Trợ lý chuyên môn (Thu gọn / Mở rộng)"
                                 class="sidebar-category-header flex items-center justify-between text-sky-200 cursor-pointer select-none hover:text-white transition">
                                 <span class="flex items-center gap-1.5 font-bold">
                                     <i class="fa-solid fa-robot text-[10px] text-cyan-300"></i>
@@ -381,7 +402,7 @@
                         <!-- 4. THƯ KÝ AI TIN TỨC -->
                         <div>
                             <div 
-                                @click="toggleMenuGroup('ai_secretaries')" 
+                                @click="toggleMenuGroup('ai_secretaries')" title="Thư ký AI Tin tức (Thu gọn / Mở rộng)"
                                 class="sidebar-category-header flex items-center justify-between text-sky-200 cursor-pointer select-none hover:text-white transition">
                                 <span class="flex items-center gap-1.5 font-bold">
                                     <i class="fa-solid fa-newspaper text-[10px] text-amber-300"></i>
@@ -421,7 +442,7 @@
                         <!-- 5. TỔNG THƯ KÝ (NGANG CẤP VỚI THƯ KÝ AI TIN TỨC) -->
                         <div>
                             <div 
-                                @click="toggleMenuGroup('chief_secretary')" 
+                                @click="toggleMenuGroup('chief_secretary')" title="Tổng Thư ký (Thu gọn / Mở rộng)"
                                 class="sidebar-category-header flex items-center justify-between text-sky-200 cursor-pointer select-none hover:text-white transition">
                                 <span class="flex items-center gap-1.5 font-bold">
                                     <i class="fa-solid fa-crown text-[10px] text-amber-300"></i>
@@ -469,7 +490,7 @@
                         <!-- 6. THIẾT LẬP CHUNG -->
                         <div>
                             <div 
-                                @click="toggleMenuGroup('general_settings')" 
+                                @click="toggleMenuGroup('general_settings')" title="Thiết lập chung (Thu gọn / Mở rộng)"
                                 class="sidebar-category-header flex items-center justify-between text-sky-200 cursor-pointer select-none hover:text-white transition">
                                 <span class="flex items-center gap-1.5 font-bold">
                                     <i class="fa-solid fa-gears text-[10px] text-purple-300"></i>
@@ -503,8 +524,12 @@
                         </div>
                     </div>
                     <!-- Trạng thái kết nối Google Drive & Gemini AI -->
-                    <div class="mt-2 pt-3 border-t border-sky-400/20 text-[11px] space-y-2">
-                        <div class="bg-black/20 p-2.5 rounded-lg border border-sky-400/20 space-y-1.5">
+                    <div v-if="!isSidebarCollapsed" class="mt-2 pt-2 border-t border-sky-400/20 text-[11px] space-y-2">
+                        <div @click="toggleFooterStatus()" class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-sky-300/90 hover:text-white cursor-pointer select-none px-1">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-plug-circle-check text-emerald-400"></i><span>Trạng thái kết nối</span></span>
+                            <i class="fa-solid text-[10px] transition-transform duration-200" :class="isFooterStatusOpen ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+                        </div>
+                        <div v-show="isFooterStatusOpen" class="bg-black/20 p-2.5 rounded-lg border border-sky-400/20 space-y-1.5">
                             <div class="flex items-center justify-between text-sky-200">
                                 <span class="flex items-center gap-1.5 font-semibold">
                                     <i class="fa-brands fa-google-drive text-amber-300"></i> Google Drive
@@ -518,7 +543,7 @@
                                 {{ defaultFolderName }}
                             </div>
                         </div>
-                        <div class="bg-black/20 p-2.5 rounded-lg border border-sky-400/20">
+                        <div v-show="isFooterStatusOpen" class="bg-black/20 p-2.5 rounded-lg border border-sky-400/20">
                             <div class="flex items-center justify-between text-sky-200">
                                 <span class="flex items-center gap-1.5 font-semibold">
                                     <i class="fa-solid fa-robot text-emerald-400"></i> Model AI
@@ -2110,7 +2135,7 @@
                                 <select 
                                     v-model="selectedFolderForBatch"
                                     class="bg-[#f8f9fa] border border-[#b9d2ec] text-slate-800 text-xs rounded px-2 py-0.5 max-w-[170px] truncate focus:outline-none">
-                                    <option v-for="f in folders" :key="f.id" :value="f.id">{{ f.raw_name || f.clean_name || f.name }}</option>
+                                    <option v-for="f in folders" :key="f.id" :value="f.id">{{ f.clean_name || f.raw_name || f.name }}</option>
                                 </select>
                                 <button 
                                     type="button" 
@@ -2190,6 +2215,16 @@
                                 <span v-if="selectedDocIds.length > 0" class="px-1.5 py-0.2 rounded bg-white/20 text-white text-[10px] font-mono">
                                     {{ selectedDocIds.length }}
                                 </span>
+                            </button>
+                            <!-- NÚT 4: REFRESH (LÀM MỚI GOOGLE DRIVE & NOTEBOOKLM) NẰM BÊN PHẢI NÚT LƯU LÊN NOTEBOOKLM -->
+                            <button 
+                                type="button" 
+                                @click="refreshDriveAndNotebooks(false)"
+                                :disabled="isRefreshingDriveAndNotebooks"
+                                class="px-3 py-1.5 rounded bg-white hover:bg-[#edf5fd] text-[#004b93] border border-[#004b93] font-bold text-xs uppercase tracking-wide shadow-xs transition flex items-center space-x-1.5 disabled:opacity-50 cursor-pointer"
+                                title="Làm mới (Refresh) danh sách thư mục Google Drive và sổ ghi chú NotebookLM theo thời gian thực">
+                                <i class="fa-solid fa-arrows-rotate text-sm" :class="{ 'fa-spin': isRefreshingDriveAndNotebooks }"></i>
+                                <span>{{ isRefreshingDriveAndNotebooks ? 'Đang cập nhật...' : 'Refresh' }}</span>
                             </button>
                         </div>
                     </div>
@@ -2342,7 +2377,7 @@
                                                 v-model="doc.selected_folder_id"
                                                 class="w-full bg-white border border-[#b9d2ec] text-slate-800 text-xs rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#004b93]">
                                                 <option v-for="f in folders" :key="f.id" :value="f.id">
-                                                    {{ f.raw_name || f.clean_name || f.name }}
+                                                    {{ f.clean_name || f.raw_name || f.name }}
                                                 </option>
                                             </select>
                                             <div class="flex items-center justify-between text-[10px] text-slate-500">
@@ -2522,7 +2557,7 @@
                                         v-model="batchUploadedFolderId" 
                                         class="bg-white border border-[#b9d2ec] text-slate-800 text-xs rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#004b93]">
                                         <option v-for="f in folders" :key="f.id" :value="f.id">
-                                            {{ f.name }}
+                                            {{ f.clean_name || f.raw_name || f.name }}
                                         </option>
                                     </select>
                                     <button 
@@ -2598,6 +2633,16 @@
                                 <i v-if="isSavingUploadedToNotebook" class="fa-solid fa-spinner fa-spin"></i>
                                 <i v-else class="fa-solid fa-brain"></i>
                                 <span>Lưu lên NotebookLM ({{ selectedUploadedIds.length }})</span>
+                            </button>
+                            <!-- NÚT REFRESH (LÀM MỚI GOOGLE DRIVE & NOTEBOOKLM) NẰM BÊN PHẢI NÚT LƯU LÊN NOTEBOOKLM -->
+                            <button 
+                                type="button" 
+                                @click="refreshDriveAndNotebooks(false)"
+                                :disabled="isRefreshingDriveAndNotebooks"
+                                class="px-3.5 py-2 rounded bg-white hover:bg-[#edf5fd] text-[#004b93] border border-[#004b93] text-xs font-bold shadow-xs transition flex items-center space-x-1.5 disabled:opacity-50 cursor-pointer"
+                                title="Làm mới (Refresh) danh sách thư mục Google Drive và sổ ghi chú NotebookLM theo thời gian thực">
+                                <i class="fa-solid fa-arrows-rotate" :class="{ 'fa-spin': isRefreshingDriveAndNotebooks }"></i>
+                                <span>{{ isRefreshingDriveAndNotebooks ? 'Đang cập nhật...' : 'Refresh' }}</span>
                             </button>
                             <!-- Chọn tất cả / Bỏ chọn -->
                             <button 
@@ -2725,7 +2770,7 @@
                                                 v-model="file.selected_folder_id"
                                                 class="w-full bg-white border border-[#b9d2ec] text-slate-800 text-xs rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[#004b93]">
                                                 <option v-for="f in folders" :key="f.id" :value="f.id">
-                                                    {{ f.raw_name || f.clean_name || f.name }}
+                                                    {{ f.clean_name || f.raw_name || f.name }}
                                                 </option>
                                             </select>
                                             <div class="flex items-center justify-between text-[10px] text-slate-500">
@@ -7297,9 +7342,9 @@
 
     <!-- 3D Three.js & Doraemon Virtual Office Simulation -->
     <script src="/static/js/three.min.js"></script>
-    <script src="/static/js/doraemon_office.js?v=30.0"></script>
+    <script src="/static/js/doraemon_office.js?v=31.0"></script>
     <!-- Script Vue App -->
-    <script src="/static/js/app.js?v=16.0"></script>
+    <script src="/static/js/app.js?v=20.0"></script>
     
 </body>
 </html>

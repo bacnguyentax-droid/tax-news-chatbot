@@ -19,6 +19,7 @@ from config import (
     DEFAULT_TAX_KEYWORDS,
     DEFAULT_YOUTUBE_API_KEY,
     DEFAULT_COOKIE_PATH,
+    DEFAULT_FFMPEG_PATH,
     APP_DIR
 )
 from youtube_searcher import YouTubeSearcher
@@ -335,7 +336,10 @@ def stage2_process():
                     cut_name = os.path.basename(cut_path)
 
                     push_log(f"-> [THÀNH CÔNG GỐC] Đã lưu video gốc: {goc_name}", level="SUCCESS")
-                    push_log(f"-> [THÀNH CÔNG 9:16] Đã dựng ghép banner & chữ 52 BOLD: {cut_name}", level="SUCCESS")
+                    if cut_path and cut_path != goc_path and os.path.exists(cut_path):
+                        push_log(f"-> [THÀNH CÔNG 9:16] Đã dựng ghép banner & chữ 52 BOLD: {cut_name}", level="SUCCESS")
+                    else:
+                        push_log(f"-> [CẢNH BÁO 9:16] Chưa tạo được file 9:16 riêng cho: {goc_name}", level="WARNING")
 
                     # Ghi Excel log
                     main_title = v_title.split("|")[0].split("-")[0].strip()
@@ -485,11 +489,8 @@ def get_video_info():
     if not os.path.exists(video_path):
         return jsonify({"status": "error", "message": "File không tồn tại"}), 404
     try:
-        dur_cmd = ["ffprobe", "-v", "error", "-show_entries", "format=duration,size", "-of", "json", video_path]
-        res = subprocess.run(dur_cmd, capture_output=True, text=True, check=True)
-        info = json.loads(res.stdout)
-        duration = float(info.get("format", {}).get("duration", 0))
-        size = int(info.get("format", {}).get("size", os.path.getsize(video_path)))
+        duration = VideoDownloader.get_video_duration(video_path)
+        size = os.path.getsize(video_path)
         return jsonify({
             "status": "success",
             "filename": filename,
@@ -542,7 +543,7 @@ def edit_video():
     cut_desc = f"Từ {start_time:.1f}s đến {'Hết video' if end_time <= 0 else f'{end_time:.1f}s'}"
     push_log(f"-> Mốc cắt: {cut_desc} | Âm lượng: {volume_percent}%", level="INFO")
 
-    cmd = ["ffmpeg", "-y"]
+    cmd = [DEFAULT_FFMPEG_PATH, "-y"]
     if start_time > 0:
         cmd.extend(["-ss", str(start_time)])
     if end_time > start_time:

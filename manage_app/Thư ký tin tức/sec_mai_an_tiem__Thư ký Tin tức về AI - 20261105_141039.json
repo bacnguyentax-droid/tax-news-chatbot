@@ -1,0 +1,66 @@
+{
+  "secretary_id": "sec_mai_an_tiem",
+  "secretary_name": "Thư ký Tin tức về AI",
+  "character": "Mai An Tiêm",
+  "role": "Thư ký Tin tức về AI",
+  "search_time_range": "1_week",
+  "time_desc": "trong vòng 7 ngày qua (1 tuần trước đến nay)",
+  "created_at": "05/11/2026 14:10:39",
+  "filename": "sec_mai_an_tiem__Thư ký Tin tức về AI - 20261105_141039.docx",
+  "display_filename": "Thư ký Tin tức về AI - 20261105_141039.docx",
+  "download_url": "/api/secretaries/sec_mai_an_tiem/download-report/sec_mai_an_tiem__Thư ký Tin tức về AI - 20261105_141039.docx",
+  "content_markdown": "Chào mừng quý vị đến với bản tin AI mới nhất từ Mai An Tiêm, Thư ký Tin tức về AI.\n\nChúng ta đang ở ngày 05/11/2026. Dưới đây là tổng hợp các sự kiện và tin tức nổi bật trong lĩnh vực Trí tuệ nhân tạo trên toàn cầu trong tuần qua, dựa trên dữ liệu tìm kiếm mới nhất.\n\n---\n\n### **TIÊU ĐIỂM**\n\n1.  **Google Gemini 4 Argon Mở Rộng Tiếp Cận:** Mô hình Gemini 4 Argon của Google đã chính thức được mở rộng quyền truy cập cho tất cả người dùng Vertex và Google Cloud Platform (GCP). Đây là một bước tiến quan trọng trong việc đưa công nghệ AI tiên tiến đến tay các nhà phát triển và doanh nghiệp, hứa hẹn thúc đẩy các ứng dụng AI mới trên nền tảng đám mây của Google.\n    *   **Nguồn & Thời gian:** [如何评价10月13日正式推出的Gemini 4 Argon？ - 知乎](https://www.zhihu.com/question/2093454112922912690) (Ngày 13/10/2026)\n\n2.  **OpenAI Đề Xuất Giải Pháp cho Bài Toán Navier–Stokes:** Trong một nghiên cứu đột phá, một mô hình của OpenAI đã đề xuất một giải pháp cho bài toán Navier–Stokes, một trong bảy bài toán thiên niên kỷ chưa được giải quyết. Nếu được xác nhận, đây sẽ là một thành tựu khoa học vĩ đại, có thể mở ra những hiểu biết mới về động lực học chất lỏng và các ứng dụng trong nhiều lĩnh vực kỹ thuật.\n    *   **Nguồn & Thời gian:** [OpenAI| Research & Deployment](https://openai.com/) (Ngày 08/09/2026)\n\n### **ĐIỂM TIN CÁC NỀN TẢNG**\n\n*   **Google Gemini:**\n    *   **Gemini 4 Argon** đã được mở rộng quyền truy cập hoàn toàn cho người dùng Vertex và GCP, sau khi ra mắt chính thức vào ngày 13/10/2026.\n        *   **Nguồn:** [如何评价10月13日正式推出的Gemini 4 Argon？ - 知乎](https://www.zhihu.com/question/2093454112922912690)\n\n*   **OpenAI:**\n    *   Một mô hình nghiên cứu của OpenAI đã đề xuất một giải pháp cho bài toán Navier–Stokes.\n        *   **Nguồn:** [OpenAI| Research & Deployment](https://openai.com/)\n\n---\n\nMai An Tiêm sẽ tiếp tục cập nhật những tin tức AI nóng hổi nhất trong các bản tin tiếp theo. Xin cảm ơn quý vị đã theo dõi!",
+  "web_sources": [
+    {
+      "title": "OpenAI| Research & Deployment",
+      "uri": "https://openai.com/"
+    },
+    {
+      "title": "Introducing ChatGPT -OpenAI",
+      "uri": "https://openai.com/index/chatgpt/"
+    },
+    {
+      "title": "ChatGPT",
+      "uri": "https://chatgpt.com/"
+    },
+    {
+      "title": "OpenAIPlatform",
+      "uri": "https://platform.openai.com/"
+    },
+    {
+      "title": "OpenAIDevelopers",
+      "uri": "https://developers.openai.com/"
+    },
+    {
+      "title": "如何评价10月13日正式推出的Gemini 4 Argon？ - 知乎",
+      "uri": "https://www.zhihu.com/question/2093454112922912690"
+    },
+    {
+      "title": "Gemini Zodiac Sign - Astrology Answers",
+      "uri": "https://www.astrologyanswers.com/zodiac-signs/gemini/"
+    },
+    {
+      "title": "Gemini 3.5 Flash 正式发布，你怎么评价这款模型? - 知乎",
+      "uri": "https://www.zhihu.com/question/2040251136867815469"
+    },
+    {
+      "title": "Gemini Man: Traits & Characteristics | Astrology Answers",
+      "uri": "https://www.astrologyanswers.com/article/gemini-man-personality-traits-characteristics-of-the-male-gemini/"
+    },
+    {
+      "title": "《记忆革命：Gemini 1.5如何让Transformer突破百万级上下文枷锁》",
+      "uri": "https://bbs.huaweicloud.com/blogs/453371"
+    },
+    {
+      "title": "Tin tức|Tinnhanh |Tinmới trong ngày cập nhật liên tục 24h",
+      "uri": "https://www.24h.com.vn/tin-tuc-trong-ngay-c46.html"
+    },
+    {
+      "title": "Báo VnExpress - Báo tiếng Việt nhiều người xem nhất",
+      "uri": "https://vnexpress.net/"
+    }
+  ],
+  "alt_file_path": "D:\\LuyenCong\\tax-news-chatbot\\____Manage App____\\Thư ký tin tức\\Thư ký Tin tức về AI - 20261105_141039.docx",
+  "drive_file_id": "1Spgr_YIej55Wo320I-KV06-eM7mX6O2i",
+  "drive_web_link": "https://docs.google.com/document/d/1Spgr_YIej55Wo320I-KV06-eM7mX6O2i/edit?usp=drivesdk&ouid=101322887468073177531&rtpof=true&sd=true"
+}

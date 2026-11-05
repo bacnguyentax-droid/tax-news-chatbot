@@ -1,4 +1,5 @@
 import urllib.request
+import urllib.parse
 import ssl
 import re
 import os
@@ -50,6 +51,169 @@ def safe_log(msg: str):
             pass
 
 class AttachmentDownloader:
+    @staticmethod
+    def _fetch_with_d1n_cookie(url: str, extra_headers: Optional[Dict[str, str]] = None, timeout: int = 10) -> Tuple[str, Dict[str, str]]:
+        """
+        Tải HTML từ các cổng có lớp bảo vệ JS Cookie Challenge (D1N=...) như quochoi.vn,
+        vietlaw.quochoi.vn, duthaoonline.quochoi.vn. Trả về (html, headers_kèm_cookie).
+        """
+        hdrs = dict(HEADERS)
+        if extra_headers:
+            hdrs.update(extra_headers)
+        req1 = urllib.request.Request(url, headers=hdrs)
+        with urllib.request.urlopen(req1, context=SSL_CTX, timeout=timeout) as r1:
+            html = r1.read().decode('utf-8', errors='ignore')
+        m_cookie = re.search(r'document\.cookie\s*=\s*"([^"]+)"', html)
+        if m_cookie and len(html) < 500:
+            hdrs['Cookie'] = m_cookie.group(1)
+            req2 = urllib.request.Request(url, headers=hdrs)
+            with urllib.request.urlopen(req2, context=SSL_CTX, timeout=timeout) as r2:
+                html = r2.read().decode('utf-8', errors='ignore')
+        return html, hdrs
+
+    @staticmethod
+    def download_quochoi_document(doc: Dict[str, Any], prefer_ext: str = "pdf") -> Optional[Tuple[bytes, str, str]]:
+        """
+        Tải file đính kèm thực tế hoặc trích xuất toàn văn đầy đủ từ 2 cổng của Quốc hội:
+        1. vietlaw.quochoi.vn (Văn bản Quốc hội & UBTVQH ban hành)
+        2. duthaoonline.quochoi.vn (Chuyên mục Dự thảo Luật)
+        """
+        source_url = (doc.get("source_url") or "").strip()
+        if not source_url or "quochoi.vn" not in source_url.lower():
+            return None
+
+        doc_num = (doc.get("doc_number") or "VanBan").strip()
+        field = doc.get("field", "Chung")
+        clean_num = re.sub(r'[/\\:*?"<>| ]', '_', doc_num)
+        clean_field = re.sub(r'[/\\:*?"<>| ]', '_', field)
+
+        try:
+            html, hdrs = AttachmentDownloader._fetch_with_d1n_cookie(source_url, timeout=10)
+            if not html or len(html) < 300:
+                return None
+
+            soup = BeautifulSoup(html, 'html.parser')
+
+            # --- TRƯỜNG HỢP 1: vietlaw.quochoi.vn (Văn bản Quốc hội & UBTVQH ban hành) ---
+            if "vietlaw.quochoi.vn" in source_url.lower():
+                tv_div = soup.find('div', class_='toanvan') or soup.find('div', id='toanvancontent')
+                if tv_div:
+                    for tag in tv_div.find_all(['script', 'style']):
+                        tag.decompose()
+                    full_tv_text = tv_div.get_text("\n", strip=True)
+                    if len(full_tv_text) > len(doc.get("content", "")):
+                        doc["content"] = full_tv_text
+
+                att_links = []
+                for a in soup.find_all('a'):
+                    href = (a.get('href') or '').strip()
+                    if not href:
+                        continue
+                    h_low = href.lower()
+                    if '/attachments/' in h_low or any(h_low.endswith(ext) for ext in ['.pdf', '.doc', '.docx']):
+                        full_href = f"https://vietlaw.quochoi.vn{href}" if href.startswith('/') else href
+                        att_links.append(full_href)
+
+                target_url = ""
+                if prefer_ext == "pdf":
+                    pdf_links = [u for u in att_links if u.lower().endswith('.pdf')]
+                    target_url = pdf_links[0] if pdf_links else (att_links[0] if att_links else "")
+                else:
+                    word_links = [u for u in att_links if any(u.lower().endswith(x) for x in ['.docx', '.doc'])]
+                    target_url = word_links[0] if word_links else (att_links[0] if att_links else "")
+
+                if target_url:
+                    clean_target = urllib.parse.quote(target_url, safe=':/?&=%')
+                    req_f = urllib.request.Request(clean_target, headers=hdrs)
+                    with urllib.request.urlopen(req_f, context=SSL_CTX, timeout=15) as rf:
+                        raw_bytes = rf.read()
+                    if raw_bytes and len(raw_bytes) > 1000:
+                        if raw_bytes.startswith(b'%PDF'):
+                            filename = f"{clean_num}_{clean_field}.pdf"
+                            with open(os.path.join(CACHE_DIR, filename), "wb") as f:
+                                f.write(raw_bytes)
+                            safe_log(f"[AttachmentDownloader] Tải PDF gốc từ vietlaw.quochoi.vn: {filename} ({len(raw_bytes):,} bytes)")
+                            return raw_bytes, filename, "application/pdf"
+                        elif raw_bytes.startswith(b'PK\x03\x04') or raw_bytes.startswith(b'\xd0\xcf\x11\xe0'):
+                            is_docx = raw_bytes.startswith(b'PK\x03\x04')
+                            ext = ".docx" if is_docx else ".doc"
+                            mt = "application/vnd.openxmlformats-officedocument.wordprocessingml.document" if is_docx else "application/msword"
+                            word_filename = f"{clean_num}_{clean_field}{ext}"
+                            with open(os.path.join(CACHE_DIR, word_filename), "wb") as f:
+                                f.write(raw_bytes)
+                            if prefer_ext in ["doc", "docx"]:
+                                return raw_bytes, word_filename, mt
+
+                if len(doc.get("content", "")) > 500:
+                    pdf_bytes = PDFGenerator.generate_document_pdf(doc)
+                    filename = f"{clean_num}_{clean_field}.pdf"
+                    with open(os.path.join(CACHE_DIR, filename), "wb") as f:
+                        f.write(pdf_bytes)
+                    return pdf_bytes, filename, "application/pdf"
+
+            # --- TRƯỜNG HỢP 2: duthaoonline.quochoi.vn (Dự thảo Luật) ---
+            elif "duthaoonline.quochoi.vn" in source_url.lower():
+                m_lid = re.search(r'lanDuThaoId\s*=\s*["\']([0-9a-fA-F\-]{20,})["\']', html)
+                m_ttc = re.search(r'(?:ThongTinChungId|duThaoChungId)\s*=\s*["\']([0-9a-fA-F\-]{20,})["\']', html)
+                lid = m_lid.group(1) if m_lid else ""
+                ttcid = m_ttc.group(1) if m_ttc else ""
+
+                if lid and ttcid:
+                    hs_url = f"{source_url}?handler=HoSoDuAn&lanDuThaoId={lid}&thongTinChungId={ttcid}"
+                    try:
+                        hs_html, _ = AttachmentDownloader._fetch_with_d1n_cookie(hs_url, extra_headers=hdrs, timeout=8)
+                        hs_soup = BeautifulSoup(hs_html, 'html.parser')
+                        hs_files = []
+                        for a in hs_soup.find_all('a'):
+                            href = (a.get('href') or '').strip()
+                            if any(href.lower().endswith(ext) for ext in ['.pdf', '.docx', '.doc']):
+                                full_h = f"https://duthaoonline.quochoi.vn{href}" if href.startswith('/') else href
+                                hs_files.append(full_h)
+                        if hs_files:
+                            chosen = next((u for u in hs_files if u.lower().endswith('.pdf')), hs_files[0]) if prefer_ext == "pdf" else next((u for u in hs_files if any(u.lower().endswith(x) for x in ['.docx', '.doc'])), hs_files[0])
+                            clean_chosen = urllib.parse.quote(chosen, safe=':/?&=%')
+                            with urllib.request.urlopen(urllib.request.Request(clean_chosen, headers=hdrs), context=SSL_CTX, timeout=15) as rf:
+                                fbytes = rf.read()
+                            if fbytes and fbytes.startswith(b'%PDF'):
+                                filename = f"{clean_num}_{clean_field}.pdf"
+                                with open(os.path.join(CACHE_DIR, filename), "wb") as f:
+                                    f.write(fbytes)
+                                return fbytes, filename, "application/pdf"
+                    except Exception:
+                        pass
+
+                if lid:
+                    tv_url = f"{source_url}?handler=ToanVanDuThao&lanDuThaoId={lid}&trangThaiThongQua=False"
+                    tv_html, _ = AttachmentDownloader._fetch_with_d1n_cookie(tv_url, extra_headers=hdrs, timeout=12)
+                    if tv_html and len(tv_html) > 500:
+                        tv_soup = BeautifulSoup(tv_html, 'html.parser')
+                        content_col = tv_soup.find('div', class_='col-md-8') or tv_soup
+                        for noise in content_col.find_all(['script', 'style', 'button']):
+                            noise.decompose()
+                        raw_lines = [line.strip() for line in content_col.get_text("\n", strip=True).splitlines()]
+                        clean_lines = [
+                            line for line in raw_lines
+                            if line and line.lower() not in ('gửi ý kiến', 'xem ý kiến', 'mục lục')
+                        ]
+                        if clean_lines:
+                            if re.match(r'^\d{1,2}/\d{1,2}/\d{4}$', clean_lines[0]):
+                                doc["issue_date"] = clean_lines[0]
+                                doc["effective_date"] = clean_lines[0]
+                            full_draft_text = "\n".join(clean_lines)
+                            if len(full_draft_text) > 300:
+                                doc["content"] = full_draft_text
+                                safe_log(f"[AttachmentDownloader] Đã nạp Toàn văn Dự thảo Luật {doc_num}: {len(full_draft_text):,} ký tự")
+                                pdf_bytes = PDFGenerator.generate_document_pdf(doc)
+                                filename = f"{clean_num}_{clean_field}.pdf"
+                                with open(os.path.join(CACHE_DIR, filename), "wb") as f:
+                                    f.write(pdf_bytes)
+                                return pdf_bytes, filename, "application/pdf"
+
+        except Exception as e:
+            safe_log(f"[AttachmentDownloader] Lỗi tải văn bản Quốc hội ({source_url}): {e}")
+
+        return None
+
     @staticmethod
     def resolve_attachment_url(doc: Dict[str, Any], prefer_ext: str = "pdf") -> str:
         """
@@ -305,6 +469,12 @@ class AttachmentDownloader:
                     return pdf_bytes, pdf_filename, "application/pdf"
                 return vbpl_res
 
+        # 0.6. Nếu là văn bản từ quochoi.vn (vietlaw.quochoi.vn / duthaoonline.quochoi.vn)
+        if "quochoi.vn" in source or "quochoi.vn" in source_url:
+            qh_res = AttachmentDownloader.download_quochoi_document(doc, prefer_ext=prefer_ext)
+            if qh_res:
+                return qh_res
+
         # 1. Thử lấy link tải file đính kèm thực tế từ web nguồn
         att_url = AttachmentDownloader.resolve_attachment_url(doc, prefer_ext=prefer_ext)
         if att_url:
@@ -423,6 +593,12 @@ class AttachmentDownloader:
                 safe_log(f"[AttachmentDownloader] Mammoth convert error: {e}")
 
         # 2. Fallback: Render văn bản hành chính đẹp mắt từ doc["content"]
+        # Nếu là văn bản từ quochoi.vn mà nội dung đang chỉ có tóm tắt ngắn, nạp toàn văn trước khi render HTML
+        if "quochoi.vn" in (doc.get("source_url") or "").lower() and len(doc.get("content", "")) < 400:
+            try:
+                AttachmentDownloader.download_quochoi_document(doc, prefer_ext="pdf")
+            except Exception:
+                pass
         raw_content = doc.get("content", doc.get("title", ""))
         lines = raw_content.split("\n")
         

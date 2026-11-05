@@ -3,6 +3,7 @@ import re
 import subprocess
 import yt_dlp
 from typing import Dict, Any
+from config import DEFAULT_FFMPEG_PATH, DEFAULT_ASSETS_DIR
 
 class VideoDownloader:
     def __init__(self, output_dir: str = r"D:\Data_Video"):
@@ -175,8 +176,30 @@ class VideoDownloader:
     @staticmethod
     def get_video_duration(video_path: str) -> float:
         """
-        Lấy độ dài thời gian chính xác của video (tính bằng giây) qua ffprobe.
+        Lấy độ dài thời gian chính xác của video (tính bằng giây) qua ffprobe hoặc ffmpeg -i.
         """
+        # 1. Thử lấy bằng ffmpeg -i (luôn có sẵn trong assets/ffmpeg.exe)
+        try:
+            res = subprocess.run(
+                [DEFAULT_FFMPEG_PATH, "-i", video_path],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                encoding="utf-8",
+                errors="replace"
+            )
+            match = re.search(r"Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)", res.stderr or "")
+            if match:
+                hrs = float(match.group(1))
+                mins = float(match.group(2))
+                secs = float(match.group(3))
+                total = hrs * 3600 + mins * 60 + secs
+                if total > 0:
+                    return max(0.5, total)
+        except Exception:
+            pass
+
+        # 2. Dự phòng bằng ffprobe nếu có
         cmd = [
             "ffprobe", "-v", "error",
             "-show_entries", "format=duration",
@@ -259,7 +282,7 @@ class VideoDownloader:
         )
 
         cmd = [
-            "ffmpeg", "-y",
+            DEFAULT_FFMPEG_PATH, "-y",
             "-i", raw_video_path,
             "-loop", "1", "-i", top_path,
             "-loop", "1", "-i", bottom_path,
@@ -407,6 +430,7 @@ class VideoDownloader:
                 ydl_opts = {
                     'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
                     'outtmpl': goc_filepath,
+                    'ffmpeg_location': DEFAULT_ASSETS_DIR,
                     'remote_components': {'ejs:github': {}},
                     'overwrites': True,
                     'quiet': True,
@@ -415,7 +439,6 @@ class VideoDownloader:
                 if clients:
                     ydl_opts['extractor_args'] = {'youtube': {'player_client': clients}}
                 if cookie_file:
-                    ydl_opts['cookiefile'] = cookie_file
                     ydl_opts['cookiefile'] = cookie_file
 
                 for browser_name in ['chrome', 'edge', 'firefox']:
@@ -445,6 +468,7 @@ class VideoDownloader:
             if not downloaded_goc:
                 cmd = [
                     "yt-dlp",
+                    "--ffmpeg-location", DEFAULT_ASSETS_DIR,
                     "--remote-components", "ejs:github",
                     "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
                     "--merge-output-format", "mp4",

@@ -24,3 +24,6 @@ curl_cffi>=0.7.0
 # Video & Audio processing (Tùy chọn)
 youtube-transcript-api>=0.6.1
 yt-dlp>=2024.3.10
+
+# Google NotebookLM Auto Sync
+notebooklm-py[browser]>=0.1.0

@@ -5,6 +5,76 @@ import re
 import json
 from typing import Dict, Any, List, Optional, Tuple
 
+_VN_GROUPS = [
+    ("a", "aàảãáạ"),
+    ("ă", "ăằẳẵắặ"),
+    ("â", "âầẩẫấậ"),
+    ("b", "b"),
+    ("c", "c"),
+    ("d", "d"),
+    ("đ", "đ"),
+    ("e", "eèẻẽéẹ"),
+    ("ê", "êềểễếệ"),
+    ("f", "f"),
+    ("g", "g"),
+    ("h", "h"),
+    ("i", "iìỉĩíị"),
+    ("j", "j"),
+    ("k", "k"),
+    ("l", "l"),
+    ("m", "m"),
+    ("n", "n"),
+    ("o", "oòỏõóọ"),
+    ("ô", "ôồổỗốộ"),
+    ("ơ", "ơờởỡớợ"),
+    ("p", "p"),
+    ("q", "q"),
+    ("r", "r"),
+    ("s", "s"),
+    ("t", "t"),
+    ("u", "uùủũúụ"),
+    ("ư", "ưừửữứự"),
+    ("v", "v"),
+    ("w", "w"),
+    ("x", "x"),
+    ("y", "yỳỷỹýỵ"),
+    ("z", "z"),
+]
+_PRIMARY_MAP = {}
+_SECONDARY_MAP = {}
+for _base_idx, (_, _chars) in enumerate(_VN_GROUPS, start=50):
+    for _tone_idx, _ch in enumerate(_chars):
+        _PRIMARY_MAP[_ch] = _base_idx
+        _SECONDARY_MAP[_ch] = _tone_idx
+
+def clean_display_folder_name(text: str) -> str:
+    s = str(text or "").strip()
+    s = re.sub(r'^[📁\s]+', '', s)
+    s = re.sub(r'\s*⭐\s*\[Mặc định\]\s*$', '', s, flags=re.IGNORECASE)
+    s = s.strip('-_ ').strip()
+    return s
+
+def vn_abc_sort_key(text: str):
+    """Khóa sắp xếp chuẩn bảng chữ cái tiếng Việt (A -> Z: a, ă, â, b, c, d, đ, e, ê, ..., o, ô, ơ, ..., u, ư, ...)"""
+    s = clean_display_folder_name(text).lower()
+    s = re.sub(r'[\-\_\s]+', ' ', s).strip()
+    primary = []
+    secondary = []
+    for ch in s:
+        if ch in _PRIMARY_MAP:
+            primary.append(_PRIMARY_MAP[ch])
+            secondary.append(_SECONDARY_MAP[ch])
+        elif ch == ' ':
+            primary.append(1)
+            secondary.append(0)
+        elif ch.isdigit():
+            primary.append(10 + int(ch))
+            secondary.append(0)
+        else:
+            primary.append(ord(ch) + 200)
+            secondary.append(0)
+    return (primary, secondary)
+
 def is_valid_drive_folder(name: str) -> bool:
     """Lọc bỏ các thư mục rác, file ẩn, mã hash, ký tự đặc biệt #, 00, %, thư mục giải trí..."""
     if not name:
@@ -260,11 +330,11 @@ class DriveService:
 
                 folder_id = f.get("id")
                 web_link = f.get("webViewLink", f"https://drive.google.com/drive/folders/{folder_id}")
-                clean_name = raw_name.lstrip('-_ ')
+                clean_name = clean_display_folder_name(raw_name)
 
                 item = {
                     "id": folder_id,
-                    "name": f"📁 {raw_name}",
+                    "name": f"📁 {clean_name}",
                     "raw_name": raw_name,
                     "clean_name": clean_name,
                     "webViewLink": web_link,
@@ -273,18 +343,16 @@ class DriveService:
 
                 # Nhận diện thư mục mặc định: Tax_Nghiệp vụ thuế
                 if "nghiệp vụ thuế" in raw_name.lower() or raw_name.lower() == "tax_nghiệp vụ thuế":
-                    item["name"] = f"📁 Tax_Nghiệp vụ thuế ⭐ [Mặc định]"
+                    item["name"] = f"📁 {clean_name}"
+                    item["is_default"] = True
                     tax_primary = item
-                else:
-                    tax_folders.append(item)
 
-            # Sắp xếp theo bảng chữ cái
-            tax_folders.sort(key=lambda x: x["clean_name"].lower())
+                tax_folders.append(item)
 
-            # Xây dựng danh sách hiển thị: Tax_Nghiệp vụ thuế mặc định lên đầu, tiếp theo là toàn bộ thư mục Tax ở gốc
-            formatted_folders = []
+            # Sắp xếp toàn bộ thư mục theo đúng thứ tự bảng chữ cái tiếng Việt (ABC)
+            tax_folders.sort(key=lambda x: vn_abc_sort_key(x.get("clean_name") or x.get("raw_name") or x.get("name", "")))
+
             if tax_primary:
-                formatted_folders.append(tax_primary)
                 try:
                     ConfigManager.update_drive_config({
                         "default_folder_id": tax_primary["id"],
@@ -293,7 +361,7 @@ class DriveService:
                 except Exception:
                     pass
 
-            formatted_folders.extend(tax_folders)
+            formatted_folders = list(tax_folders)
 
             # Dự phòng nếu không có thư mục nào
             if not formatted_folders:
@@ -360,6 +428,43 @@ class DriveService:
                 file_metadata['parents'] = [folder_id]
 
             media = MediaIoBaseUpload(io.BytesIO(file_content), mimetype=mimetype, resumable=True)
+
+            # Kiểm tra xem trong thư mục đã có file trùng tên chưa để cập nhật thay vì tạo bản sao trùng lặp
+            safe_fname = filename.replace("'", "\\'")
+            q_dup = f"name = '{safe_fname}' and trashed = false"
+            if folder_id and folder_id != "root":
+                q_dup += f" and '{folder_id}' in parents"
+            try:
+                existing_res = self.service.files().list(
+                    q=q_dup,
+                    spaces='drive',
+                    fields='files(id, name, webViewLink)'
+                ).execute()
+                existing_files = existing_res.get('files', [])
+            except Exception:
+                existing_files = []
+
+            if existing_files:
+                primary_id = existing_files[0]['id']
+                uploaded_file = self.service.files().update(
+                    fileId=primary_id,
+                    body={'name': filename},
+                    media_body=media,
+                    fields='id, name, webViewLink, webContentLink, size'
+                ).execute()
+                # Dọn dẹp các bản trùng dư thừa (nếu có > 1 bản cùng tên trong cùng thư mục)
+                for extra_f in existing_files[1:]:
+                    try:
+                        self.service.files().delete(fileId=extra_f['id']).execute()
+                    except Exception:
+                        pass
+                return {
+                    "success": True,
+                    "id": uploaded_file.get('id'),
+                    "name": uploaded_file.get('name'),
+                    "webViewLink": uploaded_file.get('webViewLink'),
+                    "message": f"Đã cập nhật file trên Drive (không tạo bản trùng): {uploaded_file.get('name')}"
+                }
 
             uploaded_file = self.service.files().create(
                 body=file_metadata,

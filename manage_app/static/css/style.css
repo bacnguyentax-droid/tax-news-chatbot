@@ -232,6 +232,37 @@ body {
     box-shadow: 0 3px 8px rgba(0, 75, 147, 0.45);
 }
 
+@media (min-width: 1024px) {
+    .sidebar-collapsed .sidebar-category-header span span,
+    .sidebar-collapsed .sidebar-category-header > i,
+    .sidebar-collapsed .sidebar-nav-item span,
+    .sidebar-collapsed .sidebar-hide-when-collapsed {
+        display: none !important;
+    }
+    .sidebar-collapsed .sidebar-category-header {
+        justify-content: center;
+        padding: 0.35rem 0.25rem;
+        border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+        margin-bottom: 0.2rem;
+    }
+    .sidebar-collapsed .sidebar-category-header span i {
+        font-size: 0.85rem !important;
+    }
+    .sidebar-collapsed .sidebar-submenu-container {
+        padding: 0.25rem 0.15rem;
+        background-color: transparent;
+        border-color: transparent;
+    }
+    .sidebar-collapsed .sidebar-nav-item {
+        justify-content: center;
+        padding: 0.6rem 0.35rem;
+        gap: 0;
+    }
+    .sidebar-collapsed .sidebar-nav-item:hover {
+        transform: scale(1.06);
+    }
+}
+
 /* Authentic A4 Paper Preview Container */
 .a4-paper-container {
     background-color: #525659;

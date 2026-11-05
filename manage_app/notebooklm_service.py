@@ -135,7 +135,9 @@ class NotebookLMService:
             # 3. Nếu Google Drive kết nối, đồng bộ file lên Google Drive
             drive_link = ""
             drive_file_id = ""
-            if drive_service.is_connected:
+            drive_link = doc.get("drive_link") or ""
+            drive_file_id = doc.get("drive_file_id") or ""
+            if drive_service.is_connected and not drive_link:
                 target_folder_id = doc.get("selected_folder_id")
                 if not target_folder_id or target_folder_id == "root":
                     default_cfg_fid = ConfigManager.load_config().get("google_drive", {}).get("default_folder_id")
@@ -261,7 +263,9 @@ class NotebookLMService:
 
             # Đồng bộ Google Drive nếu kết nối
             drive_link = ""
-            if drive_service.is_connected:
+            drive_link = file_record.get("drive_link") or ""
+            drive_file_id = file_record.get("drive_file_id") or ""
+            if drive_service.is_connected and not drive_link:
                 target_folder_id = file_record.get("selected_folder_id") or "root"
                 try:
                     drive_res = drive_service.upload_file(

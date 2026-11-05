@@ -27,7 +27,7 @@ if CURRENT_DIR not in sys.path:
     sys.path.insert(0, CURRENT_DIR)
 from assistant_service import assistant_service
 from config_manager import ConfigManager
-from drive_service import drive_service
+from drive_service import drive_service, vn_abc_sort_key
 from google_auth_service import GoogleAuthService
 from scanner_service import scanner_service
 from pdf_generator import PDFGenerator
@@ -103,6 +103,10 @@ def get_config():
     user_info = drive_service.user_info if is_connected else None
     sources = ConfigManager.get_sources()
     drive_folders = drive_service.list_folders() if is_connected else []
+    notebooks_list = ConfigManager.get_notebooks()
+    for nb in notebooks_list:
+        nb["is_tax"] = nb.get("name", "").strip('-_ 📁').lower().startswith("tax")
+    notebooks_list = sorted(notebooks_list, key=lambda x: vn_abc_sort_key(x.get("name", "")))
     
     return jsonify({
         "success": True,
@@ -115,7 +119,7 @@ def get_config():
         "folders": drive_folders,
         "client_id": config.get("google_drive", {}).get("client_id", ""),
         "sources": sources,
-        "notebooks": ConfigManager.get_notebooks(),
+        "notebooks": notebooks_list,
         "default_notebook_id": ConfigManager.get_default_notebook_id(),
         "notebooklm_storage_dir": ConfigManager.get_notebooklm_storage_dir()
     })
@@ -426,13 +430,19 @@ def upload_documents_to_drive():
 # ==================== NOTEBOOKLM APIS ====================
 @app.route("/api/notebooklm/list", methods=["GET"])
 def get_notebooklm_list():
-    """Lấy danh sách các notebook trong NotebookLM, gắn cờ is_tax cho từng notebook"""
+    """Lấy danh sách các notebook trong NotebookLM, tự động đồng bộ thực tế nếu refresh=1 và sắp xếp theo chuẩn ABC"""
+    if request.args.get("refresh") == "1" and NotebookLMAutoService.is_storage_present():
+        try:
+            NotebookLMAutoService.sync_notebooks()
+        except Exception as e:
+            print(f"[App] Lỗi đồng bộ NotebookLM khi refresh: {e}")
+
     notebooks = ConfigManager.get_notebooks()
     for nb in notebooks:
-        nb["is_tax"] = "tax" in nb.get("name", "").lower()
+        nb["is_tax"] = nb.get("name", "").strip('-_ 📁').lower().startswith("tax")
     
-    # Sắp xếp ưu tiên các notebook Tax lên trước
-    sorted_notebooks = sorted(notebooks, key=lambda x: (not x["is_tax"], x.get("name", "").lower()))
+    # Sắp xếp theo đúng thứ tự bảng chữ cái tiếng Việt (ABC)
+    sorted_notebooks = sorted(notebooks, key=lambda x: vn_abc_sort_key(x.get("name", "")))
     default_id = ConfigManager.get_default_notebook_id()
     storage_dir = ConfigManager.get_notebooklm_storage_dir()
     return jsonify({
@@ -440,6 +450,53 @@ def get_notebooklm_list():
         "notebooks": sorted_notebooks,
         "default_notebook_id": default_id,
         "storage_dir": storage_dir
+    })
+
+@app.route("/api/sync-drive-notebooklm", methods=["POST"])
+def sync_drive_and_notebooklm_live():
+    """Đồng bộ thời gian thực cả danh sách thư mục Google Drive và sổ ghi chú Google NotebookLM (sắp xếp chuẩn ABC)"""
+    results = {"folders": [], "notebooks": [], "nb_synced": False}
+
+    def _refresh_drive():
+        try:
+            if drive_service.is_connected:
+                results["folders"] = drive_service.list_folders(force_refresh=True)
+            else:
+                results["folders"] = drive_service.list_folders(force_refresh=False)
+        except Exception as ex_d:
+            print(f"[SyncLive] Lỗi làm mới Google Drive folders: {ex_d}")
+            results["folders"] = drive_service.folders_cache or []
+
+    def _refresh_notebooklm():
+        try:
+            if NotebookLMAutoService.is_storage_present():
+                sync_res = NotebookLMAutoService.sync_notebooks()
+                results["nb_synced"] = bool(sync_res.get("success"))
+        except Exception as ex_n:
+            print(f"[SyncLive] Lỗi làm mới Google NotebookLM: {ex_n}")
+
+    t1 = threading.Thread(target=_refresh_drive)
+    t2 = threading.Thread(target=_refresh_notebooklm)
+    t1.start()
+    t2.start()
+    t1.join(timeout=20)
+    t2.join(timeout=25)
+
+    notebooks = ConfigManager.get_notebooks()
+    for nb in notebooks:
+        nb["is_tax"] = nb.get("name", "").strip('-_ 📁').lower().startswith("tax")
+    sorted_notebooks = sorted(notebooks, key=lambda x: vn_abc_sort_key(x.get("name", "")))
+
+    config = ConfigManager.load_config()
+    return jsonify({
+        "success": True,
+        "folders": results["folders"],
+        "notebooks": sorted_notebooks,
+        "default_folder_id": config.get("google_drive", {}).get("default_folder_id", "1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK"),
+        "default_folder_name": config.get("google_drive", {}).get("default_folder_name", "📁 Tax_Nghiệp vụ thuế"),
+        "default_notebook_id": ConfigManager.get_default_notebook_id(),
+        "nb_synced": results["nb_synced"],
+        "message": "Đã cập nhật danh sách thư mục Google Drive và NotebookLM theo thời gian thực!"
     })
 @app.route("/api/notebooklm/save", methods=["POST"])
 def save_notebooklm_item():

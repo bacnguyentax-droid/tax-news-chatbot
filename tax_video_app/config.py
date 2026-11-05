@@ -26,6 +26,15 @@ DEFAULT_TOP_BANNER_PATH = os.path.join(DEFAULT_ASSETS_DIR, "_top2.png")
 DEFAULT_BOTTOM_BANNER_PATH = os.path.join(DEFAULT_ASSETS_DIR, "_Bottom_1.png")
 DEFAULT_FULL_TEMPLATE_PATH = os.path.join(DEFAULT_ASSETS_DIR, "full.png")
 DEFAULT_COOKIE_PATH = os.path.join(DEFAULT_ASSETS_DIR, "cookies.txt")
+DEFAULT_FFMPEG_PATH = (
+    os.path.join(DEFAULT_ASSETS_DIR, "ffmpeg.exe")
+    if os.path.exists(os.path.join(DEFAULT_ASSETS_DIR, "ffmpeg.exe"))
+    else "ffmpeg"
+)
+
+# Tự động thêm thư mục assets vào biến môi trường PATH để FFmpeg và yt-dlp luôn tìm thấy ffmpeg.exe
+if os.path.exists(DEFAULT_ASSETS_DIR) and DEFAULT_ASSETS_DIR not in os.environ.get("PATH", ""):
+    os.environ["PATH"] = DEFAULT_ASSETS_DIR + os.pathsep + os.environ.get("PATH", "")
 
 # Tự động khởi tạo thư mục assets và sao chép ảnh banner nếu chưa có
 os.makedirs(DEFAULT_ASSETS_DIR, exist_ok=True)
