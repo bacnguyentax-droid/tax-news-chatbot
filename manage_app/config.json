@@ -423,7 +423,7 @@
         "folder_name": "Tax_VB nghiên cứu",
         "description": "Đồng bộ từ Google NotebookLM (0 nguồn)",
         "is_default": false,
-        "sources_count": 0,
+        "sources_count": 8,
         "is_tax": true
       },
       {
@@ -672,5 +672,149 @@
       "avatar_icon": "fa-seedling",
       "badge_color": "teal"
     }
-  ]
+  ],
+  "drafted_documents": [
+    {
+      "id": "draft_qlrr_quy4",
+      "title": "Công văn đôn đốc công tác QLRR, rà soát NNT rủi ro cao và nâng cao chất lượng dữ liệu Quý IV",
+      "doc_type": "CÔNG VĂN",
+      "agency_parent": "CỤC THUẾ TP. HỒ CHÍ MINH",
+      "agency_name": "PHÒNG QUẢN TRỊ DỮ LIỆU VÀ QUẢN LÝ RỦI RO",
+      "unit_code": "CT-QLRR",
+      "doc_number": "   /CT-QLRR",
+      "republic_title": "CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM",
+      "motto": "Độc lập - Tự do - Hạnh phúc",
+      "location": "TP. Hồ Chí Minh",
+      "date_formatted": "ngày     tháng 10 năm 2026",
+      "subject": "V/v đôn đốc triển khai công tác quản lý rủi ro, rà soát NNT rủi ro cao và nâng cao chất lượng dữ liệu Quý IV",
+      "template_preset": "cong_van",
+      "header_ratio": 45,
+      "purpose": "Đôn đốc các Phòng và Chi cục Thuế tập trung rà soát 100% NNT có dấu hiệu rủi ro cao về HĐĐT, vận hành ứng dụng KTH, đối chiếu dữ liệu tờ khai thuế và chuẩn hóa CSDL trong Quý IV năm 2026.",
+      "recipients": [
+        "- Trưởng các Phòng thuộc Cục Thuế TP. Hồ Chí Minh",
+        "- Chi cục trưởng Chi cục Thuế các quận, huyện và khu vực",
+        "- Ban Quản lý tuân thủ - TCT (để b/c)",
+        "- Cục trưởng (để b/c)",
+        "- Các Phó Cục trưởng (để p/h)",
+        "- Phòng KTNB, Phòng KK&KTT (để p/h)",
+        "- Lưu: VT, QLRR (3b)."
+      ],
+      "signer_role": "KT. CỤC TRƯỞNG\nPHÓ CỤC TRƯỞNG",
+      "signer_name": "Nguyễn Văn A",
+      "legal_bases": [
+        "Căn cứ Quyết định số 1264/QĐ-CT và Bộ 9 chỉ số tiêu chí kiểm soát hóa đơn (TPR);",
+        "Căn cứ Công văn số 4728/CT-QLTT và Công văn số 5890/CT-QLTT về triển khai ứng dụng KTH;",
+        "Căn cứ kết quả rà soát, phân tích rủi ro trong 9 tháng đầu năm 2026 của Cục Thuế TP. Hồ Chí Minh."
+      ],
+      "body_paragraphs": [
+        "Kính gửi: Trưởng các Phòng thuộc Cục Thuế TP. Hồ Chí Minh; Chi cục trưởng Chi cục Thuế các quận, huyện và khu vực.",
+        "Thực hiện chỉ đạo của Tổng cục Thuế về việc đẩy mạnh công tác quản lý rủi ro (QLRR), kiểm soát hóa đơn điện tử (HĐĐT) và nâng cao chất lượng dữ liệu ngành Thuế; căn cứ kết quả triển khai công tác rà soát, phân tích rủi ro trong 9 tháng đầu năm 2026, Cục Thuế TP. Hồ Chí Minh đôn đốc và chỉ đạo Trưởng các Phòng, Chi cục trưởng Chi cục Thuế các quận, huyện, khu vực tập trung triển khai các nhiệm vụ trọng tâm mảng Quản lý rủi ro trong Quý IV năm 2026 như sau:",
+        "I. ĐÁNH GIÁ CHUNG VỀ TÌNH HÌNH THỰC HIỆN CÔNG TÁC QUẢN LÝ RỦI RO",
+        "Trong thời gian qua, các đơn vị thuộc và trực thuộc Cục Thuế đã tích cực khai thác các ứng dụng CNTT ngành Thuế (như Hệ thống HĐĐT tập trung, Ứng dụng Quản lý rủi ro TPR, Ứng dụng phân tích chuỗi rủi ro KTH, Phân hệ đối chiếu HĐĐT và Tờ khai thuế) để kịp thời phát hiện, xử lý các trường hợp Người nộp thuế (NNT) có dấu hiệu rủi ro cao về thuế và hóa đơn.",
+        "Tuy nhiên, qua công tác giám sát và tổng hợp báo cáo cho thấy tại một số đơn vị vẫn còn tình trạng xử lý danh sách cảnh báo chậm so với tiến độ quy định; chưa đôn đốc triệt để NNT giải trình đúng hạn 03 ngày làm việc; việc cập nhật danh sách loại trừ chuỗi KTH chưa kịp thời; công tác thu thập, làm sạch dữ liệu NNT và người đại diện theo pháp luật (NĐPL) chưa đạt độ đồng bộ cao. Để khắc phục các hạn chế trên và hoàn thành thắng lợi nhiệm vụ Quý IV, Cục Thuế yêu cầu Thủ trưởng các đơn vị trực tiếp chỉ đạo thực hiện các nhiệm vụ chuyên môn cốt lõi.",
+        "II. TRỌNG TÂM ĐÔN ĐỐC TRIỂN KHAI CÁC NHÓM NHIỆM VỤ CỐT LÕI",
+        "1. Tập trung rà soát, xử lý danh sách Người nộp thuế có dấu hiệu rủi ro cao về hóa đơn điện tử:\n- Khẩn trương phân công công chức rà soát 100% NNT thuộc danh sách cảnh báo rủi ro cao theo Bộ chỉ số tiêu chí tại Quyết định số 1264/QĐ-CT và Bộ 9 chỉ số tiêu chí kiểm soát hóa đơn (TPR).\n- Thực hiện nghiêm túc Quy trình 7 bước xử lý NNT rủi ro cao về HĐĐT. Ban hành ngay Thông báo yêu cầu giải trình, bổ sung thông tin tài liệu (Mẫu 01/TB-BSTT-NNT) và Thông báo chuyển hình thức sử dụng HĐĐT có mã theo từng lần phát sinh (Mẫu 01/TB-SDPS) theo quy định.",
+        "2. Triển khai hiệu quả Ứng dụng phân tích chuỗi rủi ro hoàn thuế GTGT (KTH) và rà soát danh sách loại trừ:\n- Khai thác triệt để Ứng dụng KTH theo hướng dẫn tại Công văn số 4728/CT-QLTT và Công văn số 5890/CT-QLTT.\n- Thực hiện nghiêm túc việc rà soát danh sách loại trừ trên ứng dụng KTH theo chỉ đạo tại Công văn số 4129/CT-QLTT. Đảm bảo loại trừ chính xác các doanh nghiệp thực tế có hoạt động sản xuất kinh doanh hợp pháp, không để ảnh hưởng đến hoạt động hoàn thuế GTGT của doanh nghiệp tuân thủ tốt.",
+        "3. Đẩy mạnh đối chiếu, xử lý dứt điểm chênh lệch dữ liệu HĐĐT và Tờ khai thuế:\n- Khai thác phân hệ nâng cấp ứng dụng HĐĐT đối chiếu dữ liệu HĐĐT và Tờ khai thuế theo Công văn số 1917/CT-QLTT, Công văn số 1918/CT-QLTT và Công văn số 5911/CT-QLTT.\n- Đối chiếu chi tiết chênh lệch thuế GTGT, TNDN giữa HĐĐT phát sinh và Tờ khai thuế kê khai trong kỳ. Yêu cầu NNT giải trình hoặc kê khai bổ sung, điều chỉnh kịp thời, chống thất thu ngân sách nhà nước.",
+        "4. Xây dựng CSDL đa chiều, Bộ tiêu chí đặc thù và các ứng dụng CNTT hỗ trợ Quý IV:\n- Tập trung toàn lực thu thập, làm sạch dữ liệu NNT, dữ liệu đa chiều NĐPL và thông tin cảnh báo vi phạm từ các nguồn cơ quan Thuế, Hải quan, Ngân hàng, Công an.\n- Xây dựng Bộ tiêu chí rủi ro đặc thù của Cục Thuế TP. Hồ Chí Minh và tiêu chí hóa theo từng đơn vị Thuế quản lý trực tiếp.\n- Đưa vào vận hành Ứng dụng tra cứu thông tin NĐPL, NNT và Ứng dụng thu thập thông tin vi phạm phục vụ công tác thanh tra, kiểm tra và quản lý thuế."
+      ]
+    },
+    {
+      "id": "draft_thong_bao_giai_trinh",
+      "title": "Thông báo Yêu cầu giải trình, bổ sung thông tin tài liệu về hóa đơn điện tử (Mẫu 01/TB-BSTT-NNT)",
+      "doc_type": "THÔNG BÁO",
+      "agency_parent": "TỔNG CỤC THUẾ",
+      "agency_name": "CỤC THUẾ TP. HỒ CHÍ MINH",
+      "unit_code": "CT-KTT",
+      "doc_number": "128/TB-CTHCM",
+      "republic_title": "CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM",
+      "motto": "Độc lập - Tự do - Hạnh phúc",
+      "location": "TP. Hồ Chí Minh",
+      "date_formatted": "ngày 24 tháng 10 năm 2026",
+      "subject": "Về việc yêu cầu giải trình, bổ sung thông tin tài liệu liên quan đến hóa đơn điện tử có dấu hiệu rủi ro cao",
+      "template_preset": "thong_bao",
+      "header_ratio": 45,
+      "purpose": "Yêu cầu Người nộp thuế giải trình và cung cấp tài liệu chứng minh tính hợp pháp của các hóa đơn điện tử đầu vào/đầu ra phát sinh trong kỳ theo đúng thời hạn 03 ngày làm việc.",
+      "recipients": [
+        "- Công ty TNHH Thương mại Dịch vụ ABC (MST: 0312345678);",
+        "- Phòng Thanh tra - Kiểm tra thuế số 1;",
+        "- Phòng Quản trị dữ liệu và Quản lý rủi ro (để phối hợp);",
+        "- Lưu: VT, KTT (2b)."
+      ],
+      "signer_role": "TRƯỞNG PHÒNG",
+      "signer_name": "Trần Văn B",
+      "legal_bases": [
+        "Căn cứ Luật Quản lý thuế số 38/2019/QH14 ngày 13 tháng 6 năm 2019;",
+        "Căn cứ Nghị định số 123/2020/NĐ-CP ngày 19 tháng 10 năm 2020 của Chính phủ quy định về hóa đơn, chứng từ;",
+        "Căn cứ kết quả đối chiếu dữ liệu rủi ro trên Hệ thống HĐĐT tập trung của ngành Thuế."
+      ],
+      "body_paragraphs": [
+        "Cục Thuế TP. Hồ Chí Minh thông báo và yêu cầu Công ty TNHH Thương mại Dịch vụ ABC (Mã số thuế: 0312345678) thực hiện giải trình và cung cấp tài liệu chứng minh nguồn gốc hàng hóa, tính hợp pháp của các số hóa đơn điện tử có dấu hiệu chênh lệch lớn giữa đầu vào và đầu ra trong kỳ kê khai thuế Quý III/2026.",
+        "Trong thời hạn 03 ngày làm việc kể từ ngày nhận được Thông báo này, yêu cầu Người đại diện theo pháp luật của Công ty gửi văn bản giải trình bằng phương thức điện tử qua Cổng dịch vụ công của cơ quan Thuế.",
+        "Quá thời hạn nêu trên nếu Công ty không gửi văn bản giải trình hoặc giải trình không chứng minh được tính hợp pháp của giao dịch, Cơ quan Thuế sẽ áp dụng các biện pháp quản lý theo quy định, bao gồm việc chuyển hình thức sử dụng HĐĐT có mã theo từng lần phát sinh hoặc ngừng sử dụng HĐĐT và phối hợp với cơ quan có thẩm quyền xử lý nghiêm theo quy định của pháp luật."
+      ]
+    }
+  ],
+  "ai_assistants": [
+    {
+      "id": "asst_tax_corp",
+      "name": "Trợ lý Chính sách Thuế",
+      "nickname": "Mini-Dora",
+      "description": "Chuyên gia giải đáp về chính sách thuế.",
+      "drive_folder_ids": [
+        "1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK"
+      ],
+      "drive_folder_names": [
+        "Tax_Nghiệp vụ thuế"
+      ],
+      "filter_tax_only": true,
+      "enable_web_search": true,
+      "system_prompt": "Bạn là Trợ lý AI cao cấp chuyên về Pháp chế và Chính sách Thuế Doanh nghiệp Việt Nam. Hãy trả lời chuẩn xác, văn phong chuyên nghiệp, dẫn chiếu đầy đủ Luật, Nghị định, Thông tư và căn cứ vào các tài liệu tham khảo trong Google Drive.",
+      "model": "gemini-3.5-flash-lite",
+      "temperature": 0.2,
+      "avatar_icon": "fa-robot",
+      "badge_color": "sky"
+    },
+    {
+      "id": "asst_tax_risk",
+      "name": "Trợ lý Quản Lý Rủi Ro & Kiểm Soát HĐĐT",
+      "nickname": "Suneo",
+      "description": "Phân tích rủi ro hóa đơn điện tử, chuỗi cảnh báo KTH, bộ chỉ số tiêu chí TPR và quy trình xử lý người nộp thuế rủi ro cao.",
+      "drive_folder_ids": [
+        "1Wuza1Z1SW5dx2EDq4t8T3vW2NRi99qkK"
+      ],
+      "drive_folder_names": [
+        "Tax_Nghiệp vụ thuế"
+      ],
+      "filter_tax_only": true,
+      "enable_web_search": false,
+      "system_prompt": "Bạn là Trợ lý AI chuyên gia về Quản lý rủi ro và Kiểm soát hóa đơn điện tử ngành Thuế. Hãy phân tích sắc bén, chỉ ra các nguy cơ rủi ro và giải pháp xử lý theo quy định.",
+      "model": "gemini-3.5-flash-lite",
+      "temperature": 0.2,
+      "avatar_icon": "fa-shield-halved",
+      "badge_color": "rose"
+    }
+  ],
+  "entertainment_songs": [
+    {
+      "id": "song_1",
+      "title": "E là không thể",
+      "youtube_url": "https://www.youtube.com/watch?v=3S6R-nOA2eY",
+      "youtube_id": "3S6R-nOA2eY"
+    },
+    {
+      "id": "song_2",
+      "title": "Dĩ Vãng Nhạt Nhòa",
+      "youtube_url": "https://www.youtube.com/watch?v=aahqBEJJigI",
+      "youtube_id": "aahqBEJJigI"
+    }
+  ],
+  "telegram": {
+    "bot_token": "9115859680:AAF1JfPzvVZfmITMC3c1Y1sdrf705ySExgU",
+    "chat_id": "8929374740",
+    "enabled": true,
+    "bot_username": "HCMThanhHuyenBot",
+    "bot_name": "ThanhHuyenBot",
+    "last_tested": "05/11/2026 21:48"
+  }
 }

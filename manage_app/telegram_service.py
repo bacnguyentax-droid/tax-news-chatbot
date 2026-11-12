@@ -170,6 +170,12 @@ class TelegramService:
             try:
                 err_dict = json.loads(err_body)
                 desc = err_dict.get("description", str(he))
+                if "chat not found" in desc.lower():
+                    cfg = cls.get_config()
+                    bot_user = cfg.get("bot_username", "Bot")
+                    desc = f"Lỗi Telegram (Chat not found): Sếp chưa bấm nút START cho Bot @{bot_user} trên Telegram hoặc Chat ID chưa đúng. Vui lòng mở https://t.me/{bot_user} trên Telegram và bấm START (/start) trước nhé!"
+                elif "bot was blocked by the user" in desc.lower():
+                    desc = "Lỗi Telegram: Sếp đang chặn (block) Bot. Vui lòng mở lại cuộc trò chuyện trên Telegram và unblock Bot."
                 return {"success": False, "message": desc}
             except Exception:
                 return {"success": False, "message": err_body or str(he)}
